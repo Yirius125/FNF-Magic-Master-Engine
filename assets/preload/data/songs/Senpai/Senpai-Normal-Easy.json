@@ -2510,7 +2510,7 @@
 						"changeCharacters": false
 					}
 				],
-				"style": "pxl-Default"
+				"style": "pixel-Simulator"
 			},
 			{
 				"playable": true,
@@ -4660,7 +4660,7 @@
 						"changeCharacters": false
 					}
 				],
-				"style": "pxl-Default"
+				"style": "pixel-Simulator"
 			}
 		]
 	}

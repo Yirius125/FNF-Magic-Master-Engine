@@ -38,14 +38,14 @@ class Mod {
     public var save(default, null):FlxSave;
     public var path(default, null):String;
 
-    public var enabled:Bool = false;
+    public var enabled:Bool = true;
 
     public function new(folder:String) {
         this.path = folder;
 
         var json_data:Dynamic = {};
         var mod_info_path = '$path/mod.json';
-        if(Paths.exists(mod_info_path)){ json_data = mod_info_path.getJson(); }
+        if (Paths.exists(mod_info_path)) { json_data = mod_info_path.getJson(); }
 
         this.name = json_data.name != null ? json_data.name : this.name;
         this.description = json_data.description != null ? json_data.description : this.description;

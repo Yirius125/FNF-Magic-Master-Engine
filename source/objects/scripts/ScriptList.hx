@@ -6,72 +6,119 @@ import utils.Scripts;
 import utils.Mods;
 
 class ScriptList {
-    public var list:Map<String, Script> = [];
-    
     public var call_globals:Bool = true;
+
+    public var m_piorityList:Array<String> = [];
+    public var m_localList:Map<String, Script> = [];
     
-    public function new(?scripts:Map<String, Script>):Void {
-        if(scripts != null){list = scripts;}
+    public var d_list(get, default):Array<{name:String, script:Script}> = [];
+    public function get_d_list():Array<{name:String, script:Script}> {
+        var l_scriptList:Array<{name:String, script:Script}> = [];
+
+        if (call_globals) { for (l_key => l_script in Scripts.global_scripts) { l_scriptList.push({name: l_key, script: l_script}); } }
+        for (l_key => l_script in this.m_localList) { l_scriptList.push({name: l_key, script: l_script}); }
+
+        l_scriptList.sort((_a, _b) -> {
+            var l_priorityA:Bool = m_piorityList.indexOf(_a.name) != -1;
+            var l_priorityB:Bool = m_piorityList.indexOf(_b.name) != -1;
+
+            if (l_priorityA && !l_priorityB) { return -1; }
+            if (!l_priorityA && l_priorityB) { return -1; }
+
+            return 0;
+        });
+
+        return l_scriptList;
     }
     
-
-    public function get(key:String):Script {
-        if(call_globals && Scripts.contains(key)){return Scripts.get(key);}
-        return list.get(key);
+    public function new(?_scripts:Map<String, Script>):Void {
+        if (_scripts != null) { this.m_localList = _scripts; }
     }
 
-	public function set(key:String, script:Script):Void {
-        if(call_globals && Scripts.contains(key)){return;}
-		if(list.exists(key)){return;}
-        list.set(key, script);
-	}
-	public function remove(key:String):Void {
-		list.remove(key);
-	}
-
-    public function load(key:String, file:String):Void {
-        if(list.exists(key)){return;}
-        var new_script = new Script();
-        new_script.load(file, true);
-        new_script.name = key;
-        if(new_script.program == null){return;}
-        list.set(key, new_script);
+    public function get(_key:String):Script {
+        if (call_globals && Scripts.contains(_key)) { return Scripts.get(_key); }
+        return m_localList.get(_key);
     }
 
-    public function setVar(name:String, toSet:Dynamic){
-        if(call_globals){for(key => s in Scripts.global_scripts){s.interp.variables.set(name, toSet);}}
-		for(key => s in list){s.interp.variables.set(name, toSet);}
-    }
-
-	public function call(name:String, arguments:Array<Dynamic> = null):Void {
-		if(arguments == null){arguments = [];}
+	public function set(_key:String, _script:Script):Void {
+        if (call_globals && Scripts.contains(_key)) { return; }
+		if (m_localList.exists(_key)) { return; }
         
-        if(call_globals){for(key => s in Scripts.global_scripts){s.call(name, arguments);}}
-		for(key => s in list){s.call(name, arguments);}
+        m_localList.set(_key, _script);
+	}
+	public function remove(_key:String):Void {
+		m_localList.remove(_key);
 	}
 
-    public function callback(name:String, arguments:Array<Dynamic> = null):Script_Calls {
-		if(arguments == null){arguments = [];}
+    public function load(_key:String, _file:String):Void {
+        if (m_localList.exists(_key)) { return; }
 
-        var toReturn:Script_Calls = Continue;
+        var l_scpNew = new Script();
+        l_scpNew.load(_file, true);
+        l_scpNew.name = _key;
+        
+        if (l_scpNew.program == null) { return; }
+        
+        m_localList.set(_key, l_scpNew);
+    }
 
-        if(call_globals){
-            for(key => s in Scripts.global_scripts){
-                var cur_call:Script_Calls = cast(s.call(name, arguments), Script_Calls);
-                if(cur_call == Stop_And_Break){return Stop;}
-                if(cur_call == Break){return Break;}
-                if(toReturn == Stop){continue;}
-                toReturn = cur_call;
+    public function setVar(_name:String, _value:Dynamic) {
+		for (l_scpCurrent in d_list) { l_scpCurrent.script.interp.variables.set(_name, _value); }
+    }
+
+	public function call(_name:String, _arguments:Array<Dynamic> = null):Void {
+		if (_arguments == null) { _arguments = []; }
+        
+		for (l_scpCurrent in d_list) { l_scpCurrent.script.call(_name, _arguments); }
+	}
+
+    public function callback(_name:String, _arguments:Array<Dynamic> = null):Script_Calls {
+		if (_arguments == null) { _arguments = []; }
+
+        var l_toReturn:Script_Calls = Continue;
+
+		for (l_scpCurrent in d_list) {
+            var l_tempResult:Dynamic = l_scpCurrent.script.call(_name, _arguments);
+            if (l_tempResult == null) { continue; }
+
+            try {
+                var l_tempCallback:Script_Calls = cast(l_tempResult, Script_Calls);
+                if (l_tempCallback == Stop_And_Break) { return Stop; }
+                if (l_tempCallback == Break) { return Break; }
+                if (l_toReturn == Stop) { continue; }
+
+                l_toReturn = l_tempCallback;
+            } catch(e) { }
+        }
+
+        return l_toReturn;
+    }
+
+    public function complex(_name:String, _arguments:Array<Dynamic> = null, _endMethod:Void->Void):Void {
+		if (_arguments == null) { _arguments = []; }
+
+        var l_methods:Array<(Void -> Void) -> Void> = [];
+		for (l_scpCurrent in d_list) {
+            l_methods.push((_next:(Void -> Void)) -> { 
+                var l_newArguments:Array<Dynamic> = _arguments.copy();
+                l_newArguments.push(_next);
+
+                if (l_scpCurrent.script.getVar(_name) == null) { _next(); }
+                else { l_scpCurrent.script.call(_name, l_newArguments); }
+            });
+        }
+
+        var l_indexScript:Int = 0;
+
+        function doNext():Void {
+            if (l_indexScript >= l_methods.length) { _endMethod(); } else {
+                var l_curMethod:(Void -> Void) -> Void = l_methods[l_indexScript];
+                l_indexScript++;
+
+                l_curMethod(doNext);
             }
         }
-		for(key => s in list){
-            var cur_call:Script_Calls = cast(s.call(name, arguments), Script_Calls);
-            if(cur_call == Stop_And_Break){return Stop;}
-            if(cur_call == Break){return Break;}
-            if(toReturn == Stop){continue;}
-            toReturn = cur_call;
-        }
 
-        return toReturn;
+        doNext();
     }
 }

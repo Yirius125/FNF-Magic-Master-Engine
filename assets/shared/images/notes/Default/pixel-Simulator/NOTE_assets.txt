@@ -9,8 +9,8 @@ ConfirmRight_1:34,17,17,17
 ConfirmUp_0:34,34,17,17
 ConfirmUp_1:51,0,17,17
 Down_0:51,17,17,17
-HoldEnd_0:68,0,17,17
-HoldPiece_0:51,34,17,17
+HoldEnd_0:68,0,17,5
+HoldPiece_0:51,34,17,5
 Left_0:68,17,17,17
 Middle_0:85,0,17,17
 PressDown_0:85,17,17,17

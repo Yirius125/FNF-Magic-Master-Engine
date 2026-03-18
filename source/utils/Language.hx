@@ -41,10 +41,10 @@ class Language {
     public static function get_list():Array<String> {
         var toReturn:Array<String> = [];
 
-        for(path in Paths.readDirectory('assets/data/lang/')){
-            if(!path.endsWith(".json")){continue;}
+        for (path in Paths.readDirectory('assets/data/lang/')) {
+            if (!path.endsWith(".json")) { continue; }
             var cur_lang:String = path.split("_")[1].replace(".json", "");
-            if(toReturn.contains(cur_lang)){continue;}
+            if (toReturn.contains(cur_lang)) { continue; }
             toReturn.push(cur_lang);
         }
 
@@ -56,18 +56,18 @@ class Language {
 
     public static function init():Void {
         var saved_lang:String = Settings.get("Language");
-        if(saved_lang == null){saved_lang = current;}
+        if (saved_lang == null) {saved_lang = current; }
         Language.load(saved_lang);
     }
 
     public static function load(?new_lang:String):Void {
-        if(new_lang == null){new_lang == Settings.get("Language");}
+        if (new_lang == null) {new_lang == Settings.get("Language"); }
         current = Paths.exists(Paths.getPath('data/lang/lang_${new_lang}.json', TEXT)) ? new_lang : "English"; 
 
         var new_data:Map<String, Dynamic> = [];
-        for(cur_path in Paths.readFile('assets/data/lang/lang_${current}.json')){
+        for (cur_path in Paths.readFile('assets/data/lang/lang_${current}.json')) {
             var file_content:Dynamic = cur_path.getJson();
-            for(key in Reflect.fields(file_content)){ new_data.set(key, Reflect.getProperty(file_content, key)); }
+            for (key in Reflect.fields(file_content)) { new_data.set(key, Reflect.getProperty(file_content, key)); }
         }
 
         data = new_data;

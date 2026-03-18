@@ -1,93 +1,94 @@
 {
 	"aspect": "Christmas",
+	"icon": "bf",
 	"position": [
 		0,
 		340
 	],
 	"scale": 1,
+	"color": "#409fff",
+	"name": "Boyfriend",
+	"image": "bfChristmas",
+	"zoom": 0.8,
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"skin": "Default",
+	"onRight": false,
+	"camera": [
+		218.571428571428,
+		547.142857142857
+	],
 	"animations": [
 		{
-			"loop": false,
 			"symbol": "BF HEY!!",
-			"key": "hey",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "hey"
 		},
 		{
-			"loop": false,
 			"symbol": "BF NOTE DOWN",
-			"key": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
-			"loop": false,
 			"symbol": "MISS BF NOTE DOWN",
-			"key": "singDOWNmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWNmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF NOTE LEFT",
-			"key": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
-			"loop": false,
 			"symbol": "MISS BF NOTE LEFT",
-			"key": "singLEFTmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFTmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF NOTE RIGHT",
-			"key": "singRIGHT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"loop": false,
 			"symbol": "MISS BF NOTE RIGHT",
-			"key": "singRIGHTmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHTmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF NOTE UP",
-			"key": "singUP",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		},
 		{
-			"loop": false,
 			"symbol": "MISS BF NOTE UP",
-			"key": "singUPmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUPmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF idle dance",
-			"key": "idle",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		}
-	],
-	"zoom": 0.8,
-	"image": "bfChristmas",
-	"name": "Boyfriend",
-	"antialiasing": true,
-	"singTime": 1,
-	"icon": "bf",
-	"camera": [
-		0,
-		0
-	],
-	"onRight": false,
-	"color": "#409fff",
-	"skin": "Default"
+	]
 }

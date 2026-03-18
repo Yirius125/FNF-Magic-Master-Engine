@@ -3,6 +3,6 @@ PressCircle_0:17,0,17,17
 ConfirmCircle_0:34,0,17,17
 ConfirmCircle_1:0,17,17,17
 Circle_0:17,17,17,17
-HoldEnd_0:34,17,17,17
-HoldPiece_0:0,34,17,17
+HoldEnd_0:34,17,17,5
+HoldPiece_0:0,34,17,5
 SwitchHold_0:17,34,17,17

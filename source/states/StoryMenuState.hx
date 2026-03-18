@@ -1,27 +1,13 @@
 package states;
 
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.addons.text.FlxTypeText;
-import flixel.addons.ui.FlxUIButton;
-import flixel.input.mouse.FlxMouse;
 import utils.Songs.Category_Data;
-import flixel.effects.FlxFlicker;
 import flixel.util.FlxGradient;
 import objects.songs.WeekList;
-import flixel.tweens.FlxEase;
 import objects.game.Alphabet;
 import flixel.util.FlxColor;
-import lime.app.Application;
 import flixel.math.FlxPoint;
-import flixel.ui.FlxButton;
-import flixel.text.FlxText;
-import flixel.math.FlxMath;
-import flixel.FlxSubState;
-import flixel.FlxObject;
 import flixel.FlxSprite;
-import io.newgrounds.NG;
 import flixel.FlxCamera;
 import flixel.FlxG;
 
@@ -54,8 +40,8 @@ class StoryMenuState extends MusicBeatState {
     var titleAlpha:Alphabet;
     var scoreAlpha:Alphabet;
 
-	override function create(){
-		if(FlxG.sound.music == null || (FlxG.sound.music != null && !FlxG.sound.music.playing)){FlxG.sound.playMusic(Paths.music('freakyMenu').getSound());}
+	override function create() {
+		if (FlxG.sound.music == null || (FlxG.sound.music != null && !FlxG.sound.music.playing)) {FlxG.sound.playMusic(Paths.music('freakyMenu').getSound()); }
 		FlxG.mouse.visible = false;
         
 		#if desktop
@@ -64,8 +50,7 @@ class StoryMenuState extends MusicBeatState {
 		Magic.setWindowTitle('Selecting a Week');
 		#end
 
-        weeks = new WeekList().setup();
-		weeks.remove_hiddens();
+        weeks = new WeekList();
 
         var bg = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
 		bg.setGraphicSize(FlxG.width, FlxG.height);
@@ -102,7 +87,7 @@ class StoryMenuState extends MusicBeatState {
 		FlxG.cameras.add(camWeeks);
 
         grpWeeks = new FlxTypedGroup<FlxSprite>();
-        for(i in 0...weeks.length){
+        for (i in 0...weeks.length) {
             var spr_week:FlxSprite = new FlxSprite().loadGraphic(Paths.image('weeks/${weeks.get(i).name}').getGraphic());
             spr_week.screenCenter(X);
             grpWeeks.add(spr_week);
@@ -130,7 +115,7 @@ class StoryMenuState extends MusicBeatState {
 
         //Adding Arrows
         grpArrows = new FlxTypedGroup<FlxSprite>();
-        for(i in 0...2){
+        for (i in 0...2) {
             var arrow_1:FlxSprite = new FlxSprite();
             arrow_1.frames = Paths.image('arrows').getAtlas();
             arrow_1.animation.addByPrefix('idle', 'Arrow Idle');
@@ -139,9 +124,9 @@ class StoryMenuState extends MusicBeatState {
             arrow_1.scale.set(0.3, 0.3);
             arrow_1.updateHitbox();
             
-            switch(i){
-                case 0:{arrow_1.angle = 90;}
-                case 1:{arrow_1.angle = 270;}
+            switch (i) {
+                case 0:{arrow_1.angle = 90; }
+                case 1:{arrow_1.angle = 270; }
             }
 
             grpArrows.add(arrow_1);
@@ -158,39 +143,39 @@ class StoryMenuState extends MusicBeatState {
 		changeWeek();
 	}
 
-	override function update(elapsed:Float){		
+	override function update(elapsed:Float) {		
 		super.update(elapsed);
 
-        if(controls.check("MenuAccept", JUST_PRESSED)){chooseWeek();}
+        if (controls.check("MenuAccept", JUST_PRESSED)) {chooseWeek(); }
 
-        if(controls.check("MenuLeft", JUST_PRESSED)){changeOption(-1);}
-        if(controls.check("MenuRight", JUST_PRESSED)){changeOption(1);}
+        if (controls.check("MenuLeft", JUST_PRESSED)) {changeOption(-1); }
+        if (controls.check("MenuRight", JUST_PRESSED)) {changeOption(1); }
 
 		Magic.sortMembersByY(cast grpWeeks, (FlxG.height - 110) - (grpWeeks.members[curWeek].height / 2), curWeek);
 
-        switch(curOption){
+        switch (curOption) {
             case 0:{
-                if(controls.check("MenuUp", JUST_PRESSED)){changeCategory(-1);}
-                if(controls.check("MenuDown", JUST_PRESSED)){changeCategory(1);}
+                if (controls.check("MenuUp", JUST_PRESSED)) {changeCategory(-1); }
+                if (controls.check("MenuDown", JUST_PRESSED)) {changeCategory(1); }
 
-                for(a in grpArrows.members){Magic.lerpX(cast a, 250);}
+                for (a in grpArrows.members) {Magic.lerpX(cast a, 250); }
 
                 grpArrows.members[0].y = category.y - grpArrows.members[0].height - 5;
                 grpArrows.members[1].y = category.y + category.height + 5;
             }
             case 1:{
-                if(controls.check("MenuUp", JUST_PRESSED) || FlxG.mouse.wheel > 0){changeWeek(-1);}
-                if(controls.check("MenuDown", JUST_PRESSED) || FlxG.mouse.wheel < 0){changeWeek(1);}
+                if (controls.check("MenuUp", JUST_PRESSED) || FlxG.mouse.wheel > 0) {changeWeek(-1); }
+                if (controls.check("MenuDown", JUST_PRESSED) || FlxG.mouse.wheel < 0) {changeWeek(1); }
 
-                for(a in grpArrows.members){Magic.lerpX(cast a, (FlxG.width / 2));}
+                for (a in grpArrows.members) {Magic.lerpX(cast a, (FlxG.width / 2)); }
                 grpArrows.members[0].y = grpWeeks.members[curWeek].y - grpArrows.members[0].height - 5;
                 grpArrows.members[1].y = grpWeeks.members[curWeek].y + grpWeeks.members[curWeek].height + 5;
             }
             case 2:{
-                if(controls.check("MenuUp", JUST_PRESSED)){changeDifficulty(-1);}
-                if(controls.check("MenuDown", JUST_PRESSED)){changeDifficulty(1);}
+                if (controls.check("MenuUp", JUST_PRESSED)) {changeDifficulty(-1); }
+                if (controls.check("MenuDown", JUST_PRESSED)) {changeDifficulty(1); }
 
-                for(a in grpArrows.members){Magic.lerpX(cast a, (FlxG.width - 250));}
+                for (a in grpArrows.members) {Magic.lerpX(cast a, (FlxG.width - 250)); }
 
                 grpArrows.members[0].y = difficulty.y - grpArrows.members[0].height - 5;
                 grpArrows.members[1].y = difficulty.y + difficulty.height + 5;
@@ -199,19 +184,19 @@ class StoryMenuState extends MusicBeatState {
 	}
 
     function changeOption(value:Int = 0, force:Bool = false):Void {
-		curOption += value; if(force){curOption = value;}
+		curOption += value; if (force) {curOption = value; }
 
-        if(curOption > 2){curOption = 0;}
-        if(curOption < 0){curOption = 2;}
+        if (curOption > 2) {curOption = 0; }
+        if (curOption < 0) {curOption = 2; }
 	}
 
 	function changeWeek(value:Int = 0, force:Bool = false):Void {
-		curWeek += value; if(force){curWeek = value;}
+		curWeek += value; if (force) {curWeek = value; }
 
-		if(curWeek < 0){curWeek = grpWeeks.members.length - 1;}
-		if(curWeek >= grpWeeks.members.length){curWeek = 0;}
+		if (curWeek < 0) {curWeek = grpWeeks.members.length - 1; }
+		if (curWeek >= grpWeeks.members.length) {curWeek = 0; }
 
-        for(w in grpWeeks.members){w.alpha = 0.5;}
+        for (w in grpWeeks.members) {w.alpha = 0.5; }
         grpWeeks.members[curWeek].alpha = 1;
 
         titleAlpha.cur_data = [{scale: 0.6, bold: true, text: weeks.get(curWeek).title}];
@@ -226,17 +211,17 @@ class StoryMenuState extends MusicBeatState {
 	}
     
     function changeCategory(value:Int = 0, force:Bool = false):Void {
-        var cat_list:Array<String> = []; for(cur_cat in weeks.get(curWeek).categories){cat_list.push(cur_cat.name);}
+        var cat_list:Array<String> = []; for (cur_cat in weeks.get(curWeek).categories) {cat_list.push(cur_cat.name); }
         var cur_cat:Int = cat_list.indexOf(curCategory);
-		if(cur_cat == -1){
+		if (cur_cat == -1) {
 			curCategory = cat_list[0];
 			changeCategory();
 			return;
 		}
-		cur_cat += value; if(force){cur_cat = value;}
+		cur_cat += value; if (force) {cur_cat = value; }
 
-		if(cur_cat < 0){cur_cat = cat_list.length - 1;}
-		if(cur_cat >= cat_list.length){cur_cat = 0;}
+		if (cur_cat < 0) {cur_cat = cat_list.length - 1; }
+		if (cur_cat >= cat_list.length) {cur_cat = 0; }
 
         curCategory = cat_list[cur_cat];
 
@@ -248,20 +233,20 @@ class StoryMenuState extends MusicBeatState {
 
     function changeDifficulty(value:Int = 0, force:Bool = false):Void {
         var cat_list:Array<Category_Data> = weeks.get(curWeek).categories;
-		var cat_names:Array<String> = []; for(cur_cat in cat_list){cat_names.push(cur_cat.name);}
+		var cat_names:Array<String> = []; for (cur_cat in cat_list) {cat_names.push(cur_cat.name); }
         var cur_cat:Int = cat_names.indexOf(curCategory);
 		var diff_list:Array<String> = cat_list[cur_cat].difficulties;
 		var cur_diff:Int = diff_list.indexOf(curDifficulty);
-		if(cur_diff == -1){
+		if (cur_diff == -1) {
 			curDifficulty = diff_list[0];
 			changeDifficulty();
 			return;
 		}
 
-		cur_diff += value; if(force){cur_diff = value;}
+		cur_diff += value; if (force) {cur_diff = value; }
 
-		if(cur_diff < 0){cur_diff = diff_list.length - 1;}
-		if(cur_diff >= diff_list.length){cur_diff = 0;}
+		if (cur_diff < 0) {cur_diff = diff_list.length - 1; }
+		if (cur_diff >= diff_list.length) {cur_diff = 0; }
 
         curDifficulty = diff_list[cur_diff];
 
@@ -279,6 +264,6 @@ class StoryMenuState extends MusicBeatState {
         
         Songs.reset();
         Songs.loadWeek(weeks.get(curWeek), curCategory, curDifficulty);
-        Songs.play();
+        Songs.play(true);
     }
 }

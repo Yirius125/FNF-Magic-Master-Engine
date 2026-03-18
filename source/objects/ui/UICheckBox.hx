@@ -28,7 +28,8 @@ class UICheckBox extends FlxUICheckBox {
 
         button.resize(LabelW, Std.int(button.label.height));
 
-        anchorLabelX(); anchorLabelY();
+        anchorLabelX(); 
+        anchorLabelY();
 
         checked = DefaultValue;
         box.antialiasing = true;
@@ -37,18 +38,21 @@ class UICheckBox extends FlxUICheckBox {
     
 	override private function set_checked(b:Bool):Bool {
         box.animation.play("play", true, !b);
+
         return checked = b;
     }
 
 	override public function anchorLabelY():Void {
 		if (button == null) { return; }
+        
         button.y = box.y + box.height - button.height + textY;
 	}
     
 	override private function _clickCheck():Void {
-        if (!visible){return;}
+        if (!visible) { return; }
+        
         checked = !checked;
-        if(_callback != null){_callback(checked);}
-        if(broadcastToFlxUI){FlxUI.event(FlxUICheckBox.CLICK_EVENT, this, checked, params);}
+        if (_callback != null) {_callback(checked); }
+        if (broadcastToFlxUI) {FlxUI.event(FlxUICheckBox.CLICK_EVENT, this, checked, params); }
     }
 }

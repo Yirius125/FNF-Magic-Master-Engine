@@ -41,7 +41,7 @@ class LangSubMenu extends SubMenu {
         group.add(optionBack);
 
         optionGroup = new FlxTypedGroup<Alphabet>();
-        for(cur_lang in Language.list){
+        for (cur_lang in Language.list) {
             var cur_option:Alphabet = new Alphabet(0, menuBack.y, {bold: true, animated: true, scale: 0.4, text: cur_lang});
             cur_option.screenCenter(X);
             optionGroup.add(cur_option);
@@ -56,27 +56,27 @@ class LangSubMenu extends SubMenu {
     override function update(elapsed:Float):Void {
         super.update(elapsed);
 
-        if(optionGroup.length > 0){
+        if (optionGroup.length > 0) {
             Magic.sortMembersByY(cast optionGroup, menuBack.y + (menuBack.height / 2) - (optionGroup.members[curOption].height / 2), curOption);
             optionBack.y = optionGroup.members[curOption].y - 5;
         }
 
-        if(!canControlle){return;}
+        if (!canControlle) { return; }
 
-        if(controls.check("MenuUp")){changeOption(-1);}
-        if(controls.check("MenuDown")){changeOption(1);}
-        if(controls.check("MenuAccept")){chooseOption();}
+        if (controls.check("MenuUp")) {changeOption(-1); }
+        if (controls.check("MenuDown")) {changeOption(1); }
+        if (controls.check("MenuAccept")) {chooseOption(); }
     }
 
     public function changeOption(_value:Int = 0, _force:Bool = false):Void {
         curOption = _force ? _value : curOption + _value;
 
-        if(curOption >= optionGroup.length){curOption = optionGroup.length - 1; canControlle = true; return;}
-        if(curOption < 0){curOption = 0; canControlle = true; return;}
+        if (curOption >= optionGroup.length) {curOption = optionGroup.length - 1; canControlle = true; return; }
+        if (curOption < 0) {curOption = 0; canControlle = true; return; }
 
-        if(!_force){FlxG.sound.play(Paths.sound("scrollMenu").getSound(), 0.5);}
+        if (!_force) {FlxG.sound.play(Paths.sound("scrollMenu").getSound(), 0.5); }
 
-        for(i in 0...optionGroup.length){
+        for (i in 0...optionGroup.length) {
             var cur_option = optionGroup.members[i];
 
             FlxTween.cancelTweensOf(cur_option);
@@ -97,6 +97,6 @@ class LangSubMenu extends SubMenu {
         FlxG.save.flush();
         
         FlxFlicker.flicker(optionGroup.members[curOption]);
-        Timer.delay(()->{doClose();}, 1000);
+        Timer.delay(()->{doClose(); }, 1000);
     }
 }

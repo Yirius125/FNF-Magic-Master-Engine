@@ -39,7 +39,9 @@ class CustomScriptState extends MusicBeatState {
     public function new(new_script:Script, ?onConfirm:String, ?onBack:String):Void {
         custom_script = new_script;
         custom_script.parent = this;
+        
         super(onConfirm, onBack);
+        
         scripts.set(new_script.name, new_script);
     }
 }

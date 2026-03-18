@@ -1,22 +1,23 @@
-import("flixel.group.FlxTypedGroup", "FlxTypedGroup");
-import("flixel.FlxSprite", "FlxSprite");
-import("flixel.FlxG", "FlxG");
-import("haxe.Timer", "Timer");
-import("utils.Paths", "Paths");
-import("Math", "Math");
-import("PreSettings");
-import("Files");
-import("StrumLine");
-import("Type");
-import("Std");
+import flixel.group.FlxTypedGroup;
+import objects.notes.StrumLine;
+import flixel.FlxSprite;
+import utils.Settings;
+import utils.Files;
+import utils.Paths;
+import flixel.FlxG;
+import haxe.Timer;
+import Math;
+import Type;
+import Std;
 
+preset("camP_1", [480, -3000]);
+preset("camP_2", [970, 530]);
 preset("initChar", 10);
-preset("camP_1", [540,-3000]);
-preset("camP_2", [970,530]);
 preset("zoom", 0.9);
 
 var tanksGroup:FlxTypedGroup<FlxSprite>;
 var shootStrumLine:Strumline;
+
 var tankAngle:Float = FlxG.random.int(-90, 45);
 var tankSpeed:Float = FlxG.random.float(5, 7);
 
@@ -38,139 +39,139 @@ var tank5:FlxSprite = null;
 var tank3:FlxSprite = null;
 
 function addToLoad(temp):Void {
-	temp.push({type: "IMAGE", instance: Paths.image('sky','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('clouds','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('mountains','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('ruins','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('ruins1','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('smokeleft','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('smokeright','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('watchtower','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('rolltank','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('ground','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('tank0','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('tank3','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('tank1','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('tank2','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('tank5','stages/war')});
-	temp.push({type: "IMAGE", instance: Paths.image('tank3','stages/war')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/sky')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/clouds')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/mountains')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/ruins')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/ruins1')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/smokeleft')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/smokeright')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/watchtower')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/rolltank')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/ground')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/tank0')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/tank3')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/tank1')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/tank2')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/tank5')});
+	temp.push({type: "IMAGE", instance: Paths.image('stages/war/tank3')});
 }
 
 function create():Void {
 	background = new FlxSprite(-250, -250);
-	background.loadGraphic(Files.getGraphic(Paths.image('sky', 'stages/war')));
+	background.loadGraphic(Files.getGraphic(Paths.image('stages/war/sky')));
 	background.scale.set(1, 1);
 	background.updateHitbox();
 	background.scrollFactor.set(0, 0);
-	add(background);
+	push(background);
 
 	clouds = new FlxSprite(-500, 150);
 	clouds.scrollFactor.set(0.1, 0.1);
-	clouds.loadGraphic(Files.getGraphic(Paths.image('clouds', 'stages/war')));
-	add(clouds);
+	clouds.loadGraphic(Files.getGraphic(Paths.image('stages/war/clouds')));
+	push(clouds);
 
 	mountains = new FlxSprite(-400, 100);
 	mountains.scrollFactor.set(0.2, 0.2);
-	mountains.loadGraphic(Files.getGraphic(Paths.image('mountains', 'stages/war')));
-	add(mountains);
+	mountains.loadGraphic(Files.getGraphic(Paths.image('stages/war/mountains')));
+	push(mountains);
 
 	buildings = new FlxSprite(-200, 130);
 	buildings.scrollFactor.set(0.3, 0.3);
-	buildings.loadGraphic(Files.getGraphic(Paths.image('ruins', 'stages/war')));
-	add(buildings);
+	buildings.loadGraphic(Files.getGraphic(Paths.image('stages/war/ruins')));
+	push(buildings);
 
 	ruins = new FlxSprite(-180, 500);
 	ruins.scrollFactor.set(0.4, 0.4);
-	ruins.loadGraphic(Files.getGraphic(Paths.image('ruins1', 'stages/war')));
-	add(ruins);
+	ruins.loadGraphic(Files.getGraphic(Paths.image('stages/war/ruins1')));
+	push(ruins);
 
 	smokeLeft = new FlxSprite(0, 0);
 	smokeLeft.scrollFactor.set(0.4, 0.4);
-	smokeLeft.frames = Files.getAtlas(Paths.image('leftsmoke', 'stages/war'));
+	smokeLeft.frames = Files.getAtlas(Paths.image('stages/war/leftsmoke'));
 	smokeLeft.animation.addByPrefix('idle', 'SmokeBlurLeft');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){smokeLeft.animation.play('idle');}
-	add(smokeLeft);
+	if (Settings.get('Animated', 'GraphicSettings')) { smokeLeft.animation.play('idle'); }
+	push(smokeLeft);
 
 	smokeRight = new FlxSprite(900, 0);
 	smokeRight.scrollFactor.set(0.4, 0.4);
-	smokeRight.frames = Files.getAtlas(Paths.image('rightsmoke', 'stages/war'));
+	smokeRight.frames = Files.getAtlas(Paths.image('stages/war/rightsmoke'));
 	smokeRight.animation.addByPrefix('idle', 'SmokeRight');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){smokeRight.animation.play('idle');}
-	add(smokeRight);
+	if (Settings.get('Animated', 'GraphicSettings')) { smokeRight.animation.play('idle'); }
+	push(smokeRight);
 
 	watchtower = new FlxSprite(100, 50);
 	watchtower.scrollFactor.set(0.5, 0.5);
-	watchtower.frames = Files.getAtlas(Paths.image('watchtower', 'stages/war'));
+	watchtower.frames = Files.getAtlas(Paths.image('stages/war/watchtower'));
 	watchtower.animation.addByPrefix('idle', 'watchtower gradient color');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){watchtower.animation.play('idle');}
-	add(watchtower);
+	if (Settings.get('Animated', 'GraphicSettings')) { watchtower.animation.play('idle'); }
+	push(watchtower);
 
 	tankrolling = new FlxSprite(300, 300);
 	tankrolling.scrollFactor.set(0.5, 0.5);
-	tankrolling.frames = Files.getAtlas(Paths.image('rolltank', 'stages/war'));
+	tankrolling.frames = Files.getAtlas(Paths.image('stages/war/rolltank'));
 	tankrolling.animation.addByPrefix('idle', 'BG tank w lighting instance 1');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){tankrolling.animation.play('idle');}
-	add(tankrolling);
+	if (Settings.get('Animated', 'GraphicSettings')) { tankrolling.animation.play('idle'); }
+	push(tankrolling);
 
 	tanksGroup = Type.createInstance(FlxTypedGroup, []);
-	add(tanksGroup);
+	push(tanksGroup);
 
 	ground = new FlxSprite(-450, 550);
-	ground.loadGraphic(Files.getGraphic(Paths.image('ground', 'stages/war')));
-	add(ground);
+	ground.loadGraphic(Files.getGraphic(Paths.image('stages/war/ground')));
+	push(ground);
 
 	tank0 = new FlxSprite(-500, 700);
-	tank0.frames = Files.getAtlas(Paths.image('tank0', 'stages/war'));
+	tank0.frames = Files.getAtlas(Paths.image('stages/war/tank0'));
 	tank0.animation.addByPrefix('idle', 'fg');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){tank0.animation.play('idle');}
+	if (Settings.get('Animated', 'GraphicSettings')) { tank0.animation.play('idle'); }
 	tank0.scrollFactor.set(1.7, 1.5);
-	add(tank0);
+	push(tank0);
 
 	tank1 = new FlxSprite(-300, 740);
-	tank1.frames = Files.getAtlas(Paths.image('tank3', 'stages/war'));
+	tank1.frames = Files.getAtlas(Paths.image('stages/war/tank3'));
 	tank1.animation.addByPrefix('idle', 'fg');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){tank1.animation.play('idle');}
+	if (Settings.get('Animated', 'GraphicSettings')) { tank1.animation.play('idle'); }
 	tank1.scrollFactor.set(2, 0.2);
-	add(tank1);
+	push(tank1);
 
 	tank2 = new FlxSprite(450, 940);
-	tank2.scrollFactor.set(1.5, 1.5);
-	tank2.frames = Files.getAtlas(Paths.image('tank1', 'stages/war'));
+	tank2.frames = Files.getAtlas(Paths.image('stages/war/tank1'));
 	tank2.animation.addByPrefix('idle', 'foreground');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){tank2.animation.play('idle');}
-	add(tank2);
+	if (Settings.get('Animated', 'GraphicSettings')) { tank2.animation.play('idle'); }
+	tank2.scrollFactor.set(1.5, 1.5);
+	push(tank2);
 
 	tank4 = new FlxSprite(1300, 900);
-	tank4.scrollFactor.set(1.5, 1.5);
-	tank4.frames = Files.getAtlas(Paths.image('tank2', 'stages/war'));
+	tank4.frames = Files.getAtlas(Paths.image('stages/war/tank2'));
 	tank4.animation.addByPrefix('idle', 'fg');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){tank4.animation.play('idle');}
-	add(tank4);
+	if (Settings.get('Animated', 'GraphicSettings')) { tank4.animation.play('idle'); }
+	tank4.scrollFactor.set(1.5, 1.5);
+	push(tank4);
 
 	tank5 = new FlxSprite(1620, 700);
-	tank5.scrollFactor.set(1.5, 1.5);
-	tank5.frames = Files.getAtlas(Paths.image('tank5', 'stages/war'));
+	tank5.frames = Files.getAtlas(Paths.image('stages/war/tank5'));
 	tank5.animation.addByPrefix('idle', 'fg');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){tank5.animation.play('idle');}
-	add(tank5);
+	if (Settings.get('Animated', 'GraphicSettings')) { tank5.animation.play('idle'); }
+	tank5.scrollFactor.set(1.5, 1.5);
+	push(tank5);
 
 	tank3 = new FlxSprite(1000, 740);
-	tank3.scrollFactor.set(2, 0.3);
-	tank3.frames = Files.getAtlas(Paths.image('tank3', 'stages/war'));
+	tank3.frames = Files.getAtlas(Paths.image('stages/war/tank3'));
 	tank3.animation.addByPrefix('idle', 'fg');
-	if(PreSettings.getPreSetting('Background Animated', 'Graphic Settings')){tank3.animation.play('idle');}
-	add(tank3);
+	if (Settings.get('Animated', 'GraphicSettings')) { tank3.animation.play('idle'); }
+	tank3.scrollFactor.set(2, 0.3);
+	push(tank3);
 
-	pushGlobal();
+	setGlobal();
 }
 
 function preload():Void {
-    shootStrumLine = getState().strumsGroup.members[2];
-    if(!PreSettings.getPreSetting("Background Animated", "Graphic Settings")){return;}
-    if(shootStrumLine == null){return;}
+    shootStrumLine = strums.members[2];
+    if (!Settings.get('Animated', 'GraphicSettings')) { return; }
+    if (shootStrumLine == null) { return; }
 
-    for(n in shootStrumLine.notelist){  
-        if(!FlxG.random.bool(16)){continue;}
+    for (n in shootStrumLine.notelist) {  
+        if (!FlxG.random.bool(16)) { continue; }
         
         var new_tank:FlxSprite = new FlxSprite(500, 200 + FlxG.random.int(50, 100));
         new_tank.flipX = n.noteData == 0;
@@ -192,19 +193,19 @@ function preload():Void {
         new_tank._.update = function(elpased:Float) {
             new_tank.visible = (new_tank.x > -0.5 * FlxG.width && new_tank.x < 1.2 * FlxG.width);
 
-            if(new_tank.animation.curAnim.name == "run"){
-                var speed:Float = (getState().conductor.position - new_tank._.strumTime) * new_tank._.tankSpeed;
+            if (new_tank.animation.curAnim.name == "run") {
+                var speed:Float = (conductor.position - new_tank._.strumTime) * new_tank._.tankSpeed;
                 
-                if(new_tank.flipX){new_tank.x = (0.02 * FlxG.width - new_tank._.endingOffset) + speed;}
-                else{new_tank.x = (0.74 * FlxG.width + new_tank._.endingOffset) - speed;}
-            }else if(new_tank.animation.curAnim.finished){
+                if (new_tank.flipX) {new_tank.x = (0.02 * FlxG.width - new_tank._.endingOffset) + speed; }
+                else{new_tank.x = (0.74 * FlxG.width + new_tank._.endingOffset) - speed; }
+            } else if (new_tank.animation.curAnim.finished) {
                 new_tank.kill();
-				Timer.delay(function(){new_tank.destroy();}, 500);
+				Timer.delay(function() {new_tank.destroy(); }, 500);
             }
     
-            if(getState().conductor.position > new_tank._.strumTime){
+            if (conductor.position > new_tank._.strumTime) {
                 new_tank.animation.play('shot');
-                if(new_tank.flipX){new_tank.offset.x = 300; new_tank.offset.y = 200;}
+                if (new_tank.flipX) { new_tank.offset.x = 300; new_tank.offset.y = 200; }
             }            
         }
 
@@ -213,7 +214,8 @@ function preload():Void {
 }
 
 function beatHit(curBeat:Int):Void {
-	if(!PreSettings.getPreSetting("Background Animated", "Graphic Settings")){return;}
+	if (!Settings.get('Animated', 'GraphicSettings')) { return; }
+	
     watchtower.animation.play('idle');
     tank0.animation.play('idle');
     tank1.animation.play('idle');
@@ -224,7 +226,8 @@ function beatHit(curBeat:Int):Void {
 }
 
 function update(elapsed) {
-    if(!PreSettings.getPreSetting("Background Animated", "Graphic Settings")){return;}
+    if (!Settings.get('Animated', 'GraphicSettings')) { return; }
+
     tankAngle += elapsed * tankSpeed;
     tankrolling.angle = tankAngle - 90 + 15;
     tankrolling.x = 400 + (1000 * Math.cos(Math.PI / 180 * (1 * tankAngle + 180)));

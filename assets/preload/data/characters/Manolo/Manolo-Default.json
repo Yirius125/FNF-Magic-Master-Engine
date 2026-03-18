@@ -1,85 +1,87 @@
 {
 	"aspect": "Default",
+	"icon": "manolo",
 	"position": [
 		10,
 		135
 	],
 	"scale": 1,
+	"name": "Manolo",
+	"image": "Manolo",
+	"zoom": 0.8,
+	"color": "#1c0d0d",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"skin": "Default",
+	"onRight": true,
+	"camera": [
+		221,
+		372
+	],
 	"animations": [
 		{
-			"loop": false,
 			"symbol": "DOWN",
-			"key": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
-			"loop": false,
 			"symbol": "BEATBOX DOWN",
-			"key": "singDOWN-alt",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWN-alt"
 		},
 		{
-			"loop": false,
 			"symbol": "IDLE",
-			"key": "idle",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
-			"loop": false,
 			"symbol": "LEFT",
-			"key": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
-			"loop": false,
 			"symbol": "BEATBOX LEFT",
-			"key": "singLEFT-alt",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFT-alt"
 		},
 		{
-			"loop": false,
 			"symbol": "RIGHT",
-			"key": "singRIGHT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"loop": false,
 			"symbol": "BEATBOX RIGHT",
-			"key": "singRIGHT-alt",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT-alt"
 		},
 		{
-			"loop": false,
 			"symbol": "UP",
-			"key": "singUP",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		},
 		{
-			"loop": false,
 			"symbol": "BEATBOX UP",
-			"key": "singUP-alt",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUP-alt"
 		}
-	],
-	"zoom": 0.8,
-	"image": "Manolo",
-	"name": "Manolo",
-	"antialiasing": true,
-	"camera": [
-		0,
-		-25
-	],
-	"icon": "manolo",
-	"onRight": true,
-	"skin": "Default",
-	"singTime": 1
+	]
 }

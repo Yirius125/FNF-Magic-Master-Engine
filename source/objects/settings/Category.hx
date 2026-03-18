@@ -15,7 +15,7 @@ class Category {
 
     public function get(_setting:String):Dynamic {
         var cur_setting:Setting = setting(_setting);
-        if(cur_setting == null){return null;}
+        if (cur_setting == null) { return null; }
         return cur_setting.value;
     }
     public function push(_setting:Setting):Void {
@@ -23,12 +23,12 @@ class Category {
     }
 
     public function setting(_name:String):Setting {
-        for(_setting in settings){
-            if(_setting.name != _name){continue;}
+        for (_setting in settings) {
+            if (_setting.name != _name) { continue; }
             return _setting;
         }
         return null;
     }
 
-    public function toString():String {return '{name: ${name}, settings: ${settings}}';}
+    public function toString():String { return '{name: ${name}, settings: ${settings}}'; }
 }

@@ -368,7 +368,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 		var pack = StringTools.trim(Description);
 		var lines:Array<String> = pack.split("\n");
-		for (i in 0...lines.length){
+		for (i in 0...lines.length) {
 			var _frame_data = lines[i].split(":");
 
 			var _name = StringTools.trim(_frame_data[0]);
@@ -379,7 +379,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			var _rect = FlxRect.get(Std.parseInt(_frame_region[0]), Std.parseInt(_frame_region[1]), Std.parseInt(_frame_region[2]), Std.parseInt(_frame_region[3]));
 
 			var _size = new Rectangle(0, 0, _rect.width, _rect.height);
-			if(_frame_size != null && _frame_size.length >= 4){_size = new Rectangle(Std.parseInt(_frame_size[0]), Std.parseInt(_frame_size[1]), Std.parseInt(_frame_size[2]), Std.parseInt(_frame_size[3]));}
+			if (_frame_size != null && _frame_size.length >= 4) {_size = new Rectangle(Std.parseInt(_frame_size[0]), Std.parseInt(_frame_size[1]), Std.parseInt(_frame_size[2]), Std.parseInt(_frame_size[3])); }
 			
 			var _offset = FlxPoint.get(-_size.left, -_size.top);
 			var _source_size = FlxPoint.get(_size.width, _size.height);

@@ -496,8 +496,8 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadGraphic(graphic:FlxGraphicAsset, animated = false, frameWidth = 0, frameHeight = 0, unique = false, ?key:String):FlxSprite
 	{
-		var graph:FlxGraphic = FlxG.bitmap.add(graphic, unique, key);
-		if (graph == null) { graph = Files.getGraphic(graphic); }
+		var graph:FlxGraphic = Files.getGraphic(graphic);
+		if (graph == null) { graph = FlxG.bitmap.add(graphic, unique, key); }
 		if (graph == null) { return this; }
 
 		if (frameWidth == 0)

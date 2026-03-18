@@ -58,42 +58,42 @@ class StaticNotes extends FlxUIGroup {
     public var style:String = StrumNote.STYLE_DEFAULT;
     public var type:String = Settings.get("NoteSkin");
 
-    public function new(X:Float, Y:Float, ?_keys:Int, ?_width:Int, ?_image:String, ?_style:String, ?_type:String){
-        if(_width != null){this.line_width = _width;}
-        if(_image != null){this.image = _image;}
-        if(_style != null){this.style = _style;}
-        if(_keys != null){this.keys = _keys;}
-        if(_type != null){this.type = _type;}
+    public function new(X:Float, Y:Float, ?_keys:Int, ?_width:Int, ?_image:String, ?_style:String, ?_type:String) {
+        if (_width != null) {this.line_width = _width; }
+        if (_image != null) {this.image = _image; }
+        if (_style != null) {this.style = _style; }
+        if (_keys != null) {this.keys = _keys; }
+        if (_type != null) {this.type = _type; }
         super(X, Y);
                         
         changeKeys(keys, line_width, true);
     }
     
-    public function playId(id:Int, anim:String, force:Bool = false){
+    public function playId(id:Int, anim:String, force:Bool = false) {
         var curStrum:StrumNote = statics[id];
-        if(curStrum == null){return;}
+        if (curStrum == null) { return; }
         curStrum.playAnim(anim, force);
     }
 
-    public function loadNotes(?_image:String, ?_style:String, ?_type:String){
-        if(_image != null){image = _image;} if(_style != null){style = _style;} if(_type != null){type = _type;}
-        for(key in statics){key.loadNote(image, style, type);}
+    public function loadNotes(?_image:String, ?_style:String, ?_type:String) {
+        if (_image != null) {image = _image; } if (_style != null) {style = _style; } if (_type != null) {type = _type; }
+        for (key in statics) {key.loadNote(image, style, type); }
     }
 
-    public function changeKeys(_keys:Int, ?_size:Int, ?force:Bool = false){
-        if((this.keys == _keys && !force) || _keys <= 0){return;}
+    public function changeKeys(_keys:Int, ?_size:Int, ?force:Bool = false) {
+        if ((this.keys == _keys && !force) || _keys <= 0) { return; }
         this.keys = _keys;
         
-        if(_size != null){this.line_width = _size;}
+        if (_size != null) { this.line_width = _size; }
         var strumSize:Int = Std.int(line_width / keys);
         
-        while(statics.length > 0){
+        while (statics.length > 0) {
             var cur_note = statics.shift();
             this.remove(cur_note);
             cur_note.destroy();
         }
 
-        for(i in 0...keys){
+        for (i in 0...keys) {
             var strum:StrumNote = new StrumNote(i, keys, image, style, type);
             strum.setGraphicSize(strumSize, strumSize);
             strum.updateHitbox();

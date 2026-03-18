@@ -47,16 +47,19 @@ class TitleState extends MusicBeatState {
 
 	var press_title:Alphabet;
 
-	public function new(started:Bool = true){
+	public function new(started:Bool = true) {
 		super();
 
 		this.toStart = started;
 	}
 
 	override public function create():Void {
+		intro_list = Language.get('intro_list');
+		
+		super.create();
+
 		FlxG.mouse.visible = false;
 
-		intro_list = Language.get('intro_list');
 		otherStuff.add(new FlxSprite());
 
 		gradient = FlxGradient.createGradientFlxSprite(FlxG.width, Std.int(FlxG.height / 2), [0x00000000, 0xFF23FFB6]);
@@ -80,29 +83,27 @@ class TitleState extends MusicBeatState {
 		press_title.cameras = [camFGame];
 		add(press_title);
 
-		super.create();
-
-		if(toStart){new FlxTimer().start(1, function(tmr:FlxTimer){if(inIntro){startIntro();}});}
+		if (toStart) { new FlxTimer().start(1, (tmr:FlxTimer) -> { if (inIntro) { startIntro(); }}); }
 	}
 
-	override function update(elapsed:Float){
-		if(FlxG.sound.music != null){conductor.position = FlxG.sound.music.time;}
+	override function update(elapsed:Float) {
+		if (FlxG.sound.music != null) {conductor.position = FlxG.sound.music.time; }
 
 		super.update(elapsed);
 
-		if(logo != null){logo.scale.set(FlxMath.lerp(logo.scale.x, 1, 0.1), FlxMath.lerp(logo.scale.y, 1, 0.1));}
+		if (logo != null) { logo.scale.set(FlxMath.lerp(logo.scale.x, 1, 0.1), FlxMath.lerp(logo.scale.y, 1, 0.1)); }
 
-		if(canControlle){
-			if(controls.check("MenuAccept")){
-				if(inIntro){
+		if (canControlle) {
+			if (controls.check("MenuAccept")) {
+				if (inIntro) {
 					skipIntro(true);
-				}else{
+				} else {
 					canControlle = false;
 					FlxG.sound.play(Paths.sound("confirmMenu").getSound());
 					camHUD.flash(FlxColor.WHITE, conductor.crochet / 4000, null, true);
 					FlxTween.tween(gradient, {y: FlxG.height}, 1, {ease: FlxEase.quadIn});
 					FlxTween.tween(press_title, {y: FlxG.height + 20}, 2, {ease: FlxEase.elasticOut});
-					FlxTween.tween(logo, {y: FlxG.height}, 1, {ease: FlxEase.quadIn, onComplete: function(twn){MusicBeatState.switchState("states.MainMenuState", []);}});
+					FlxTween.tween(logo, {y: FlxG.height}, 1, {ease: FlxEase.quadIn, onComplete: function(twn) {MusicBeatState.switchState("states.MainMenuState", []); }});
 				}
 			}
 		}
@@ -112,7 +113,7 @@ class TitleState extends MusicBeatState {
 	}
 	
 	private function changeAlpha(?new_data:Array<Dynamic>):Void {
-		if(new_data == null){new_data = [];}
+		if (new_data == null) {new_data = []; }
 		current_text.cur_data = new_data;
 		current_text.loadText();
 		current_text.screenCenter();
@@ -124,50 +125,50 @@ class TitleState extends MusicBeatState {
 	}
 	
 	private function skipIntro(forced:Bool = false):Void {
-		if(FlxG.sound.music == null){return;}
+		if (FlxG.sound.music == null) { return; }
 		inIntro = false;
 
-		if(forced){FlxG.sound.music.time = 47000;}
+		if (forced) {FlxG.sound.music.time = 47000; }
 
 		camHUD.flash(FlxColor.WHITE, conductor.crochet / 4000, null, true);
 		changeAlpha();
 		gradient.y = FlxG.height - gradient.height;
 		logo.visible = true;
-		Timer.delay(function(){FlxTween.tween(press_title, {y: FlxG.height - press_title.height - 10}, 1, {ease: FlxEase.elasticOut});}, Std.int(conductor.crochet));
+		Timer.delay(function() {FlxTween.tween(press_title, {y: FlxG.height - press_title.height - 10}, 1, {ease: FlxEase.elasticOut}); }, Std.int(conductor.crochet));
 	}
 
-	override function beatHit(){
+	override function beatHit() {
 		super.beatHit();
 
 		logo.scale.set(1.2, 1.2);
 
-		if(!toStart){toStart = true; skipIntro();}
+		if (!toStart) {toStart = true; skipIntro(); }
 
-		if(inIntro){
-			switch(curBeat){
-				case 4:{changeAlpha(Language.get('intro_1'));}
-				case 7:{changeAlpha();}
-				case 8:{changeAlpha(Language.get('intro_2'));}
-				case 11:{changeAlpha();}
-				case 12:{changeAlpha(Language.get('intro_3'));}
-				case 15:{changeAlpha();}
-				case 16:{changeAlpha(Language.get('intro_4'));}
-				case 19:{changeAlpha();}
-				case 20:{changeAlpha([intro_list[FlxG.random.int(0,intro_list.length-1)]]);}
-				case 23:{changeAlpha();}
-				case 24:{FlxTween.tween(gradient, {y: FlxG.height - gradient.height}, (conductor.crochet / 1000) * 6, {ease: FlxEase.quadInOut}); changeAlpha([intro_list[FlxG.random.int(0,intro_list.length-1)]]);}
-				case 27:{changeAlpha();}
-				case 28:{changeAlpha(Language.get('intro_5'));}
-				case 29:{changeAlpha(Language.get('intro_6'));}
-				case 30:{changeAlpha(Language.get('intro_7'));}
-				case 31:{changeAlpha(Language.get('intro_8'));}
-				case 32:{skipIntro();}
+		if (inIntro) {
+			switch (curBeat) {
+				case 4:{changeAlpha(Language.get('intro_1')); }
+				case 7:{changeAlpha(); }
+				case 8:{changeAlpha(Language.get('intro_2')); }
+				case 11:{changeAlpha(); }
+				case 12:{changeAlpha(Language.get('intro_3')); }
+				case 15:{changeAlpha(); }
+				case 16:{changeAlpha(Language.get('intro_4')); }
+				case 19:{changeAlpha(); }
+				case 20:{changeAlpha([intro_list[FlxG.random.int(0,intro_list.length-1)]]); }
+				case 23:{changeAlpha(); }
+				case 24:{FlxTween.tween(gradient, {y: FlxG.height - gradient.height}, (conductor.crochet / 1000) * 6, {ease: FlxEase.quadInOut}); changeAlpha([intro_list[FlxG.random.int(0,intro_list.length-1)]]); }
+				case 27:{changeAlpha(); }
+				case 28:{changeAlpha(Language.get('intro_5')); }
+				case 29:{changeAlpha(Language.get('intro_6')); }
+				case 30:{changeAlpha(Language.get('intro_7')); }
+				case 31:{changeAlpha(Language.get('intro_8')); }
+				case 32:{skipIntro(); }
 			}
 
-			//if(cur_text < 0){cur_text = 0;}
-			//if(cur_text >= intro_list.length){cur_text = intro_list.length - 1;}
+			//if (cur_text < 0) {cur_text = 0; }
+			//if (cur_text >= intro_list.length) {cur_text = intro_list.length - 1; }
 			//changeAlpha([intro_list[cur_text]]);
-		}else{
+		} else {
 			var sSize:Int = FlxG.random.int(20, 80);
 			var square:FlxSprite = otherStuff.recycle(FlxSprite);
 			square.setPosition(FlxG.random.float(0, FlxG.width) + 20, FlxG.height + 10);

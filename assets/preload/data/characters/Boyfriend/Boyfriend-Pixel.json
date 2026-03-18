@@ -1,87 +1,88 @@
 {
 	"aspect": "Pixel",
+	"icon": "bf-pixel",
 	"position": [
 		0,
 		320
 	],
 	"nAntialiasing": true,
 	"scale": 6,
+	"color": "#409fff",
+	"name": "Boyfriend",
+	"image": "bfPixel",
+	"zoom": 0.8,
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": false,
+	"skin": "Default",
+	"onRight": false,
+	"camera": [
+		199,
+		533
+	],
 	"animations": [
 		{
-			"loop": false,
 			"symbol": "BF DOWN MISS",
-			"key": "singDOWNmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWNmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF DOWN NOTE",
-			"key": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
-			"loop": false,
 			"symbol": "BF IDLE",
-			"key": "idle",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
-			"loop": false,
 			"symbol": "BF LEFT MISS",
-			"key": "singLEFTmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFTmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF LEFT NOTE",
-			"key": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
-			"loop": false,
 			"symbol": "BF RIGHT MISS",
-			"key": "singRIGHTmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHTmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF RIGHT NOTE",
-			"key": "singRIGHT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"loop": false,
 			"symbol": "BF UP MISS",
-			"key": "singUPmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUPmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF UP NOTE",
-			"key": "singUP",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		}
-	],
-	"zoom": 0.8,
-	"image": "bfPixel",
-	"name": "Boyfriend",
-	"antialiasing": false,
-	"singTime": 1,
-	"icon": "bf-pixel",
-	"camera": [
-		171,
-		213
-	],
-	"onRight": false,
-	"color": "#409fff",
-	"skin": "Default"
+	]
 }

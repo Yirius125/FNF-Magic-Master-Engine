@@ -11,8 +11,8 @@ typedef Event_Data = {
 class EventList extends FlxBasic {
     public static function sort(list:Array<Event_Data>):Void {
         list.sort(function(a, b) {
-            if(a.time < b.time) return -1;
-            else if(a.time > b.time) return 1;
+            if (a.time < b.time) return -1;
+            else if (a.time > b.time) return 1;
             else return 0;
         });
     }
@@ -26,54 +26,51 @@ class EventList extends FlxBasic {
     public var destroyEvents:Bool = true;
 
     public function new(?list:Array<Event_Data>):Void {
-        if(list != null){this.list = list;}
+        if (list != null) { this.list = list; }
         super();
     }
 
     override public function update(elapsed:Float):Void {
         super.update(elapsed);
 
-        if(list.length <= 0){return;}
+        if (list.length <= 0) { return; }
 
-        if(conductor == null){
+        if (conductor == null) {
             time += elapsed;
-            if(time >= list[0].time){execute();}
+            if (time >= list[0].time) { execute(); }
         } else {
-            if(conductor.position >= list[0].time){execute();}
+            if (conductor.position >= list[0].time) { execute(); }
         }
     }
 
     public function execute():Void {
         var cur_event:Event_Data = list.shift();
-        if(cur_event.method == null){return;}
+        if (cur_event.method == null) { return; }
+
         cur_event.method();
 
-        if(destroyEvents){
-            used.push(cur_event);
-            EventList.sort(used);
-        }
+        if (destroyEvents) { used.insert(0, cur_event); }
     }
 
     public function push(time:Float, method:Void->Void):Void {
-        list.push({time: time, method: method});
+        list.push({ time: time, method: method });
         EventList.sort(list);
     }
 
     public function reload():Void {
-        if(destroyEvents){return;}
-        while(used.length > 0){list.push(used.shift());}
+        if (destroyEvents) { return; }
+
+        while(used.length > 0) { list.push(used.shift()); }
         EventList.sort(list);
 
         while(
             conductor != null && list[0].time <= conductor.position ||
             list[0].time <= time
-        ){
-            used.push(list.shift());
-        }
+        ) { used.push(list.shift()); }
     }
 
     public function clear():Void {
-        while(list.length > 0){list.shift();}
-        while(used.length > 0){used.shift();}
+        while (list.length > 0) { list.shift(); }
+        while (used.length > 0) { used.shift(); }
     }
 }

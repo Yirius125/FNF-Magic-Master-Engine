@@ -6,22 +6,18 @@ import flixel.graphics.frames.FlxAtlasFrames;
 
 using utils.Files;
 
-class GitarooPause extends MusicBeatState
-{
+class GitarooPause extends MusicBeatState {
 	var replayButton:FlxSprite;
 	var cancelButton:FlxSprite;
 
 	var replaySelect:Bool = false;
 
-	public function new():Void
-	{
+	public function new():Void {
 		super();
 	}
 
-	override function create()
-	{
-		if (FlxG.sound.music != null)
-			FlxG.sound.music.stop();
+	override function create() {
+		if (FlxG.sound.music != null) { FlxG.sound.music.stop(); }
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('pauseAlt/pauseBG').getGraphic());
 		add(bg);
@@ -52,37 +48,26 @@ class GitarooPause extends MusicBeatState
 		super.create();
 	}
 
-	override function update(elapsed:Float)
-	{
-		if (controls.check("Menu_Left", JUST_PRESSED) || controls.check("MenuRight", JUST_PRESSED))
-			changeThing();
+	override function update(elapsed:Float) {
+		if (controls.check("MenuLeft", JUST_PRESSED) || controls.check("MenuRight", JUST_PRESSED)) { changeThing(); }
 
-		if (controls.check("MenuAccept", JUST_PRESSED))
-		{
-			if (replaySelect)
-			{
-				MusicBeatState.switchState("states.PlayState", []);
-			}
-			else
-			{
-				MusicBeatState.switchState("states.MainMenuState", []);
-			}
+		if (controls.check("MenuAccept", JUST_PRESSED)) {
+			if (replaySelect) {
+				VoidState.clearAssets = FlxG.keys.pressed.SHIFT;
+				Songs.play(Songs.isStoryMode);
+			} else { MusicBeatState.switchState("states.MainMenuState", []); }
 		}
 
 		super.update(elapsed);
 	}
 
-	function changeThing():Void
-	{
+	function changeThing():Void {
 		replaySelect = !replaySelect;
 
-		if (replaySelect)
-		{
+		if (replaySelect) {
 			cancelButton.animation.curAnim.curFrame = 0;
 			replayButton.animation.curAnim.curFrame = 1;
-		}
-		else
-		{
+		} else {
 			cancelButton.animation.curAnim.curFrame = 1;
 			replayButton.animation.curAnim.curFrame = 0;
 		}

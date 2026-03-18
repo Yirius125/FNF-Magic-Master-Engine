@@ -1,14 +1,11 @@
 
-import("flixel.util.FlxTimer", "FlxTimer");
-import("flixel.FlxSprite", "FlxSprite");
-import("haxe.Timer", "Timer");
-import("flixel.FlxG", "FlxG");
-
-import("Paths");
+import flixel.util.FlxTimer;
+import flixel.FlxSprite;
+import utils.Paths;
+import flixel.FlxG;
+import haxe.Timer;
 
 var blackScreen:FlxSprite;
-
-preset("endCountdown", true);
 
 function preload():Void {
     blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
@@ -18,9 +15,10 @@ function preload():Void {
     add(blackScreen);
 }
 
-function endSong(endCountdown:Void->Void):Void {
+function endSong(next:Void->Void):Void {
     blackScreen.visible = true;
+    
     FlxG.sound.play(Paths.sound("Lights_Shut_off","stages/mall"));
 
-    new FlxTimer().start(1, function(tmr:FlxTimer){endCountdown();});   
+    new FlxTimer().start(1, (_tmr:FlxTimer) -> { next(); });   
 }

@@ -77,7 +77,7 @@ class SingEditorSubState extends MusicBeatSubstate {
 
 		changeCharacter();
 
-		FlxTween.tween(curCamera, {alpha: 1}, 0.5, {onComplete: function(twn){canControlle = true;}});
+		FlxTween.tween(curCamera, {alpha: 1}, 0.5, {onComplete: function(twn) {canControlle = true; }});
 	}
 
 	override function create() {
@@ -92,37 +92,37 @@ class SingEditorSubState extends MusicBeatSubstate {
 
         doSing(elapsed);
 
-        var arrayControlle = true; for(item in arrayFocus){if(item.hasFocus){arrayControlle = false;}}
-        if(canControlle && arrayControlle){
-            if(FlxG.mouse.justPressedRight){pos = [[camFollow.x, camFollow.y],[FlxG.mouse.x, FlxG.mouse.y]];}
-            if(FlxG.mouse.pressedRight){camFollow.setPosition(pos[0][0] + (pos[1][0] - FlxG.mouse.x), pos[0][1] + (pos[1][1] - FlxG.mouse.y));}
+        var arrayControlle = true; for (item in arrayFocus) {if (item.hasFocus) {arrayControlle = false; }}
+        if (canControlle && arrayControlle) {
+            if (FlxG.mouse.justPressedRight) {pos = [[camFollow.x, camFollow.y],[FlxG.mouse.x, FlxG.mouse.y]]; }
+            if (FlxG.mouse.pressedRight) {camFollow.setPosition(pos[0][0] + (pos[1][0] - FlxG.mouse.x), pos[0][1] + (pos[1][1] - FlxG.mouse.y)); }
 
-            if(FlxG.keys.pressed.SHIFT){
-                if(FlxG.mouse.wheel != 0){curCamera.zoom += (FlxG.mouse.wheel * 0.1);}
+            if (FlxG.keys.pressed.SHIFT) {
+                if (FlxG.mouse.wheel != 0) {curCamera.zoom += (FlxG.mouse.wheel * 0.1); }
 				
-			}else{
-                if(FlxG.mouse.wheel != 0){curCamera.zoom += (FlxG.mouse.wheel * 0.01);}
+			} else {
+                if (FlxG.mouse.wheel != 0) {curCamera.zoom += (FlxG.mouse.wheel * 0.01); }
 			}
 
-			if(FlxG.keys.justPressed.A){changeCharacter(-1);}
-			if(FlxG.keys.justPressed.D){changeCharacter(1);}
+			if (FlxG.keys.justPressed.A) {changeCharacter(-1); }
+			if (FlxG.keys.justPressed.D) {changeCharacter(1); }
 
-			if(controls.check("MenuBack", JUST_PRESSED)){doClose();}
+			if (controls.check("MenuBack", JUST_PRESSED)) {doClose(); }
         }
 	}
 
     var holdSing:Float = 0.2;
     public function doSing(elapsed:Float):Void {
-        if(song_edit.strums[curStrum] == null){return;}
+        if (song_edit.strums[curStrum] == null) { return; }
         holdSing -= elapsed;
-        if(holdSing <= 0){
+        if (holdSing <= 0) {
             holdSing = 0.2;
             
             var toSing:Array<Int> = (song_edit.strums[curStrum].sections[curSection] != null && song_edit.strums[curStrum].sections[curSection].changeCharacters) ? song_edit.strums[curStrum].sections[curSection].characters.copy() : song_edit.strums[curStrum].characters.copy();
-            for(s in characters_stage.characterData){s.dance();}
-            for(s in toSing){
+            for (s in characters_stage.characterData) {s.dance(); }
+            for (s in toSing) {
                 var cur_character = characters_stage.characterData[s];
-                if(cur_character == null){continue;}
+                if (cur_character == null) { continue; }
                 cur_character.singAnim(singAnimations[FlxG.random.int(0, singAnimations.length - 1)], true);
             }
         }
@@ -131,12 +131,12 @@ class SingEditorSubState extends MusicBeatSubstate {
 
 	public function changeCharacter(value:Int = 0, force:Bool = false):Void {
 		curCharacter = force ? value : curCharacter + value;
-		if(curCharacter < 0){curCharacter = song_edit.characters.length - 1;}
-		if(curCharacter >= song_edit.characters.length){curCharacter = 0;}
+		if (curCharacter < 0) {curCharacter = song_edit.characters.length - 1; }
+		if (curCharacter >= song_edit.characters.length) {curCharacter = 0; }
 
-		for(c in characters_stage.characterData){c.alpha = 0.5;}
+		for (c in characters_stage.characterData) {c.alpha = 0.5; }
 		var selCharacter = characters_stage.characterData[curCharacter];
-		if(selCharacter != null){selCharacter.alpha = 1;}
+		if (selCharacter != null) {selCharacter.alpha = 1; }
 
         chkSing.checked = (song_edit.strums[curStrum].sections[curSection] != null && song_edit.strums[curStrum].sections[curSection].changeCharacters) ? song_edit.strums[curStrum].sections[curSection].characters.contains(curCharacter) : song_edit.strums[curStrum].characters.contains(curCharacter);
 	}
@@ -144,8 +144,8 @@ class SingEditorSubState extends MusicBeatSubstate {
 	public function doClose():Void {
 		canControlle = false;
 		subHUD.visible = false;
-		for(c in characters_stage.characterData){c.alpha = 1;}
-		FlxTween.tween(curCamera, {alpha: 0}, 0.5, {onComplete: function(twn){close();}});
+		for (c in characters_stage.characterData) {c.alpha = 1; }
+		FlxTween.tween(curCamera, {alpha: 0}, 0.5, {onComplete: function(twn) {close(); }});
 	}
 
 	override function close():Void {
@@ -164,8 +164,8 @@ class SingEditorSubState extends MusicBeatSubstate {
         tabMENU.name = "Characters";
         MENU.addGroup(tabMENU);
 
-        var btnPrevChar:FlxButton = new FlxCustomButton(25, 25, 100, null, "Previous Character", null, null, function(){changeCharacter(-1);}); tabMENU.add(btnPrevChar);
-        var btnNextChar:FlxButton = new FlxCustomButton(150, 25, 100, null, "Next Character", null, null, function(){changeCharacter(1);}); tabMENU.add(btnNextChar);
+        var btnPrevChar:FlxButton = new FlxCustomButton(25, 25, 100, null, "Previous Character", null, null, function() {changeCharacter(-1); }); tabMENU.add(btnPrevChar);
+        var btnNextChar:FlxButton = new FlxCustomButton(150, 25, 100, null, "Next Character", null, null, function() {changeCharacter(1); }); tabMENU.add(btnNextChar);
     
         chkSing = new FlxUICheckBox(25, 75, null, null, "Sing?", 100); tabMENU.add(chkSing);
 
@@ -177,19 +177,19 @@ class SingEditorSubState extends MusicBeatSubstate {
 	}
 
 	
-    override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>){
-        if(id == FlxUICheckBox.CLICK_EVENT){
+    override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
+        if (id == FlxUICheckBox.CLICK_EVENT) {
             var check:FlxUICheckBox = cast sender;
 			var wname = check.getLabel().text;
-			switch(wname){
+			switch (wname) {
                 case "Sing?":{
-                    if(song_edit.strums[curStrum] == null){return;}
+                    if (song_edit.strums[curStrum] == null) { return; }
                     var character_list = song_edit.strums[curStrum].sections[curSection] != null && song_edit.strums[curStrum].sections[curSection].changeCharacters ? song_edit.strums[curStrum].sections[curSection].characters : song_edit.strums[curStrum].characters;
                     if (check.checked) { character_list.push(curCharacter); } else { character_list.remove(curCharacter); }
                 }
                 case "Change Section Characters?":{
-                    if(song_edit.strums[curStrum] == null){return;}
-                    if(song_edit.strums[curStrum].sections[curSection] == null){return;}
+                    if (song_edit.strums[curStrum] == null) { return; }
+                    if (song_edit.strums[curStrum].sections[curSection] == null) { return; }
                     song_edit.strums[curStrum].sections[curSection].changeCharacters = check.checked;
                     changeCharacter();
                 }

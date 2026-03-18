@@ -48,82 +48,119 @@ typedef Event_Data = {
 class Note extends StrumNote {
     //Static Methods
     public static function compare(n1:Dynamic, n2:Dynamic, checkData:Bool = true, specific:Bool = false):Bool {
-        if((n1 == null || n2 == null)){return false;}
-        if(Math.abs(n1.strumTime - n2.strumTime) > 10){return false;}
-        if(checkData && (n1.keyData != n2.keyData)){return false;}
-        if(specific && (n1 != n2)){return false;}
+        if ((n1 == null || n2 == null)) { return false; }
+        if (Math.abs(n1.strumTime - n2.strumTime) > 10) { return false; }
+        if (checkData && (n1.keyData != n2.keyData)) { return false; }
+        if (specific && (n1 != n2)) { return false; }
         return true;
     }
 
     public static function getTypes():Array<String> {
         var toReturn:Array<String> = [];
-        for(i in Paths.readDirectory('assets/data/notes')){
-            #if sys if(!FileSystem.isDirectory(i)){continue;} #end
+
+        for (i in Paths.readDirectory('assets/data/notes')) {
+            #if sys if (!FileSystem.isDirectory(i)) { continue; } #end
+
             var cur_preset:String = i.split("/").pop();
-            if(toReturn.contains(cur_preset)){continue;}
+            if (toReturn.contains(cur_preset)) { continue; }
+
             toReturn.push(cur_preset);
         }
+
         return toReturn;
     }
     public static function getStyles(?type:String):Array<String> {
-        if(type == null){type = Settings.get("NoteSkin");}
+        if (type == null) { type = Settings.get("NoteSkin"); }
+
         var toReturn:Array<String> = [];
-        for(i in Paths.readDirectory('assets/shared/images/notes/$type')){
-            #if sys if(!FileSystem.isDirectory(i)){continue;} #end
+
+        for (i in Paths.readDirectory('assets/shared/images/notes/$type')) {
+            #if sys if (!FileSystem.isDirectory(i)) { continue; } #end
+
             var curStyle:String = i.split("/").pop();
-            if(toReturn.contains(curStyle)){continue;}
+            if (toReturn.contains(curStyle)) { continue; }
+
             toReturn.push(curStyle);
         }
+
         return toReturn;
     }
     public static function getPresets():Array<String> {
         var toReturn:Array<String> = ["Default"];
-        for(i in Paths.readDirectory('assets/data/notes')){
-            if(!i.endsWith(".json")){continue;}
+
+        for (i in Paths.readDirectory('assets/data/notes')) {
+            if (!i.endsWith(".json")) { continue; }
+            
             var curPreset:String = i.split("/").pop().replace(".json", "");
-            if(toReturn.contains(curPreset)){continue;}
+            if (toReturn.contains(curPreset)) { continue; }
+            
             toReturn.push(curPreset);
         }
+
         return toReturn;
     }
-    public static function getEvents(isNote:Bool = false, ?stage:String):Array<String> {
+    public static function getEvents(isNote:Bool = false, ?stage:String, ?song:String):Array<String> {
         var toReturn:Array<String> = [];
-        for(i in Paths.readDirectory('assets/data/events')){
-            if(!i.endsWith(".hx")){continue;}
+
+        for (i in Paths.readDirectory('assets/data/events/general')) {
+            if (!i.endsWith(".hx")) { continue; }
+            
             toReturn.push(i.split("/").pop().replace(".hx",""));
-        }        
-        if(isNote){
-            for(i in Paths.readDirectory('assets/data/note_events')){
-                if(!i.endsWith(".hx")){continue;}
+        }
+
+        if (isNote) {
+            for (i in Paths.readDirectory('assets/data/events/note')) {
+                if (!i.endsWith(".hx")) { continue; }
+
                 toReturn.push(i.split("/").pop().replace(".hx",""));
             }
         }
-        if(stage != null){
-            for(i in Paths.readDirectory('assets/stages/${stage}/events')){
-                if(!i.endsWith(".hx")){continue;}
+
+        toReturn.sort((_a:String, _b:String) -> {
+            _a = _a.toLowerCase();
+            _b = _b.toLowerCase();
+            
+            if (_a < _b) { return -1; }
+            if (_a > _b) { return 1; }
+            return 0;
+        });
+        
+        if (stage != null) {
+            for (i in Paths.readDirectory('assets/data/events/stage/${stage}')) {
+                if (!i.endsWith(".hx")) { continue; }
+
                 toReturn.push(i.split("/").pop().replace(".hx", ""));
             }
         }
+        
+        if (song != null) {
+            for (i in Paths.readDirectory('assets/data/events/song/${song}')) {
+                if (!i.endsWith(".hx")) { continue; }
+
+                toReturn.push(i.split("/").pop().replace(".hx", ""));
+            }
+        }
+
         return toReturn;
     }
 
     public static function set_note(n1:Array<Dynamic>, n2:Array<Dynamic>):Void {
-        if(!(n1 is Array) || !(n2 is Array)){return;}
-        for(i in 0...n2.length){
-            if(n1.length <= i){
+        if (!(n1 is Array) || !(n2 is Array)) { return; }
+        for (i in 0...n2.length) {
+            if (n1.length <= i) {
                 n1.push(n2[i]);
-            }else{
+            } else{
                 n1[i] = n2[i];
             }
         }
     }
     
     public static function convNoteData(data:Note_Data):Array<Dynamic> {
-        if(data == null){return null;}
+        if (data == null) { return null; }
         return [data.strumTime, data.keyData, data.sustainLength, data.multiHits, data.preset, data.eventData, data.otherStuff];
     }
     public static function convEventData(data:Event_Data):Array<Dynamic> {
-        if(data == null){return null;}
+        if (data == null) { return null; }
         return [data.strumTime, data.eventData, data.condition, data.isExternal, data.isBroken];
     }
     
@@ -138,15 +175,15 @@ class Note extends StrumNote {
             otherStuff: []
         }
 
-        if(note == null){return toReturn;}
+        if (note == null) { return toReturn; }
 
-        if(note.length >= 0 && Std.isOfType(note[0], Float)){toReturn.strumTime = note[0];}
-        if(note.length >= 1 && Std.isOfType(note[1], Int)){toReturn.keyData = note[1];}    
-        if(note.length >= 2 && Std.isOfType(note[2], Float)){toReturn.sustainLength = note[2];}      
-        if(note.length >= 3 && Std.isOfType(note[3], Int)){toReturn.multiHits = note[3];}
-        if(note.length >= 4 && Std.isOfType(note[4], String)){toReturn.preset = note[4];}
-        if(note.length >= 5 && Std.isOfType(note[5], Array)){toReturn.eventData = note[5];}
-        if(note.length >= 6 && Std.isOfType(note[6], Array)){toReturn.otherStuff = note[6];}
+        if (note.length >= 0 && Std.isOfType(note[0], Float)) {toReturn.strumTime = note[0]; }
+        if (note.length >= 1 && Std.isOfType(note[1], Int)) {toReturn.keyData = note[1]; }    
+        if (note.length >= 2 && Std.isOfType(note[2], Float)) {toReturn.sustainLength = note[2]; }      
+        if (note.length >= 3 && Std.isOfType(note[3], Int)) {toReturn.multiHits = note[3]; }
+        if (note.length >= 4 && Std.isOfType(note[4], String)) {toReturn.preset = note[4]; }
+        if (note.length >= 5 && Std.isOfType(note[5], Array)) {toReturn.eventData = note[5]; }
+        if (note.length >= 6 && Std.isOfType(note[6], Array)) {toReturn.otherStuff = note[6]; }
         
         return toReturn;
     }
@@ -160,17 +197,17 @@ class Note extends StrumNote {
             isBroken: false
         }
 
-        if(event == null){return toReturn;}
+        if (event == null) { return toReturn; }
 
-        if(event.length >= 0 && Std.isOfType(event[0], Float)){toReturn.strumTime = event[0];}
-        if(event.length >= 1 && Std.isOfType(event[1], Array)){
-            for(e in cast(event[1],Array<Dynamic>)){
-                if(e.length <= 1){e = [e[0], []];}
-                if(!Std.isOfType(e[0], String)){e[0] = "None";}
-                if(!Std.isOfType(e[1], Array)){
+        if (event.length >= 0 && Std.isOfType(event[0], Float)) { toReturn.strumTime = event[0]; }
+        if (event.length >= 1 && Std.isOfType(event[1], Array)) {
+            for (e in cast(event[1],Array<Dynamic>)) {
+                if (e.length <= 1) {e = [e[0], []]; }
+                if (!Std.isOfType(e[0], String)) {e[0] = "None"; }
+                if (!Std.isOfType(e[1], Array)) {
                     var new_event_data:Array<Dynamic> = [e[1]];
-                    if(e.length > 2){
-                        for(i in 2...cast(e,Array<Dynamic>).length){
+                    if (e.length > 2) {
+                        for (i in 2...cast(e,Array<Dynamic>).length) {
                             new_event_data.push(e[i]);
                             e.remove(e[i]);
                         }
@@ -181,9 +218,9 @@ class Note extends StrumNote {
             toReturn.eventData = event[1];
 
         }
-        if(event.length >= 2 && Std.isOfType(event[2], String)){toReturn.condition = event[2];}
-        if(event.length >= 3 && event[3]){toReturn.isExternal = true;}
-        if(event.length >= 4 && event[4]){toReturn.isBroken = true;}
+        if (event.length >= 2 && Std.isOfType(event[2], String)) {toReturn.condition = event[2]; }
+        if (event.length >= 3 && event[3]) {toReturn.isExternal = true; }
+        if (event.length >= 4 && event[4]) {toReturn.isBroken = true; }
 
         return toReturn;
     }
@@ -223,8 +260,8 @@ class Note extends StrumNote {
 
     public var singCharacters:Array<Int> = null;
         
-	public function new(data:Note_Data, noteKeys:Int, ?_image:String, ?_style:String, ?_type:String){
-        if(data.eventData != null){this.otherData = data.eventData.copy();}
+	public function new(data:Note_Data, noteKeys:Int, ?_image:String, ?_style:String, ?_type:String) {
+        if (data.eventData != null) { this.otherData = data.eventData.copy(); }
         this.noteLength = data.sustainLength;
         this.strumTime = data.strumTime;
         this.noteHits = data.multiHits;
@@ -245,28 +282,29 @@ class Note extends StrumNote {
     public function loadPreset(preset:String):Void {
         typePreset = preset;
 
-        var json_path:String = Paths.getPath('${preset}.json', TEXT, 'notes');
-        if(preset != "" && Paths.exists(json_path)){
+        var json_path:String = Paths.preset(preset);
+        if (preset != "" && Paths.exists(json_path)) {
             var eventList:Dynamic = json_path.getJson();
             otherData = eventList.Events;
         }
     }
 
-    public function execute_events(type:String){
-        for(cur_action in otherData){
-            if(cur_action[2] != type){continue;}
+    public function execute_events(type:String) {
+        for (cur_action in otherData) {
+            if (cur_action[2] != type) { continue; }
 
-            if((cur_action[0] is String)){
+            if ((cur_action[0] is String)) {
                 var action_script:Script = MusicBeatState.state.scripts.get(cur_action[0]);
-                if(action_script == null){trace('Null Event: ${cur_action[0]}'); continue;}
+                if (action_script == null) { trace('Null Event: ${cur_action[0]}'); continue; }
+                action_script.setVar("_note", this);
                 action_script.call("execute", cast(cur_action[1], Array<Dynamic>));
-            }else{
+            } else {
                 cur_action[0](cast(cur_action[1], Array<Dynamic>));
             }
         }
     }
 
-    override public function playAnim(anim:String, force:Bool = false){
+    override public function playAnim(anim:String, force:Bool = false) {
 		animation.play(anim, force);
         flipY = typeHit == "Hold" ? Settings.get("DownScroll") : false;
 	}

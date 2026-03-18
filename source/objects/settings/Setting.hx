@@ -17,7 +17,7 @@ class Setting {
     public var id(default, null):String;
 
     public var value(get, never):Dynamic;
-    public function get_value():Dynamic {return null;}
+    public function get_value():Dynamic { return null; }
 
     public function new(_name):Void {
         this.name = _name;

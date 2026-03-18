@@ -18,7 +18,7 @@ class Discord {
 
 		trace("Discord Client started!");
 
-		while(true){
+		while(true) {
 			DiscordRpc.process();
 			sleep(2);
 		}
@@ -28,18 +28,18 @@ class Discord {
 	}
 
     public static function init():Void {
-		var DiscordDaemon = sys.thread.Thread.create(() -> {new Discord();});
+		var DiscordDaemon = sys.thread.Thread.create(() -> {new Discord(); });
 		trace("Discord Client initialized");
     }
 
-	public static function shutdown(){
+	public static function shutdown() {
         DiscordRpc.shutdown();
 		trace("Discord Client closed");
     }
 
     public static function change(details:String, state:Null<String>, ?small_image:String, ?has_start:Bool, ?end_time:Float):Void {
 		var start_time:Float = has_start ? Date.now().getTime() : 0;
-		if(end_time > 0){end_time = start_time + end_time;}
+		if (end_time > 0) {end_time = start_time + end_time; }
 
 		DiscordRpc.presence({
 			largeImageText: "Magic Master Engine'",
@@ -60,10 +60,10 @@ class Discord {
 			state: null,
 		});
     }
-	private static function onError(_code:Int, _message:String){
+	private static function onError(_code:Int, _message:String) {
         trace('Error! $_code : $_message');
     }
-	private static function onDisconnected(_code:Int, _message:String){
+	private static function onDisconnected(_code:Int, _message:String) {
         trace('Disconnected! $_code : $_message');
     }
 }

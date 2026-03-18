@@ -1,85 +1,87 @@
 {
 	"aspect": "Default",
+	"icon": "pico",
 	"position": [
 		-5,
 		290
 	],
 	"scale": 1,
+	"color": "#eb7515",
+	"zoom": 0.8,
+	"image": "Pico_FNF_Assetss",
+	"name": "Pico",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"camera": [
+		196,
+		531
+	],
+	"onRight": false,
+	"skin": "Default",
 	"animations": [
 		{
+			"loop": false,
 			"symbol": "Pico Down Note",
-			"loop": false,
 			"fps": 24,
-			"key": "singDOWN",
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
+			"loop": false,
 			"symbol": "MISS Pico Down Note",
-			"loop": false,
 			"fps": 24,
-			"key": "singDOWNmiss",
-			"indices": []
+			"indices": [],
+			"key": "singDOWNmiss"
 		},
 		{
+			"loop": false,
 			"symbol": "Pico Idle Dance",
-			"loop": false,
 			"fps": 24,
-			"key": "idle",
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
+			"loop": false,
 			"symbol": "Pico NOTE LEFT",
-			"loop": false,
 			"fps": 24,
-			"key": "singLEFT",
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
+			"loop": false,
 			"symbol": "miss Pico NOTE LEFT",
-			"loop": false,
 			"fps": 24,
-			"key": "singLEFTmiss",
-			"indices": []
+			"indices": [],
+			"key": "singLEFTmiss"
 		},
 		{
+			"loop": false,
 			"symbol": "Pico Note Right",
-			"loop": false,
 			"fps": 24,
-			"key": "singRIGHT",
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
+			"loop": false,
 			"symbol": "Miss Pico Note Right",
-			"loop": false,
 			"fps": 24,
-			"key": "singRIGHTmiss",
-			"indices": []
+			"indices": [],
+			"key": "singRIGHTmiss"
 		},
 		{
+			"loop": false,
 			"symbol": "pico Up note",
-			"loop": false,
 			"fps": 24,
-			"key": "singUP",
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		},
 		{
-			"symbol": "miss pico Up note",
 			"loop": false,
+			"symbol": "miss pico Up note",
 			"fps": 24,
-			"key": "singUPmiss",
-			"indices": []
+			"indices": [],
+			"key": "singUPmiss"
 		}
-	],
-	"name": "Pico",
-	"image": "Pico_FNF_Assetss",
-	"zoom": 0.8,
-	"antialiasing": true,
-	"singTime": 1,
-	"skin": "Default",
-	"onRight": false,
-	"icon": "pico",
-	"camera": [
-		-29,
-		0
 	]
 }

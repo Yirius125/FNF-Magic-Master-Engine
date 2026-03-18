@@ -34,7 +34,7 @@ class Info_Field extends TextField {
 
 	public function get_fps(currentCount:Int):Int { return Math.round((currentCount + cacheCount) / 2); }
 
-	public function new(x:Float = 10, y:Float = 10, color:Int = 0x000000){
+	public function new(x:Float = 10, y:Float = 10, color:Int = 0x000000) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -51,7 +51,7 @@ class Info_Field extends TextField {
 	}
 
 	private function update_text(currentCount:Int):Void {
-		if(!visible || currentCount == cacheCount){return;}
+		if (!visible || currentCount == cacheCount) { return; }
 		this.text = "";
 		
 		var current_memory:Float = 0;
@@ -61,7 +61,7 @@ class Info_Field extends TextField {
 		current_memory = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 		#end
 		
-		if(current_memory >= 1000){
+		if (current_memory >= 1000) {
 			current_memory = FlxMath.roundDecimal(current_memory / 1000, 2);
 			size_memory = "GB";
 		}
@@ -70,7 +70,7 @@ class Info_Field extends TextField {
 		text += "FPS: " + get_fps(currentCount);
 
 		textColor = 0xFFFFFFFF;
-		if (current_memory > 3000 || get_fps(currentCount) <= Settings.get("FrameRate") / 2){textColor = 0xFFFF0000;}
+		if (current_memory > 3000 || get_fps(currentCount) <= Settings.get("FrameRate") / 2) {textColor = 0xFFFF0000; }
 
 		#if (gl_stats && !disable_cffi && (!html5 || !canvas))
 		text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
@@ -86,7 +86,7 @@ class Info_Field extends TextField {
 		currentTime += deltaTime;
 		times.push(currentTime);
 
-		while (times[0] < currentTime - 1000){times.shift();}
+		while (times[0] < currentTime - 1000) {times.shift(); }
 
 		update_text(times.length);
 

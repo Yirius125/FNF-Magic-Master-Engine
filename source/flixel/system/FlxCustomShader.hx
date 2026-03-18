@@ -1,92 +1,65 @@
 package flixel.system;
 
-import flixel.ui.*;
-import flixel.util.*;
-import flixel.addons.ui.*;
-import flixel.addons.ui.interfaces.*;
-
-import openfl.Lib;
-import flixel.FlxG;
-import flixel.FlxBasic;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.math.FlxMath;
-import flixel.math.FlxRect;
-import flixel.text.FlxText;
-import flixel.math.FlxPoint;
-import openfl.display.Shader;
-import flixel.sound.FlxSound;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxStringUtil;
-import flixel.util.FlxDestroyUtil;
-import flixel.graphics.FlxGraphic;
-import flixel.group.FlxSpriteGroup;
-import openfl.display.GraphicsShader;
-import flixel.addons.text.FlxTypeText;
-import flixel.addons.ui.FlxUI.NamedFloat;
+import flixel.addons.display.FlxRuntimeShader;
 import flixel.system.FlxAssets.FlxShader;
+import flixel.FlxG;
 
-using utils.Files;
-using StringTools;
-
-#if FLX_DRAW_QUADS
-class FlxCustomShader extends FlxShader {
+class FlxCustomShader extends FlxRuntimeShader {
     public static var shaders:Array<FlxCustomShader> = [];
 
-    @:glFragmentHeader('
+    public static var HEADER_DEFAULT:String = '
+        #pragma header
+
         #define iResolution openfl_TextureSize
         #define iChannel0 bitmap
         
         uniform float iTime;
-        uniform vec2 iScroll;
-        uniform vec4 iMouse;
-        uniform float iFrame;
         uniform float iTimeDelta;
 
-        uniform vec3 iGlobalResolution;
-    ')
-	@:glFragmentSource("
-        #pragma header
-    ")
+        uniform vec4 iMouse;
+        uniform vec2 iScroll;
 
-    public function new(options:{?fragmentsrc:String, ?vertexsrc:String}){
-        if(options.fragmentsrc != null){this.glFragmentSource += '${options.fragmentsrc}';}
-        if(options.vertexsrc != null){this.glVertexSource += '${options.vertexsrc}';}
-        this.glFragmentSource += '
-            void main(){
-                gl_FragColor = flixel_texture2D(bitmap, openfl_TextureCoordv);
-                vec2 coord = openfl_TextureCoordv;
-                vec2 fragCoord = (coord * openfl_TextureSize);
-                mainImage(gl_FragColor, fragCoord);
-            }
-        ';
-        super();
+        uniform vec3 iGlobalResolution;
+    ';
+
+    public static var BODY_DEFAULT:String = '
+        void main() {
+            gl_FragColor = flixel_texture2D(bitmap, openfl_TextureCoordv);
+            
+            vec2 coord = openfl_TextureCoordv;
+            vec2 fragCoord = (coord * openfl_TextureSize);
+            
+            mainImage(gl_FragColor, fragCoord);
+        }
+    ';
+
+    public function new(options:{?fragmentsrc:String, ?vertexsrc:String}) {
+        var l_scriptCode:String = '${FlxCustomShader.HEADER_DEFAULT}';
+        if (options.fragmentsrc != null) { l_scriptCode += '${options.fragmentsrc}'; }
+        l_scriptCode += '${FlxCustomShader.BODY_DEFAULT}';
+
+        super(l_scriptCode, options.vertexsrc);
         
-		iTime.value = [0.0];
-		iTimeDelta.value = [0.0];
-        iScroll.value = [0.0, 0.0];
-		iMouse.value = [0.0, 0.0, 0.0, 0.0];
-		iFrame.value = [FlxG.game.focusLostFramerate];
-		iGlobalResolution.value = [FlxG.width, FlxG.height, 0];
+        setFloat("iTime", 0.0);
+        setFloat("iFrame", 0.0);
+        setFloat("iTimeDelta", 0.0);
+        setFloatArray("iScroll", [0.0, 0.0]);
+        setFloatArray("iMouse", [0.0, 0.0, 0.0, 0.0]);
+        setFloatArray("iGlobalResolution", [FlxG.width, FlxG.height, 0]);
 
         FlxCustomShader.shaders.push(this);
     }
 
     public function update(elapsed:Float):Void {
-        iTime.value[0] += elapsed;
-        iTimeDelta.value[0] = elapsed;
-
-        iMouse.value[0] = FlxG.mouse.screenX;
-        iMouse.value[1] = FlxG.mouse.screenY;
-        iMouse.value[2] = FlxG.mouse.pressed ? FlxG.mouse.screenX : 0.0;
-        iMouse.value[2] = FlxG.mouse.pressed ? FlxG.mouse.screenY : 0.0;
+        var l_curTime = getFloat("iTime");
         
-        iScroll.value = [FlxG.camera.scroll.x, FlxG.camera.scroll.y];
-    }
+        setFloat("iTime", l_curTime + elapsed);
+        setFloat("iTimeDelta", elapsed);
 
-    public function set_value(field:String, value:Dynamic):Void {
-        if(!Reflect.hasField(this, field)){return;}
-        Reflect.getProperty(this, field).value = [value];
+        var l_mouseX:Float = FlxG.mouse.screenX;
+        var l_mouseY:Float = FlxG.mouse.screenY; 
+
+        setFloatArray("iMouse", [l_mouseX, l_mouseY, FlxG.mouse.pressed ? l_mouseX : 0, FlxG.mouse.pressed ? l_mouseY : 0]);
+        setFloatArray("iScroll", [FlxG.camera.scroll.x, FlxG.camera.scroll.y]);
     }
 }
-#end

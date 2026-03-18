@@ -38,8 +38,8 @@ class VoidState extends FlxState {
         super();
     }
 
-	override function create(){
-		if(clearAssets){Files.clearMemoryAssets();}else{trace("Not Clearing");}
+	override function create() {
+		if (clearAssets) { Files.clearMemoryAssets(); } else { trace("Not Clearing"); }
         clearAssets = true;
         FlxG.switchState(target);
     }

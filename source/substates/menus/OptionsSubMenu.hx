@@ -19,8 +19,8 @@ class OptionsSubMenu extends SubMenu {
     public var arrOptions(get, never):Array<MenuButton>;
     public function get_arrOptions():Array<MenuButton> {
         var toReturn:Array<MenuButton> = [];
-        for(option in gpOptions.members){
-            if(!(option is MenuButton)){continue;}
+        for (option in gpOptions.members) {
+            if (!(option is MenuButton)) { continue; }
             var curButton:MenuButton = cast option;
             toReturn.push(curButton);
         }
@@ -43,7 +43,7 @@ class OptionsSubMenu extends SubMenu {
 
         var curWidth:Float = 0;
         gpOptions = new FlxUIGroup();
-        for(option in options){
+        for (option in options) {
             var newButton:MenuButton = new MenuButton(curWidth, 0, Language.getText('opt_${option.display}'), 0.4, option.method);
             newButton.skipTransition = true;
             curWidth += newButton.width + 10;
@@ -67,23 +67,23 @@ class OptionsSubMenu extends SubMenu {
     override function update(elapsed:Float):Void {
         super.update(elapsed);
 
-        if(!canControlle){return;}
+        if (!canControlle) { return; }
 
-        if(controls.check("MenuLeft")){changeOption(-1);}
-        if(controls.check("MenuRight")){changeOption(1);}
-        if(controls.check("MenuAccept")){chooseOption();}
+        if (controls.check("MenuLeft")) {changeOption(-1); }
+        if (controls.check("MenuRight")) {changeOption(1); }
+        if (controls.check("MenuAccept")) {chooseOption(); }
     }
 
     public function changeOption(_value:Int = 0, _force:Bool = false):Void {
         curOption = _force ? _value : curOption + _value;
 
-        if(curOption < 0){curOption = 1;}
-        if(curOption > 1){curOption = 0;}
+        if (curOption < 0) {curOption = 1; }
+        if (curOption > 1) {curOption = 0; }
 
-        for(option in arrOptions){option.disable();}
+        for (option in arrOptions) {option.disable(); }
         arrOptions[curOption].enable();
 
-        if(!_force){FlxG.sound.play(Paths.sound("scrollMenu").getSound(), 0.5);}
+        if (!_force) {FlxG.sound.play(Paths.sound("scrollMenu").getSound(), 0.5); }
     }
 
     public function chooseOption():Void {
@@ -93,7 +93,7 @@ class OptionsSubMenu extends SubMenu {
         
         FlxG.sound.play(Paths.sound("confirmMenu").getSound(), 0.5);
         
-        Timer.delay(()->{doClose();}, 1000);
+        Timer.delay(()->{doClose(); }, 1000);
     }
 
     override function close():Void {

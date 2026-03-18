@@ -123,6 +123,13 @@
             "color": "#1a172b"
         },
         {
+            "song": "StereoFunk",
+            "categories": [{"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}],
+            "keyLock": null,
+            "hidden": false,
+            "color": "#db1fa6"
+        },
+        {
             "song": "Test",
             "categories": [{"name": "Normal", "difficulties": ["Easy", "Normal", "Hard"]}],
             "keyLock": null,

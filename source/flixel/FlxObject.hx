@@ -879,7 +879,7 @@ class FlxObject extends FlxBasic
 		wasTouching = touching;
 		touching = FlxDirectionFlags.NONE;
 		
-		if(_.update != null){_.update(elapsed);}
+		if (_.update != null) { _.update(elapsed); }
 	}
 
 	/**

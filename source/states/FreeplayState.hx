@@ -57,14 +57,14 @@ class FreeplayState extends MusicBeatState {
 
     var curOption:Int = 1;
 
-	public function new(?onConfirm:String, ?onBack:String, ?_onSelect:Song_File->Void){
+	public function new(?onConfirm:String, ?onBack:String, ?_onSelect:Song_File->Void) {
 		this.onSelect = _onSelect;
 		super(onConfirm, onBack);
 	}
 
-	override function create(){
-		if(FlxG.sound.music == null || (FlxG.sound.music != null && !FlxG.sound.music.playing)){FlxG.sound.playMusic(Paths.music('freakyMenu').getSound());}
-		if(onSelect == null){onSelect = chooseSong;}
+	override function create() {
+		if (FlxG.sound.music == null || (FlxG.sound.music != null && !FlxG.sound.music.playing)) { FlxG.sound.playMusic(Paths.music('freakyMenu').getSound()); }
+		if (onSelect == null) { onSelect = chooseSong; }
 
 		#if desktop
 		// Updating Discord Rich Presence
@@ -73,6 +73,7 @@ class FreeplayState extends MusicBeatState {
 		#end
 
 		songs = new SongList().setup();
+		songs.removeHiddens();
 		
 		background = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
 		background.setGraphicSize(FlxG.width, FlxG.height);
@@ -89,12 +90,12 @@ class FreeplayState extends MusicBeatState {
 		add(gradient);
 		
 		grpSongs = new FlxTypedGroup<Alphabet>();
-		for(i in 0...songs.list.length){
+		for (i in 0...songs.list.length) {
 			var songText:Alphabet = new Alphabet(0, 0, [{bold: true, text: Paths.format(songs.get(i).song)}]);
 
-			if(Highscore.isLock(songs.get(i).keyLock)){
+			if (Highscore.isLock(songs.get(i).keyLock)) {
 				var cText:String = "";
-				while(cText.length < songText.text.length){cText = '${cText}?';}
+				while(cText.length < songText.text.length) { cText = '${cText}?'; }
 				songText.text = cText; songText.loadText();
 			}
 
@@ -113,7 +114,7 @@ class FreeplayState extends MusicBeatState {
 		
         //Adding Arrows
         grpArrows = new FlxTypedGroup<FlxSprite>();
-        for(i in 0...2){
+        for (i in 0...2) {
             var arrow_1:FlxSprite = new FlxSprite();
             arrow_1.frames = Paths.image('arrows').getAtlas();
             arrow_1.animation.addByPrefix('idle', 'Arrow Idle');
@@ -122,9 +123,9 @@ class FreeplayState extends MusicBeatState {
             arrow_1.scale.set(0.3, 0.3);
             arrow_1.updateHitbox();
             
-            switch(i){
-                case 0:{arrow_1.angle = 90;}
-                case 1:{arrow_1.angle = 270;}
+            switch (i) {
+                case 0:{arrow_1.angle = 90; }
+                case 1:{arrow_1.angle = 270; }
             }
 
 			arrow_1.screenCenter(X);
@@ -145,101 +146,101 @@ class FreeplayState extends MusicBeatState {
 		super.create();
 	}
 
-	override function update(elapsed:Float){
-		if(FlxG.sound.music.volume < 0.8){FlxG.sound.music.volume += 0.5 * FlxG.elapsed;}
+	override function update(elapsed:Float) {
+		if (FlxG.sound.music.volume < 0.8) {FlxG.sound.music.volume += 0.5 * FlxG.elapsed; }
 
 		Magic.sortMembersByY(cast grpSongs, (FlxG.height / 2) - (grpSongs.members[curSong].height / 2), curSong, 25);
 	
-		if(canControlle){
-			if(controls.check("MenuLeft", JUST_PRESSED)){changeOption(-1);}
-			if(controls.check("MenuRight", JUST_PRESSED)){changeOption(1);}
+		if (canControlle) {
+			if (controls.check("MenuLeft", JUST_PRESSED)) {changeOption(-1); }
+			if (controls.check("MenuRight", JUST_PRESSED)) {changeOption(1); }
 
-			switch(curOption){
+			switch (curOption) {
 				case 0:{
-					if(controls.check("MenuUp", JUST_PRESSED)){changeCategory(-1);}
-					if(controls.check("MenuDown", JUST_PRESSED)){changeCategory(1);}
+					if (controls.check("MenuUp", JUST_PRESSED)) {changeCategory(-1); }
+					if (controls.check("MenuDown", JUST_PRESSED)) {changeCategory(1); }
 	
-					for(a in grpArrows.members){Magic.lerpX(cast a, category.x+(category.width/2)-(a.width/2));}	
+					for (a in grpArrows.members) {Magic.lerpX(cast a, category.x+(category.width/2)-(a.width/2)); }	
 					grpArrows.members[0].y = category.y - grpArrows.members[0].height - 5;
 					grpArrows.members[1].y = category.y + category.height + 5;
 
 					Magic.lerpX(cast difficulty, FlxG.width + 10);
 					Magic.lerpX(cast category, 250 - (category.width / 2));
-					for(s in grpSongs){s.x = FlxMath.lerp(s.x, FlxG.width - s.width - 5, 0.1);}
+					for (s in grpSongs) {s.x = FlxMath.lerp(s.x, FlxG.width - s.width - 5, 0.1); }
 				}
 				case 1:{
-					if(controls.check("MenuUp", JUST_PRESSED)){changeSong(-1);}
-					if(controls.check("MenuDown", JUST_PRESSED)){changeSong(1);}
+					if (controls.check("MenuUp", JUST_PRESSED)) {changeSong(-1); }
+					if (controls.check("MenuDown", JUST_PRESSED)) {changeSong(1); }
 	
-					for(a in grpArrows.members){Magic.lerpX(cast a, (FlxG.width / 2) - (a.width / 2));}
+					for (a in grpArrows.members) {Magic.lerpX(cast a, (FlxG.width / 2) - (a.width / 2)); }
 					grpArrows.members[0].y = (FlxG.height / 2) - (grpSongs.members[curSong].height / 2) - grpArrows.members[0].height - 5;
 					grpArrows.members[1].y = (FlxG.height / 2) + (grpSongs.members[curSong].height / 2) + 5;
 					
 					Magic.lerpX(cast difficulty, FlxG.width - (difficulty.width / 2));
 					Magic.lerpX(cast category, -(category.width / 2));
-					for(s in grpSongs){s.x = FlxMath.lerp(s.x, (FlxG.width / 2) - (s.width / 2), 0.1);}
+					for (s in grpSongs) {s.x = FlxMath.lerp(s.x, (FlxG.width / 2) - (s.width / 2), 0.1); }
 				}
 				case 2:{
-					if(controls.check("MenuUp", JUST_PRESSED)){changeDifficulty(-1);}
-					if(controls.check("MenuDown", JUST_PRESSED)){changeDifficulty(1);}
+					if (controls.check("MenuUp", JUST_PRESSED)) {changeDifficulty(-1); }
+					if (controls.check("MenuDown", JUST_PRESSED)) {changeDifficulty(1); }
 					
-					for(a in grpArrows.members){Magic.lerpX(cast a, difficulty.x+(difficulty.width/2)-(a.width/2));}	
+					for (a in grpArrows.members) {Magic.lerpX(cast a, difficulty.x+(difficulty.width/2)-(a.width/2)); }	
 					grpArrows.members[0].y = difficulty.y - grpArrows.members[0].height - 5;
 					grpArrows.members[1].y = difficulty.y + difficulty.height + 5;
 					
 					Magic.lerpX(cast difficulty, (FlxG.width - 250) - (difficulty.width / 2));
 					Magic.lerpX(cast category, -category.width - 10);
-					for(s in grpSongs){s.x = FlxMath.lerp(s.x, 5, 0.1);}
+					for (s in grpSongs) {s.x = FlxMath.lerp(s.x, 5, 0.1); }
 				}
 			}
 
-			if(controls.check("MenuAccept", JUST_PRESSED)){selectSong();}
+			if (controls.check("MenuAccept", JUST_PRESSED)) {selectSong(); }
 		}
 		
 		super.update(elapsed);		
 	}
 	
     function changeOption(value:Int = 0, force:Bool = false):Void {
-		curOption += value; if(force){curOption = value;}
+		curOption += value; if (force) {curOption = value; }
 
-        if(curOption > 2){curOption = 0;}
-        if(curOption < 0){curOption = 2;}
+        if (curOption > 2) {curOption = 0; }
+        if (curOption < 0) {curOption = 2; }
 	}
 	
 	var cur_tween_color:FlxTween;
 	public function changeSong(change:Int = 0, force:Bool = false):Void {
-		curSong += change; if(force){curSong = change;}
+		curSong += change; if (force) {curSong = change; }
 
-		if(curSong < 0){curSong = songs.length - 1;}
-		if(curSong >= songs.length){curSong = 0;}
+		if (curSong < 0) {curSong = songs.length - 1; }
+		if (curSong >= songs.length) {curSong = 0; }
 
-		for(s in grpSongs){s.alpha = 0.5;}
+		for (s in grpSongs) {s.alpha = 0.5; }
 
-		if(grpSongs.members.length <= 0){return;}
+		if (grpSongs.members.length <= 0) { return; }
 		grpSongs.members[curSong].alpha = 1;
 
-		if(cur_tween_color != null){cur_tween_color.cancel();}
-		cur_tween_color = FlxTween.color(background, 0.5, background.color, FlxColor.fromString(songs.get(curSong).color), {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween){cur_tween_color = null;}});
+		if (cur_tween_color != null) {cur_tween_color.cancel(); }
+		cur_tween_color = FlxTween.color(background, 0.5, background.color, FlxColor.fromString(songs.get(curSong).color), {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween) {cur_tween_color = null; }});
 
 		changeCategory();
 	}
 	
     function changeCategory(value:Int = 0, force:Bool = false):Void {
-        var cat_list:Array<String> = []; for(cur_cat in songs.get(curSong).categories){cat_list.push(cur_cat.name);}
+        var cat_list:Array<String> = []; for (cur_cat in songs.get(curSong).categories) {cat_list.push(cur_cat.name); }
         var cur_cat:Int = cat_list.indexOf(curCategory);
-		if(cur_cat == -1){
+		if (cur_cat == -1) {
 			curCategory = cat_list[0];
 			changeCategory();
 			return;
 		}
 
-		cur_cat += value; if(force){cur_cat = value;}
+		cur_cat += value; if (force) {cur_cat = value; }
 
-		if(cur_cat < 0){cur_cat = cat_list.length - 1;}
-		if(cur_cat >= cat_list.length){cur_cat = 0;}
+		if (cur_cat < 0) {cur_cat = cat_list.length - 1; }
+		if (cur_cat >= cat_list.length) {cur_cat = 0; }
 
         curCategory = cat_list[cur_cat];
-		if(curCategory == null){return;}
+		if (curCategory == null) { return; }
 
         category.loadGraphic(Paths.image('categories/${Paths.format(curCategory.toLowerCase(), true)}').getGraphic());
         category.y = (FlxG.height / 2) - (category.height / 2);
@@ -249,20 +250,21 @@ class FreeplayState extends MusicBeatState {
 
     function changeDifficulty(value:Int = 0, force:Bool = false):Void {
         var cat_list:Array<Category_Data> = songs.get(curSong).categories;
-		var cat_names:Array<String> = []; for(cur_cat in cat_list){cat_names.push(cur_cat.name);}
+		var cat_names:Array<String> = []; for (cur_cat in cat_list) {cat_names.push(cur_cat.name); }
         var cur_cat:Int = cat_names.indexOf(curCategory);
 		var diff_list:Array<String> = cat_list[cur_cat].difficulties;
 		var cur_diff:Int = diff_list.indexOf(curDifficulty);
-		if(cur_diff == -1){
+		
+		if (cur_diff == -1) {
 			curDifficulty = diff_list[0];
 			changeDifficulty();
 			return;
 		}
 
-		cur_diff += value; if(force){cur_diff = value;}
+		cur_diff += value; if (force) {cur_diff = value; }
 
-		if(cur_diff < 0){cur_diff = diff_list.length - 1;}
-		if(cur_diff >= diff_list.length){cur_diff = 0;}
+		if (cur_diff < 0) {cur_diff = diff_list.length - 1; }
+		if (cur_diff >= diff_list.length) {cur_diff = 0; }
 
         curDifficulty = diff_list[cur_diff];
 
@@ -280,6 +282,8 @@ class FreeplayState extends MusicBeatState {
 		FlxG.sound.play(Paths.sound("confirmMenu").getSound());
 		
 		var songInput:String = Song.format(songs.get(curSong).song, curCategory, curDifficulty);
+		trace('Song File: ${songInput}');
+
 		var songdata:Song_File = Song.load(songInput);
 		onSelect(songdata);
 	}

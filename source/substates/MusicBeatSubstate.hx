@@ -20,7 +20,7 @@ using StringTools;
 class MusicBeatSubstate extends FlxUISubState {
 	public var conductor:Conductor = new Conductor();
 
-	public var onClose:Void->Void = function(){};
+	public var onClose:Void->Void = function() {};
 
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
@@ -37,31 +37,33 @@ class MusicBeatSubstate extends FlxUISubState {
 	
 	public var scripts:ScriptList = new ScriptList();
 
-	public function new(onClose:Void->Void = null){
-		if(onClose != null){this.onClose = onClose;}
-		curCamera = new FlxCamera();
-		curCamera.bgColor.alpha = 0;
-		FlxG.cameras.add(curCamera);
-		
+	public function new(onClose:Void->Void = null) {
+		if (onClose != null) { this.onClose = onClose; }
 		super();
 	}
 
 	override function create() {
+		curCamera = new FlxCamera();
+		curCamera.bgColor.alpha = 0;
+		FlxG.cameras.add(curCamera);
+
 		super.create();
+		
+		this.camera = curCamera;
 				
 		FlxG.mouse.visible = false;
 
 		scripts.call('create');
 	}
 
-	override function update(elapsed:Float){
+	override function update(elapsed:Float) {
 		//everyStep();
 		var oldStep:Int = curStep;
 
 		updateCurStep();
 		curBeat = Math.floor(curStep / 4);
 
-		if(oldStep != curStep && curStep > 0){stepHit();}
+		if (oldStep != curStep && curStep > 0) { stepHit(); }
 
 		scripts.call('update', [elapsed]);
 
@@ -75,12 +77,12 @@ class MusicBeatSubstate extends FlxUISubState {
 			bpm: 0
 		}
 
-		for(i in 0...conductor.bpmChangeMap.length){if(conductor.position > conductor.bpmChangeMap[i].songTime){lastChange = conductor.bpmChangeMap[i];}}
+		for (i in 0...conductor.bpmChangeMap.length) { if (conductor.position > conductor.bpmChangeMap[i].songTime) { lastChange = conductor.bpmChangeMap[i]; }}
 		curStep = lastChange.stepTime + Math.floor((conductor.position - lastChange.songTime) / conductor.stepCrochet);
 	}
 
 	public function stepHit():Void {
-		if(curStep % 4 == 0){beatHit();}
+		if (curStep % 4 == 0) { beatHit(); }
 
 		scripts.call('stepHit', [curStep]);
 	}
@@ -93,7 +95,7 @@ class MusicBeatSubstate extends FlxUISubState {
 
 	public function loadSubState(substate:String, args:Array<Any>):Void {
 		var new_substate:FlxSubState = MusicBeatState.getSubState(substate, args);
-		if(new_substate == null){trace('Null SubState: ${substate}'); return;}
+		if (new_substate == null) {trace('Null SubState: ${substate}'); return; }
 		openSubState(new_substate);
 	}
 
@@ -108,7 +110,7 @@ class MusicBeatSubstate extends FlxUISubState {
 		super.close();
 	}
 
-	override function destroy(){		
+	override function destroy() {		
 		super.destroy();
 	}
 }

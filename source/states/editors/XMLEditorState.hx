@@ -1,56 +1,30 @@
 package states.editors;
 
-import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
-import flixel.graphics.frames.FlxAtlasFrames.TexturePackerObject;
-import flixel.system.FlxAssets.FlxTexturePackerSource;
-import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
-import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.graphics.tile.FlxGraphicsShader;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.addons.display.FlxGridOverlay;
-import flixel.addons.ui.FlxUINumericStepper;
-import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIInputText;
-import flixel.addons.ui.FlxUICheckBox;
-import flixel.addons.ui.FlxUITabMenu;
-import objects.ui.UINumericStepper;
-import openfl.events.IOErrorEvent;
-import flixel.graphics.FlxGraphic;
-import openfl.display.BitmapData;
-import objects.ui.UIValueChanger;
-import flixel.ui.FlxCustomButton;
 import objects.ui.UITabContainer;
-import openfl.net.FileReference;
 import objects.utils.SaverFile;
-import objects.ui.UIContainer;
 import flixel.addons.ui.FlxUI;
 import objects.scripts.Script;
 import objects.ui.UICheckBox;
-import flash.geom.Rectangle;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import objects.ui.UIButton;
 import flixel.text.FlxText;
 import openfl.events.Event;
-import flixel.ui.FlxButton;
 import objects.ui.UISlider;
-import flixel.math.FlxRect;
 import lime.ui.FileDialog;
-import haxe.DynamicAccess;
 import objects.ui.UIList;
 import flixel.FlxSprite;
 import flixel.FlxObject;
-import flixel.FlxState;
-import haxe.xml.Access;
-import openfl.Assets;
 import flixel.FlxG;
 import utils.Magic;
-import haxe.Json;
 
 #if desktop
-import utils.Discord;
 import sys.FileSystem;
 import sys.io.File;
+
+import utils.Discord;
 #end
 
 using utils.Files;
@@ -90,6 +64,8 @@ class XMLEditorState extends MusicBeatState {
     var mousePointer:FlxPoint = FlxPoint.get(0, 0);
     var mouseState:Int = -1;
 
+    var cooldownMouse:Float = 0;
+
     function setMousePointer(_camPoint:Dynamic, _mousePoint:Dynamic, _inverse:Bool, _state:Int):Void { 
         mousePointer.set(
             _inverse ? _mousePoint.x + _camPoint.x : _mousePoint.x - _camPoint.x, 
@@ -100,7 +76,7 @@ class XMLEditorState extends MusicBeatState {
 
     var camFollow:FlxObject;
 
-    override function create(){
+    override function create() {
         FlxG.sound.playMusic(Paths.music('break_song').getSound());
 
         #if desktop
@@ -108,6 +84,8 @@ class XMLEditorState extends MusicBeatState {
 		Discord.change('Editing', '[XML Editor]');
 		Magic.setWindowTitle('On XML Editor', 1);
 		#end
+
+        super.create();
 
         var bgGrid:FlxSprite = FlxGridOverlay.create(10, 10, FlxG.width, FlxG.height, true, 0xff4d4d4d, 0xff333333);
         bgGrid.cameras = [camGame];
@@ -155,13 +133,11 @@ class XMLEditorState extends MusicBeatState {
         ctnGhostMenu.camera = camHUD;
         addGhostMenuStuff();
         add(ctnGhostMenu);
-        
+
 		camFollow = new FlxObject(normal.getGraphicMidpoint().x, normal.getGraphicMidpoint().y, 1, 1);
         camFGame.follow(camFollow, LOCKON);
 		add(camFollow); 
-
-        super.create();
-        
+                
         FlxG.mouse.visible = true;
     }
 
@@ -170,20 +146,22 @@ class XMLEditorState extends MusicBeatState {
         super.destroy();
     }
 
-    override function update(elapsed:Float){
+    override function update(elapsed:Float) {
         var pMouse = FlxG.mouse.getPositionInCameraView(camFGame);
         var wMouse = FlxG.mouse.getWorldPosition(camFGame);
 
-        var arrayControlle = true;
-        for(item in arrayFocus){if(item.hasFocus){arrayControlle = false;}}
+        if (cooldownMouse > 0) { cooldownMouse -= elapsed; }
 
-        if(canControlle && arrayControlle){  
+        var arrayControlle = true;
+        for (item in arrayFocus) {if (item.hasFocus) {arrayControlle = false; }}
+
+        if (canControlle && arrayControlle) {  
             switch (mouseState) {
-                case 0: {camFollow.setPosition(mousePointer.x - pMouse.x, mousePointer.y - pMouse.y);}
-                case 1: {normal.setPosition(wMouse.x - mousePointer.x, wMouse.y - mousePointer.y);}
+                case 0: { camFollow.setPosition(mousePointer.x - pMouse.x, mousePointer.y - pMouse.y); }
+                case 1: { normal.setPosition(wMouse.x - mousePointer.x, wMouse.y - mousePointer.y); }
             }
             
-            if((FlxG.mouse.releasedRight && mouseState == 0) || (FlxG.mouse.released && mouseState > 0)){
+            if ((FlxG.mouse.releasedRight && mouseState == 0) || (FlxG.mouse.released && mouseState > 0)) {
                 switch (mouseState) {
                     case 1:{
                         var _offset = (lastPosition - normal.getPosition()).floor();
@@ -192,30 +170,36 @@ class XMLEditorState extends MusicBeatState {
                     }
                 }
                 mouseState = -1;
-            }else if(mouseState == -1 && !overlapsTabs()){
-                if(FlxG.mouse.justPressedRight){setMousePointer(camFollow, pMouse, true, 0);}
-                else if(FlxG.mouse.justPressed){
-                    if(FlxG.mouse.overlaps(normal, camFGame)){setMousePointer(lastPosition = normal.getPosition(), wMouse, false, 1);}
-                }else if(FlxG.keys.pressed.SHIFT){
-                    if(FlxG.keys.justPressed.W){addOffset(0, 10);}
-                    if(FlxG.keys.justPressed.A){addOffset(10, 0);}
-                    if(FlxG.keys.justPressed.S){addOffset(0, -10);}
-                    if(FlxG.keys.justPressed.D){addOffset(-10, 0);}
-                }else{
-                    if(FlxG.keys.justPressed.W){addOffset(0, 1);}
-                    if(FlxG.keys.justPressed.A){addOffset(1, 0);}
-                    if(FlxG.keys.justPressed.S){addOffset(0, -1);}
-                    if(FlxG.keys.justPressed.D){addOffset(-1, 0);}
+            } else if (mouseState == -1 && !overlapsTabs()) {
+                if (FlxG.mouse.justPressedRight) { setMousePointer(camFollow, pMouse, true, 0); }
+                else if (FlxG.mouse.justPressed && cooldownMouse <= 0) {
+                    if (FlxG.mouse.overlaps(normal, camFGame)) { setMousePointer(lastPosition = normal.getPosition(), wMouse, false, 1); }
+                } else if (FlxG.keys.pressed.SHIFT) {
+                    if (FlxG.keys.justPressed.W) { addOffset(0, 10); }
+                    if (FlxG.keys.justPressed.A) { addOffset(10, 0); }
+                    if (FlxG.keys.justPressed.S) { addOffset(0, -10); }
+                    if (FlxG.keys.justPressed.D) { addOffset(-10, 0); }
+
+                    if (FlxG.keys.justPressed.Q) { lstGhostAnimations.change(true); }
+                    if (FlxG.keys.justPressed.E) { lstGhostAnimations.change(); }
+                } else {
+                    if (FlxG.keys.justPressed.W) { addOffset(0, 1); }
+                    if (FlxG.keys.justPressed.A) { addOffset(1, 0); }
+                    if (FlxG.keys.justPressed.S) { addOffset(0, -1); }
+                    if (FlxG.keys.justPressed.D) { addOffset(-1, 0); }
+
+                    if (FlxG.keys.justPressed.Q) { lstNormalAnimations.change(true); }
+                    if (FlxG.keys.justPressed.E) { lstNormalAnimations.change(); }
                 }
             }
 
-            if(FlxG.keys.pressed.SHIFT){
-                if(FlxG.mouse.wheel != 0){camFGame.zoom += (FlxG.mouse.wheel * 0.1);}
-            }else{
-                if(FlxG.mouse.wheel != 0){camFGame.zoom += (FlxG.mouse.wheel * 0.01);}
+            if (FlxG.keys.pressed.SHIFT) {
+                if (FlxG.mouse.wheel != 0) { camFGame.zoom += (FlxG.mouse.wheel * 0.1); }
+            } else {
+                if (FlxG.mouse.wheel != 0) { camFGame.zoom += (FlxG.mouse.wheel * 0.01); }
             }
             
-            if(FlxG.mouse.justPressedMiddle){camFollow.setPosition(normal.getGraphicMidpoint().x, normal.getGraphicMidpoint().y);}
+            if (FlxG.mouse.justPressedMiddle) { camFollow.setPosition(normal.getGraphicMidpoint().x, normal.getGraphicMidpoint().y); }
         }
         
 		super.update(elapsed);
@@ -230,19 +214,19 @@ class XMLEditorState extends MusicBeatState {
         lstPosMode.name = "POSITION_MODE";
 
         var btnSetSize:UIButton = new UIButton(0, 0, ctnGeneralMenu.display_width, null, "Set FrameSize to Frame", 16, null, null, () -> {
-            if(normal.animation.curAnim == null){return;}
+            if (normal.animation.curAnim == null) { return; }
             var _size = normal.frames.frames[normal.animation.curAnim.frames[normal.animation.curAnim.curFrame]].sourceSize.clone();
-            switch(lstPosMode.getSelectedLabel()){
+            switch (lstPosMode.getSelectedLabel()) {
                 case "Animation":{
-                    if(normal.animation.curAnim == null){return;}
-                    for(_index in normal.animation.curAnim.frames){
+                    if (normal.animation.curAnim == null) { return; }
+                    for (_index in normal.animation.curAnim.frames) {
                         var _frame = normal.frames.frames[_index];
                         _frame.sourceSize.set(_size.x, _size.y);
                     } 
                 }
                 case "Sprite":{
-                    for(_animation in normal.animation.getNameList()){
-                        for(_index in normal.animation.getByName(_animation).frames){
+                    for (_animation in normal.animation.getNameList()) {
+                        for (_index in normal.animation.getByName(_animation).frames) {
                             var _frame = normal.frames.frames[_index];
                             _frame.sourceSize.set(_size.x, _size.y);
                         }
@@ -264,17 +248,19 @@ class XMLEditorState extends MusicBeatState {
         ttlFiles.alignment = CENTER;
 
         var btnNormal:UIButton = new UIButton(0, 0, ctnNormalMenu.display_width, null, "Import Normal Sprite", 16, null, null, () -> {
+            cooldownMouse = 0.5;
+            
             var _dialog = new FileDialog();
-            _dialog.onSelect.add(loadNormal); 
+            _dialog.onSelect.add(loadNormal);
             _dialog.browse();
         }); ctnNormalMenu.addBody(btnNormal);
 
         var btnSave:UIButton = new UIButton(0, 0, ctnNormalMenu.display_width, null, "Save XML", 16, null, null, () -> {
-            if(save_file != null){return;}
+            if (save_file != null) { return; }
 
             var _file_name:String = Normal_Image_Path.split("\\").pop();
             var _data:String = '<TextureAtlas imagePath="${_file_name}">\n\t<!-- Created with Magic XML Editor version 2.0 -->\n';
-            for(_frame in normal.frames.frames){
+            for (_frame in normal.frames.frames) {
                 _data += '\t<SubTexture ';
                 _data += 'name="${_frame.name}" ';
                 _data += 'x="${_frame.frame.x}" ';
@@ -289,7 +275,7 @@ class XMLEditorState extends MusicBeatState {
             }
             _data += '</TextureAtlas>';
             
-            save_file = new SaverFile([{name: _file_name.replace(".png", ".xml"), data: _data}], {destroyOnComplete: true, onComplete: ()->{save_file = null;}});
+            save_file = new SaverFile([{name: _file_name.replace(".png", ".xml"), data: _data}], {destroyOnComplete: true, onComplete: ()->{save_file = null; }});
 			save_file.saveFile();
         }); ctnNormalMenu.addBody(btnSave, 10);
         
@@ -309,9 +295,9 @@ class XMLEditorState extends MusicBeatState {
         };
         ctnNormalMenu.addBody(sldNormalFrame);
         
-        var chkFlipX:UICheckBox = new UICheckBox(0, 0, ctnNormalMenu.display_width, "Flip X", 18, false, (_check)->{normal.flipX = _check;}); ctnNormalMenu.addBody(chkFlipX, 0);
+        var chkFlipX:UICheckBox = new UICheckBox(0, 0, ctnNormalMenu.display_width, "Flip X", 18, false, (_check)->{normal.flipX = _check; }); ctnNormalMenu.addBody(chkFlipX, 0);
         
-        var chkFlipY:UICheckBox = new UICheckBox(0, 0, ctnNormalMenu.display_width, "Flip Y", 18, false, (_check)->{normal.flipY = _check;}); ctnNormalMenu.addBody(chkFlipY, 0);
+        var chkFlipY:UICheckBox = new UICheckBox(0, 0, ctnNormalMenu.display_width, "Flip Y", 18, false, (_check)->{normal.flipY = _check; }); ctnNormalMenu.addBody(chkFlipY, 0);
     }
     
     var lstGhostAnimations:UIList;
@@ -336,9 +322,9 @@ class XMLEditorState extends MusicBeatState {
         sldGhostFrame = new UISlider(10, 0, 12, ctnGhostMenu.display_width - 20, 20, false, null, null, 0, 120);
         ctnGhostMenu.addBody(sldGhostFrame);
         
-        var chkFlipX:UICheckBox = new UICheckBox(0, 0, ctnGhostMenu.display_width, "Flip X", 18, false, (_check)->{ghost.flipX = _check;}); ctnGhostMenu.addBody(chkFlipX, 0);
+        var chkFlipX:UICheckBox = new UICheckBox(0, 0, ctnGhostMenu.display_width, "Flip X", 18, false, (_check)->{ghost.flipX = _check; }); ctnGhostMenu.addBody(chkFlipX, 0);
         
-        var chkFlipY:UICheckBox = new UICheckBox(0, 0, ctnGhostMenu.display_width, "Flip Y", 18, false, (_check)->{ghost.flipY = _check;}); ctnGhostMenu.addBody(chkFlipY, 0);
+        var chkFlipY:UICheckBox = new UICheckBox(0, 0, ctnGhostMenu.display_width, "Flip Y", 18, false, (_check)->{ghost.flipY = _check; }); ctnGhostMenu.addBody(chkFlipY, 0);
         
         var lblAlpha = new FlxText(0, 0, ctnGhostMenu.display_width, "Alpha:", 12); ctnGhostMenu.addBody(lblAlpha, 0);
         var lstAlpha = new UISlider(10, 0, 12, ctnGhostMenu.display_width - 20, 20, false, ghost, "alpha", 0, 1); ctnGhostMenu.addBody(lstAlpha);
@@ -346,9 +332,9 @@ class XMLEditorState extends MusicBeatState {
     }
 
     public function addOffset(_x:Int, _y:Int):Void {
-        switch(lstPosMode.getSelectedLabel()){
+        switch (lstPosMode.getSelectedLabel()) {
             case "Frame":{
-                if(normal.animation.curAnim == null){return;}
+                if (normal.animation.curAnim == null) { return; }
                 var _frame = normal.frames.frames[normal.animation.curAnim.frames[normal.animation.curAnim.curFrame]];
                 _frame.offset.x -= _x;
                 _frame.offset.y -= _y;
@@ -359,8 +345,8 @@ class XMLEditorState extends MusicBeatState {
                 normal.animation.curAnim.curFrame = _curFrame;
             }
             case "Animation":{
-                if(normal.animation.curAnim == null){return;}
-                for(_index in normal.animation.curAnim.frames){
+                if (normal.animation.curAnim == null) { return; }
+                for (_index in normal.animation.curAnim.frames) {
                     var _frame = normal.frames.frames[_index];
                     _frame.offset.x -= _x;
                     _frame.offset.y -= _y;
@@ -372,8 +358,8 @@ class XMLEditorState extends MusicBeatState {
                 normal.animation.curAnim.curFrame = _curFrame;
             }
             case "Sprite":{
-                for(_animation in normal.animation.getNameList()){
-                    for(_index in normal.animation.getByName(_animation).frames){
+                for (_animation in normal.animation.getNameList()) {
+                    for (_index in normal.animation.getByName(_animation).frames) {
                         var _frame = normal.frames.frames[_index];
                         _frame.offset.x -= _x;
                         _frame.offset.y -= _y;
@@ -389,7 +375,7 @@ class XMLEditorState extends MusicBeatState {
     }
 
     private function loadNormal(_path:String):Void {
-        if(!_path.endsWith(".png")){trace("File is Not PNG"); return;}
+        if (!_path.endsWith(".png")) {trace("File is Not PNG"); return; }
 
         Normal_Image_Path = _path;
         Normal_Atlas_Path = _path.replace(".png", ".xml");
@@ -400,7 +386,7 @@ class XMLEditorState extends MusicBeatState {
         icon.updateHitbox();
 
         normal.frames = _path.getSparrowAtlas();
-        for(_anim in _animations){normal.animation.addByPrefix(_anim, _anim, 24, false);}
+        for (_anim in _animations) {normal.animation.addByPrefix(_anim, _anim, 24, false); }
 
         camFollow.setPosition(normal.getGraphicMidpoint().x, normal.getGraphicMidpoint().y);
 
@@ -408,14 +394,14 @@ class XMLEditorState extends MusicBeatState {
         lstNormalAnimations.setIndex();
     }
     private function loadGhost(_path:String):Void {
-        if(!_path.endsWith(".png")){trace("File is Not PNG"); return;}
+        if (!_path.endsWith(".png")) {trace("File is Not PNG"); return; }
 
         Ghost_Image_Path = _path;
         Ghost_Atlas_Path = _path.replace(".png", ".xml");
         var _animations:Array<String> = Ghost_Atlas_Path.getXMLAnimations();
 
         ghost.frames = _path.getSparrowAtlas();
-        for(_anim in _animations){ghost.animation.addByPrefix(_anim, _anim, 24, false);}
+        for (_anim in _animations) {ghost.animation.addByPrefix(_anim, _anim, 24, false); }
         
         lstGhostAnimations.setData(_animations);
         lstGhostAnimations.setIndex();
@@ -423,18 +409,18 @@ class XMLEditorState extends MusicBeatState {
         ghost.setPosition(initPoint.x + 3, initPoint.y + 3);
     }
 
-    override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>){
-        if(id == UIList.CHANGE_EVENT && (sender is UIList)){
+    override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
+        if (id == UIList.CHANGE_EVENT && (sender is UIList)) {
             var nums:UIList = cast sender;
             var wname = nums.name;
 
-            switch(wname){
-                default:{trace('${wname} is Working!');}
+            switch (wname) {
+                default:{trace('${wname} is Working!'); }
                 case "NORMAL_ANIMATION":{
                     normal.animation.play(nums.getSelectedLabel()); 
                     normal.animation.pause();
                     var _anim = normal.animation.curAnim;
-                    if(_anim == null){return;}
+                    if (_anim == null) { return; }
 
                     sldNormalFrame.maxValue = _anim.frames.length - 1;
                     sldNormalFrame._object = _anim;
@@ -449,7 +435,7 @@ class XMLEditorState extends MusicBeatState {
                     ghost.animation.play(nums.getSelectedLabel()); 
                     ghost.animation.pause();
                     var _anim = ghost.animation.curAnim;
-                    if(_anim == null){return;}
+                    if (_anim == null) { return; }
                     sldGhostFrame.maxValue = _anim.frames.length - 1;
                     sldGhostFrame._object = _anim;
                     sldGhostFrame.varString = "curFrame";

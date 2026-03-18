@@ -1,57 +1,59 @@
 {
-	"script": "Spirit_Script",
 	"aspect": "Default",
+	"icon": "spirit-pixel",
 	"position": [
 		-15,
 		20
 	],
 	"scale": 6,
+	"color": "#ab1313",
+	"zoom": 0.8,
+	"image": "spirit",
+	"name": "Spirit",
+	"script": "Spirit_Script",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"camera": [
+		185.428571428571,
+		434.142857142857
+	],
+	"skin": "Default",
+	"onRight": true,
 	"animations": [
 		{
+			"loop": false,
 			"symbol": "idle_spirit",
-			"loop": false,
 			"fps": 24,
-			"key": "idle",
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
+			"loop": false,
 			"symbol": "spirit_down",
-			"loop": false,
 			"fps": 24,
-			"key": "singDOWN",
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
+			"loop": false,
 			"symbol": "left",
-			"loop": false,
 			"fps": 24,
-			"key": "singLEFT",
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
+			"loop": false,
 			"symbol": "right",
-			"loop": false,
 			"fps": 24,
-			"key": "singRIGHT",
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"symbol": "up",
 			"loop": false,
+			"symbol": "up",
 			"fps": 24,
-			"key": "singUP",
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		}
-	],
-	"name": "Spirit",
-	"image": "spirit",
-	"zoom": 0.8,
-	"onRight": true,
-	"skin": "Default",
-	"camera": [
-		184,
-		357
-	],
-	"icon": "spirit-pixel",
-	"singTime": 1
+	]
 }

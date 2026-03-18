@@ -62,7 +62,7 @@ class Dialogue extends FlxUIGroup {
 	public var dialogue_data:DialogueData;
 	public var cur_dialogue:Int = 0;
 
-	public var finishFunc:Void->Void = function(){};
+	public var finishFunc:Void->Void = function() {};
 	
 	public var script:Script;
 
@@ -71,14 +71,14 @@ class Dialogue extends FlxUIGroup {
 
 	public var curAnim:String = "";
 
-	public function new(_data:Dynamic, ?options:Dynamic){
+	public function new(_data:Dynamic, ?options:Dynamic) {
 		this.dialogue_data = _data.dialogue;
 		this.controls = MusicBeatState.state.controls;
-		if(options.onComplete != null){finishFunc = options.onComplete;}
+		if (options.onComplete != null) {finishFunc = options.onComplete; }
 		super();
 		this.autoBounds = false;
 
-		for(port in dialogue_data.portraits){
+		for (port in dialogue_data.portraits) {
 			trace(port);
 			var new_port:Portrait = new Portrait(port);
 			new_port.alpha = 0;
@@ -95,9 +95,9 @@ class Dialogue extends FlxUIGroup {
 			
 		dialogue_custom_text = new Alphabet(dialogue_data.dialogue_position[0], dialogue_data.dialogue_position[1], []);
 		dialogue_custom_text.onType = function(char:String, item:Dynamic):Void {
-			if(item.portrait == null){return;}
+			if (item.portrait == null) { return; }
 			var cur_port:Portrait = portraits.get(item.portrait).sprite;
-			if(cur_port == null){return;}
+			if (cur_port == null) { return; }
 
 			cur_port.talk();
 		}
@@ -105,9 +105,9 @@ class Dialogue extends FlxUIGroup {
 
 		loadDialogueBox(dialogue_data.box);
 
-		if(options.script != null){
+		if (options.script != null) {
 			script = options.script;
-		}else if(options.script_path != null){
+		} else if (options.script_path != null) {
 			script = new Script();
 			script.name = "Dialogue_Script";
 			script.load(options.script_path, true);
@@ -123,58 +123,58 @@ class Dialogue extends FlxUIGroup {
 	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-		if(can_controlle){
-			if(controls.check("MenuAccept", JUST_PRESSED)){nextDialogue(1);}
+		if (can_controlle) {
+			if (controls.check("MenuAccept", JUST_PRESSED)) {nextDialogue(1); }
 		}
 
-		if(dialogue_box != null && dialogue_box.animation != null && dialogue_box.animation.curAnim != null && dialogue_box.animation.finished && dialogue_box.animation.curAnim.name.contains("Appear")){
+		if (dialogue_box != null && dialogue_box.animation != null && dialogue_box.animation.curAnim != null && dialogue_box.animation.finished && dialogue_box.animation.curAnim.name.contains("Appear")) {
 			dialogue_box.animation.play('${curAnim}_Idle', true);
 		}
 	}
 
 	public var type_dialog:String = "Alphabet";
 	public function nextDialogue(value:Int = 0, force:Bool = false):Void {
-		switch(type_dialog){
-			case "Alphabet":{if(dialogue_custom_text.isTyping){dialogue_custom_text.loadText(); return;}}
-			case "Flixel":{if(dialogue_flixel_text.isTyping){dialogue_flixel_text.skip(); return;}}
+		switch (type_dialog) {
+			case "Alphabet":{if (dialogue_custom_text.isTyping) {dialogue_custom_text.loadText(); return; }}
+			case "Flixel":{if (dialogue_flixel_text.isTyping) {dialogue_flixel_text.skip(); return; }}
 		}
 		
 
-		cur_dialogue += value; if(force){cur_dialogue = value;}
+		cur_dialogue += value; if (force) {cur_dialogue = value; }
 		
 		var cur_dialog_stuff:DialogueItem = dialogue_data.dialogue[cur_dialogue];
 
-		if(cur_dialog_stuff == null){
+		if (cur_dialog_stuff == null) {
 			can_controlle = false;
 			
 			dialogue_custom_text.cur_data = []; dialogue_custom_text.loadText();
 			dialogue_flixel_text.startText(" ", 0.1);
 
-			FlxTween.tween(dialogue_box, {alpha: 0}, 1, {onComplete: function(twn:FlxTween){destroy(); if(finishFunc != null){finishFunc();}}});
-			for(prt in sides){if(prt == null){continue;} FlxTween.tween(prt, {alpha: 0, y: prt.y + 6}, 0.5);}
+			FlxTween.tween(dialogue_box, {alpha: 0}, 1, {onComplete: function(twn:FlxTween) {destroy(); if (finishFunc != null) {finishFunc(); }}});
+			for (prt in sides) {if (prt == null) { continue; } FlxTween.tween(prt, {alpha: 0, y: prt.y + 6}, 0.5); }
 			return;
 		}
 
-		if(cur_dialog_stuff.text_type != null){type_dialog = cur_dialog_stuff.text_type;}
+		if (cur_dialog_stuff.text_type != null) {type_dialog = cur_dialog_stuff.text_type; }
 		dialogue_box.flipX = cur_dialog_stuff.flip_box;
 
-		if(cur_dialog_stuff.box_anim != null && cur_dialog_stuff.box_anim != curAnim){
+		if (cur_dialog_stuff.box_anim != null && cur_dialog_stuff.box_anim != curAnim) {
 			curAnim = cur_dialog_stuff.box_anim;
 			
-			if(dialogue_box.animation.getByName('${curAnim}_Appear') != null){
+			if (dialogue_box.animation.getByName('${curAnim}_Appear') != null) {
 				dialogue_box.animation.play('${curAnim}_Appear');
-			}else{
+			} else{
 				dialogue_box.animation.play('${curAnim}_Idle');
 			}
 		}
 
-		if(cur_dialog_stuff.appear_left != null){changePortrait(cur_dialog_stuff.appear_left, "Left");}
-		if(cur_dialog_stuff.appear_right != null){changePortrait(cur_dialog_stuff.appear_right, "Right");}
-		if(cur_dialog_stuff.appear_middle != null){changePortrait(cur_dialog_stuff.appear_middle, "Middle");}
+		if (cur_dialog_stuff.appear_left != null) {changePortrait(cur_dialog_stuff.appear_left, "Left"); }
+		if (cur_dialog_stuff.appear_right != null) {changePortrait(cur_dialog_stuff.appear_right, "Right"); }
+		if (cur_dialog_stuff.appear_middle != null) {changePortrait(cur_dialog_stuff.appear_middle, "Middle"); }
 
-		if(script != null){script.call("toChangeDialogue", [cur_dialogue]);}
+		if (script != null) {script.call("toChangeDialogue", [cur_dialogue]); }
 		
-		switch(type_dialog){
+		switch (type_dialog) {
 			case "Alphabet":{
 				dialogue_flixel_text.visible = false;
 				dialogue_custom_text.visible = true;
@@ -190,7 +190,7 @@ class Dialogue extends FlxUIGroup {
 			}
 		}
 
-		if(script != null){script.call("onDialogueChanged", [cur_dialogue]);}
+		if (script != null) {script.call("onDialogueChanged", [cur_dialogue]); }
 	}
 
 	public function loadDialogueBox(sprite_box:String = "Default_Box"):Void {
@@ -199,30 +199,30 @@ class Dialogue extends FlxUIGroup {
 
 		dialogue_box.frames = box_path.getAtlas();
 		
-		if(!Paths.exists(box_xml_path)){return;}
+		if (!Paths.exists(box_xml_path)) { return; }
 
 		var animSymbols:Array<String> = box_xml_path.getXMLAnimations();
-		for(symbol in animSymbols){dialogue_box.animation.addByPrefix(symbol, symbol, false);}
+		for (symbol in animSymbols) {dialogue_box.animation.addByPrefix(symbol, symbol, false); }
 
-		if(dialogue_custom_text != null){dialogue_custom_text.textWidth = dialogue_box.width - 90;}
-		if(dialogue_flixel_text != null){dialogue_flixel_text.fieldWidth = dialogue_box.width - 90;}
+		if (dialogue_custom_text != null) {dialogue_custom_text.textWidth = dialogue_box.width - 90; }
+		if (dialogue_flixel_text != null) {dialogue_flixel_text.fieldWidth = dialogue_box.width - 90; }
 	}
 
-	public function changePortrait(port:String, side:String):Void {portraits.get(port).side = side; updatePortrait(port);};
+	public function changePortrait(port:String, side:String):Void {portraits.get(port).side = side; updatePortrait(port); };
 	public function updatePortrait(port:String):Void {
 		var data_port:Dynamic = portraits.get(port);
 
 		var last_port:Portrait = sides.get(data_port.side);
-		if(last_port != null){FlxTween.tween(last_port, {alpha: 0, y: last_port.y + 6}, 0.5);}
+		if (last_port != null) {FlxTween.tween(last_port, {alpha: 0, y: last_port.y + 6}, 0.5); }
 
 		var new_port:Portrait = data_port.sprite;
 		sides.set(data_port.side, new_port);
-		if(new_port == null){return;}
+		if (new_port == null) { return; }
 
-		switch(data_port.side){
-			case "Left":{new_port.setPosition(dialogue_box.x, dialogue_box.y - new_port.height + 6);}
-			case "Middle":{new_port.screenCenter(X); new_port.y = dialogue_box.y - new_port.height + 6;}
-			case "Right":{new_port.setPosition(dialogue_box.x + dialogue_box.width - new_port.width, dialogue_box.y - new_port.height + 6);}
+		switch (data_port.side) {
+			case "Left":{new_port.setPosition(dialogue_box.x, dialogue_box.y - new_port.height + 6); }
+			case "Middle":{new_port.screenCenter(X); new_port.y = dialogue_box.y - new_port.height + 6; }
+			case "Right":{new_port.setPosition(dialogue_box.x + dialogue_box.width - new_port.width, dialogue_box.y - new_port.height + 6); }
 		}
 
 		FlxTween.tween(new_port, {alpha: 1, y: new_port.y - 6}, 0.5);
@@ -233,7 +233,7 @@ class Portrait extends FlxSprite {
 	public var curPortrait:String = "PlaceHolder";
 	public var curExpresion:String = "Normal";
 
-	public function new(_name:String){
+	public function new(_name:String) {
 		curPortrait = _name;
 		super();
 
@@ -246,10 +246,10 @@ class Portrait extends FlxSprite {
 
 		this.frames = port_path.getAtlas();
 		
-		if(!Paths.exists(port_xml_path)){return;}
+		if (!Paths.exists(port_xml_path)) { return; }
 
 		var animSymbols:Array<String> = port_xml_path.getXMLAnimations();
-		for(symbol in animSymbols){this.animation.addByPrefix(symbol, symbol, false);}
+		for (symbol in animSymbols) {this.animation.addByPrefix(symbol, symbol, false); }
 
 		updateHitbox();
 	}
@@ -257,13 +257,13 @@ class Portrait extends FlxSprite {
 	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-		if(animation != null && animation.curAnim != null && animation.finished && animation.curAnim.name.contains("Talk")){
+		if (animation != null && animation.curAnim != null && animation.finished && animation.curAnim.name.contains("Talk")) {
 			animation.play('${curExpresion}_Idle', true);
 		}
 	}
 
 	public function talk():Void {
-		if(animation.getByName('${curExpresion}_Talk') == null){return;}
+		if (animation.getByName('${curExpresion}_Talk') == null) { return; }
 		animation.play('${curExpresion}_Talk', true);
 	}
 }

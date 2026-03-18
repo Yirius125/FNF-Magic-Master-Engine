@@ -23,21 +23,21 @@ class MenuList extends Alphabet {
 
     override public function update(elapsed:Float):Void {
         super.update(elapsed);
-        if(!isSelected){return;}
+        if (!isSelected) { return; }
 
-        if(controls.check("MenuLeft", JUST_PRESSED)){change(-1);}
-        else if(controls.check("MenuRight", JUST_PRESSED)){change(1);}
+        if (controls.check("MenuLeft", JUST_PRESSED)) {change(-1); }
+        else if (controls.check("MenuRight", JUST_PRESSED)) {change(1); }
     }
 
     public function change(_value:Int, _force:Bool = false):Void {
         curOption = _force ? _value : curOption + _value;
 
-		if(curOption < 0){curOption = list.length - 1;}
-		if(curOption >= list.length){curOption = 0;}
+		if (curOption < 0) {curOption = list.length - 1; }
+		if (curOption >= list.length) {curOption = 0; }
         
-        if(setting != null){Settings.get_setting(setting).set(curOption);}
+        if (setting != null) {Settings.get_setting(setting).set(curOption); }
         
         setText({font: "easy_font", scale: 0.7, text: list[curOption].toLowerCase()});
-		if(!_force){FlxG.sound.play(Paths.sound("scrollMenu").getSound());}
+		if (!_force) {FlxG.sound.play(Paths.sound("scrollMenu").getSound()); }
     }
 }

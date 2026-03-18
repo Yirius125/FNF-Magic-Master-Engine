@@ -1,93 +1,94 @@
 {
 	"aspect": "Car",
+	"icon": "bf",
 	"position": [
 		0,
 		339
 	],
 	"scale": 1,
+	"color": "#409fff",
+	"zoom": 0.8,
+	"image": "bfCar",
+	"name": "Boyfriend",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"camera": [
+		227,
+		539
+	],
+	"onRight": false,
+	"skin": "Default",
 	"animations": [
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF HEY!!",
 			"fps": 24,
-			"key": "hey",
-			"loop": false
+			"indices": [],
+			"key": "hey"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "MISS BF NOTE DOWN",
 			"fps": 24,
-			"key": "singDOWNmiss",
-			"loop": false
+			"indices": [],
+			"key": "singDOWNmiss"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF NOTE DOWN",
 			"fps": 24,
-			"key": "singDOWN",
-			"loop": false
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "MISS BF NOTE LEFT",
 			"fps": 24,
-			"key": "singLEFTmiss",
-			"loop": false
+			"indices": [],
+			"key": "singLEFTmiss"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF NOTE LEFT",
 			"fps": 24,
-			"key": "singLEFT",
-			"loop": false
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "MISS BF NOTE RIGHT",
 			"fps": 24,
-			"key": "singRIGHTmiss",
-			"loop": false
+			"indices": [],
+			"key": "singRIGHTmiss"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF NOTE RIGHT",
 			"fps": 24,
-			"key": "singRIGHT",
-			"loop": false
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "MISS BF NOTE UP",
 			"fps": 24,
-			"key": "singUPmiss",
-			"loop": false
+			"indices": [],
+			"key": "singUPmiss"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF NOTE UP",
 			"fps": 24,
-			"key": "singUP",
-			"loop": false
+			"indices": [],
+			"key": "singUP"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF idle dance",
 			"fps": 24,
-			"key": "idle",
-			"loop": false
+			"indices": [],
+			"key": "idle"
 		}
-	],
-	"name": "Boyfriend",
-	"image": "bfCar",
-	"zoom": 0.8,
-	"antialiasing": true,
-	"singTime": 1,
-	"skin": "Default",
-	"onRight": false,
-	"icon": "bf",
-	"color": "#409fff",
-	"camera": [
-		25,
-		20
 	]
 }

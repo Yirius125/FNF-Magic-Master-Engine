@@ -1,10 +1,10 @@
-import("flixel.sound.FlxSound", "FlxSound");
-import("flixel.FlxSprite", "FlxSprite");
-import("PreSettings", "PreSettings");
-import("utils.Files", "Files");
-import("Character", "Character");
-import("flixel.FlxG", "FlxG");
-import("utils.Paths", "Paths");
+import objects.game.Character;
+import flixel.sound.FlxSound;
+import flixel.FlxSprite;
+import utils.Settings;
+import utils.Files;
+import utils.Paths;
+import flixel.FlxG;
 
 preset("initChar", 5);
 preset("camP_1", [585,305]);
@@ -28,78 +28,70 @@ var train:FlxSprite = null;
 var street:FlxSprite = null;
 var trainsound:FlxSound = null;
 
-function addToLoad(temp):Void {
-	temp.push({type: "IMAGE", instance: Paths.image('sky','stages/philly')});
-	temp.push({type: "IMAGE", instance: Paths.image('city','stages/philly')});
-	temp.push({type: "IMAGE", instance: Paths.image('win','stages/philly')});
-	temp.push({type: "IMAGE", instance: Paths.image('behindTrain','stages/philly')});
-	temp.push({type: "IMAGE", instance: Paths.image('train','stages/philly')});
-	temp.push({type: "IMAGE", instance: Paths.image('street','stages/philly')});
+function cache(list:Array<Dynamic>):Void {
+	list.push({type: "IMAGE", instance: Paths.image('stages/philly/sky')});
+	list.push({type: "IMAGE", instance: Paths.image('stages/philly/win')});
+	list.push({type: "IMAGE", instance: Paths.image('stages/philly/city')});
+	list.push({type: "IMAGE", instance: Paths.image('stages/philly/train')});
+	list.push({type: "IMAGE", instance: Paths.image('stages/philly/street')});
+	list.push({type: "IMAGE", instance: Paths.image('stages/philly/behindTrain')});
 }
 
 function create():Void {
-	sky = new FlxSprite(-100, 0);
+	sky = new FlxSprite(-100, 0).loadGraphic(Paths.image('stages/philly/sky'));
 	sky.scrollFactor.set(0.1, 0.1);
-	sky.loadGraphic(Files.getGraphic(Paths.image('sky', 'stages/philly')));
-	add(sky);
+	push(sky);
 
-	city = new FlxSprite(-10, 0);
+	city = new FlxSprite(-10, 0).loadGraphic(Paths.image('stages/philly/city'));
 	city.scrollFactor.set(0.3, 0.3);
-	city.loadGraphic(Files.getGraphic(Paths.image('city', 'stages/philly')));
-	add(city);
+	push(city);
 
-	lights = new FlxSprite(0, 0);
+	lights = new FlxSprite(0, 0).loadGraphic(Paths.image('stages/philly/win'));
 	lights.scrollFactor.set(0.3, 0.3);
-	lights.loadGraphic(Files.getGraphic(Paths.image('win', 'stages/philly')));
-	add(lights);
+	push(lights);
 
-	behindtrain = new FlxSprite(-40, 50);
-	behindtrain.loadGraphic(Files.getGraphic(Paths.image('behindTrain', 'stages/philly')));
-	add(behindtrain);
+	behindtrain = new FlxSprite(-40, 50).loadGraphic(Paths.image('stages/philly/behindTrain'));
+	push(behindtrain);
 
-	train = new FlxSprite(2000, 360);
-	train.loadGraphic(Files.getGraphic(Paths.image('train', 'stages/philly')));
-	add(train);
+	train = new FlxSprite(2000, 360).loadGraphic(Paths.image('stages/philly/train'));
+	push(train);
 
-	street = new FlxSprite(-40, 50);
-	street.loadGraphic(Files.getGraphic(Paths.image('street', 'stages/philly')));
-	add(street);
+	street = new FlxSprite(-40, 50).loadGraphic(Paths.image('stages/philly/street'));
+	push(street);
 
-	trainsound = new FlxSound();
-	trainsound.loadEmbedded(Files.getSound(Paths.sound('train_passes', 'stages/philly')), true);
+	trainsound = new FlxSound().loadEmbedded(Files.getSound(Paths.sound('stages/philly/train_passes')));
 	FlxG.sound.list.add(trainsound);
-	add(trainsound);
 
-    pushGlobal();
+    setGlobal();
 }
 
-function update(elapsed:Float):Void {
-    if(!PreSettings.getPreSetting("Background Animated", "Graphic Settings")){return;}
+function update(_elapsed:Float):Void {
+    if (!Settings.get('Animated', 'GraphicSettings')) { return; }
 
-    if(trainMoving){
-        trainFrameTiming += elapsed;
+    if (trainMoving) {
+        trainFrameTiming += _elapsed;
 
-        if(trainFrameTiming >= 1 / 24){
+        if (trainFrameTiming >= 1 / 24) {
             updateTrainPos();
             trainFrameTiming = 0;
         }
     }
 
-    lights.alpha -= (getState().conductor.crochet / 1000) * FlxG.elapsed * 1.5;
+    lights.alpha -= (conductor.crochet / 1000) * FlxG.elapsed * 1.5;
 }
 
 function beatHit(curBeat:Int):Void {
-    if(!PreSettings.getPreSetting("Background Animated", "Graphic Settings")){return;}
+    if (!Settings.get('Animated', 'GraphicSettings')) { return; }
     
-    if(!trainMoving){trainCooldown += 1;}
+    if (!trainMoving) { trainCooldown += 1; }
 
-    if(curBeat % 4 == 0){
+    if (curBeat % 4 == 0) {
         curLight = FlxG.random.int(0, phillyLightsColors.length - 1, [curLight]);
         lights.color = phillyLightsColors[curLight];
         lights.alpha = 1;
     }
 
-    if(curBeat % 8 == 4 && FlxG.random.bool(30) && !trainMoving && trainCooldown > 8){
+    if (curBeat % 8 == 4 && FlxG.random.bool(30) && !trainMoving && trainCooldown > 8) {
         trainCooldown = FlxG.random.int(-4, 0);
         trainStart();
     }
@@ -107,32 +99,32 @@ function beatHit(curBeat:Int):Void {
 
 function trainStart():Void {
     trainMoving = true;
-    if(!trainsound.playing){trainsound.play(true);}
+    trainsound.play(true);
 }
 
 function stepHit(curStep:Int):Void {
-    if(trainMoving && trainsound.time >= 4700 && curStep % 2 == 0){
-        var gf_char:Character = getState().stage.getCharacterByType("Girlfriend");
-        if(gf_char != null){gf_char.singAnim('hairBlow', true, true);}
+    if (trainMoving && trainsound.time >= 4700 && curStep % 2 == 0) {
+        var gf_char:Character = getCharacterByStatus("Girlfriend");
+        if (gf_char != null) { gf_char.emoteAnim('hairBlow', true); }
     }
 }
 function updateTrainPos():Void {
-    if(trainsound.time >= 4700){
+    if (trainsound.time >= 4700) {
         train.visible = true;
         startedMoving = true;
     }
 
-    if(startedMoving){
+    if (startedMoving) {
         train.x -= 400;
 
-        if(train.x < -2000 && !trainFinishing){
+        if (train.x < -2000 && !trainFinishing) {
             train.x = -1150;
             trainCars -= 1;
 
-            if(trainCars <= 0){trainFinishing = true;}
+            if (trainCars <= 0) {trainFinishing = true; }
         }
 
-        if(train.x < -4000 && trainFinishing){trainReset();}
+        if (train.x < -4000 && trainFinishing) { trainReset(); }
     }
 }
 
@@ -146,14 +138,11 @@ function trainReset():Void {
     trainFinishing = false;
     startedMoving = false;
     
-    var gf_char:Character = getState().stage.getCharacterByType("Girlfriend");
-    if(gf_char != null){gf_char.singAnim('hairFall', true, true);}
+    var gf_char:Character = getCharacterByStatus("Girlfriend");
+    if (gf_char != null) { gf_char.emoteAnim('hairFall', true); }
 }
 
-function song_paused(isPaused:Bool):Void {
-    if(isPaused){
-        trainsound.pause();
-    }else{
-        trainsound.resume();
-    }
+function paused(isPaused:Bool):Void {
+    if (isPaused) { trainsound.pause(); } 
+    else { trainsound.resume(); }
 }

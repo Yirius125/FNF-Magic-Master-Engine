@@ -1,4 +1,4 @@
 Bar_0:0,0,17,17:0,0,17,17
-HoldEnd_0:0,17,17,17
-HoldPiece_0:0,18,17,17
+HoldEnd_0:0,17,17,5
+HoldPiece_0:0,18,17,5
 SwitchHold_0:18,18,17,17

@@ -11,7 +11,6 @@ import flixel.tweens.FlxTween;
 import objects.game.Alphabet;
 import flixel.sound.FlxSound;
 import flixel.group.FlxGroup;
-import flixel.tweens.FlxEase;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flash.geom.Rectangle;
@@ -42,7 +41,7 @@ class PopLangState extends MusicBeatState {
     private var toNext:String;
 
     override public function create():Void{
-        if(onConfirm != null){toNext = onConfirm; onConfirm = null;}
+        if (onConfirm != null) {toNext = onConfirm; onConfirm = null; }
         
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBG').getGraphic());
         bg.setGraphicSize(Std.int(FlxG.width), Std.int(FlxG.height)); bg.screenCenter();
@@ -56,7 +55,7 @@ class PopLangState extends MusicBeatState {
 		backRect1.alpha = 0.6;
 
         langGroup = new FlxTypedGroup<Alphabet>();
-        for(lang in Language.list){
+        for (lang in Language.list) {
             var new_lang:Alphabet = new Alphabet(0,-1000, {scale:0.7, animated: true, bold: true, text: lang});
             new_lang.screenCenter(X);
             langGroup.add(new_lang);
@@ -78,22 +77,22 @@ class PopLangState extends MusicBeatState {
         super.create();
     }
 
-    override function update(elapsed:Float){        
+    override function update(elapsed:Float) {        
         super.update(elapsed);
         
         Magic.sortMembersByY(cast langGroup, (FlxG.height / 2) - (langGroup.members[curLang].height / 2), curLang, 25);
 
-		if(controls.check("MenuUp", JUST_PRESSED)){changeLang(-1);}
-		if(controls.check("MenuDown", JUST_PRESSED)){changeLang(1);}
+		if (controls.check("MenuUp", JUST_PRESSED)) {changeLang(-1); }
+		if (controls.check("MenuDown", JUST_PRESSED)) {changeLang(1); }
 
-		if(controls.check("MenuAccept", JUST_PRESSED)){chooseLang();}
+		if (controls.check("MenuAccept", JUST_PRESSED)) {chooseLang(); }
 	}
     
 	public function changeLang(change:Int = 0, force:Bool = false):Void {
-		curLang += change; if(force){curLang = change;}
+		curLang += change; if (force) {curLang = change; }
 
-		if(curLang < 0){curLang = langGroup.length - 1;}
-		if(curLang >= langGroup.length){curLang = 0;}
+		if (curLang < 0) {curLang = langGroup.length - 1; }
+		if (curLang >= langGroup.length) {curLang = 0; }
 	}
 
     public function chooseLang():Void {

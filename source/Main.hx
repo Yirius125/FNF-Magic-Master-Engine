@@ -43,20 +43,20 @@ class Main extends Sprite {
 		Lib.current.addChild(new Main());
 	}
 
-	public function new(){
+	public function new() {
 		super();
 		
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
-		if(stage != null){
+		if (stage != null) {
 			init();
-		}else{
+		} else{
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 	}
 
 	private function init(?E:Event):Void {
-		if(hasEventListener(Event.ADDED_TO_STAGE)){
+		if (hasEventListener(Event.ADDED_TO_STAGE)) {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
 
@@ -67,7 +67,7 @@ class Main extends Sprite {
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
-		if(zoom == -1){
+		if (zoom == -1) {
 			var ratioX:Float = stageWidth / gameWidth;
 			var ratioY:Float = stageHeight / gameHeight;
 			zoom = Math.min(ratioX, ratioY);
@@ -87,7 +87,7 @@ class Main extends Sprite {
 		var ng:NGio = new NGio(APIStuff.API, APIStuff.EncKey);
 		trace('Newgrounds Loaded');
 		#end
-		FlxG.save.bind('funkin', 'Yirius125');
+		FlxG.save.bind('funkin', 'Yirius125/Magic Master Engine');
 
 		Highscore.init();
 		Controls.init();
@@ -97,13 +97,13 @@ class Main extends Sprite {
 		
 		#if desktop
 		Discord.init();
-		Application.current.onExit.add(function(exitCode){Discord.shutdown();});
+		Application.current.onExit.add(function(exitCode) {Discord.shutdown(); });
 
             #if !switch
                 NGio.unlockMedal(60960);
 
                 // If it's Friday according to da clock
-                if(Date.now().getDay() == 5){NGio.unlockMedal(61034);}
+                if (Date.now().getDay() == 5) {NGio.unlockMedal(61034); }
 			#end
 		#end
 		

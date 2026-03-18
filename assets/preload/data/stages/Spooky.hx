@@ -1,43 +1,46 @@
-import("flixel.FlxSprite", "FlxSprite");
-import("PreSettings", "PreSettings");
-import("utils.Files", "Files");
-import("flixel.FlxG", "FlxG");
-import("utils.Paths", "Paths");
+import flixel.FlxSprite;
+import utils.Settings;
+import utils.Files;
+import utils.Paths;
+import flixel.FlxG;
 
-preset("initChar", 0);
 preset("camP_1", [400,230]);
 preset("camP_2", [1300,570]);
+preset("initChar", 0);
 preset("zoom", 1.1);
 
 var background:FlxSprite = null;
 
-function addToLoad(temp):Void {
-	temp.push({type: "IMAGE", instance: Paths.image('halloween_bg','stages/spooky')});
-	temp.push({type: "SOUND", instance: Paths.image('thunder_1','stages/spooky')});
-	temp.push({type: "SOUND", instance: Paths.image('thunder_2','stages/spooky')});
+function cache(list:Array<Dynamic>):Void {
+	list.push({type: "IMAGE", instance: Paths.image('stages/spooky/halloween_bg')});
+	list.push({type: "SOUND", instance: Paths.image('stages/spooky/thunder_1')});
+	list.push({type: "SOUND", instance: Paths.image('stages/spooky/thunder_2')});
 }
 
 function create():Void {
 	background = new FlxSprite(-200, -110);
-	background.frames = Files.getAtlas(Paths.image('halloween_bg', 'stages/spooky'));
+	background.frames = Files.getAtlas(Paths.image('stages/spooky/halloween_bg'));
 	background.animation.addByPrefix('idle', 'halloweem bg lightning strike', 30, false);
 	background.animation.play('idle');
-	add(background);
+	push(background);
 
-	pushGlobal();
+	setGlobal();
 }
 
 var lightningStrikeBeat:Int = 0;
 var lightningOffset:Int = 8;
 function beatHit(curBeat:Int):Void {
-	if(!PreSettings.getPreSetting("Background Animated", "Graphic Settings")){return;}
-    if(FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset){lightningStrikeShit(curBeat);}
+    if (!Settings.get("Animated", "GraphicSettings")) { return; }
+	
+    if (FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset) { lightningStrikeShit(curBeat); }
 }
 
 function lightningStrikeShit(curBeat:Int):Void {
-	FlxG.sound.play(Files.getSound(Paths.soundRandom('thunder_', 1, 2, 'stages/spooky')));
+	FlxG.sound.play(Files.getSound(Paths.soundRandom('stages/spooky/thunder_', 1, 2)));
 	background.animation.play('idle');
+
 	lightningStrikeBeat = curBeat;
 	lightningOffset = FlxG.random.int(8, 24);
-    for(i in 0...getState().stage.character_Length){getState().stage.getCharacterById(i).singAnim('scared');}
+
+    for (f_i in 0...character_Length) { getCharacterById(f_i).emoteAnim('scared', true); }
 }

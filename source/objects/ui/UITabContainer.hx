@@ -40,7 +40,7 @@ class UITabContainer extends FlxUIGroup {
 
         lblTabTitle = new FlxUIText(0, 0, 0, _title, _size); addTab(lblTabTitle);
 
-        hideButton = new UIButton(0, -4, 30, 16, "", 1, null, 0xffe01a1a, ()->{switchTab();});
+        hideButton = new UIButton(0, -4, 30, 16, "", 1, null, 0xffe01a1a, ()->{switchTab(); });
         hideButton.x = width - hideButton.width - (body.list_width * 2);
         addTab(hideButton);
 
@@ -59,24 +59,24 @@ class UITabContainer extends FlxUIGroup {
     }
 
     override public function update(elapsed:Float):Void {
-        if(FlxG.mouse.justPressed && isOverlaping() && focused != this && (focused == null || (focused != null && !focused.isOverlaping()))){
+        if (FlxG.mouse.justPressed && isOverlaping() && focused != this && (focused == null || (focused != null && !focused.isOverlaping()))) {
             focused = this;
 
-            if(FlxG.state.members.contains(this)){
+            if (FlxG.state.members.contains(this)) {
                 FlxG.state.remove(this, true);
                 FlxG.state.add(this);
             }
         }
-        if(FlxG.mouse.justPressed && FlxG.mouse.overlaps(tab) && dragged != this && (focused == null || (focused != null && (focused == this || (focused != this && !focused.isOverlaping()))))){
+        if (FlxG.mouse.justPressed && FlxG.mouse.overlaps(tab) && dragged != this && (focused == null || (focused != null && (focused == this || (focused != this && !focused.isOverlaping()))))) {
             _offset.set(FlxG.mouse.x - x, FlxG.mouse.y - y);
-            if(!isHidden){body.active = true;}
+            if (!isHidden) {body.active = true; }
             dragged = this;
         }
-        if(dragged == this){
+        if (dragged == this) {
             setPosition(FlxG.mouse.x - _offset.x, FlxG.mouse.y - _offset.y);
             y = Math.min(Math.max(y, 0), _bounds.y - tab.height);
             x = Math.min(Math.max(x, 0), _bounds.x - width);
-            if(!FlxG.mouse.pressed){dragged = null;}
+            if (!FlxG.mouse.pressed) {dragged = null; }
         }
 
         body.active = focused == this && !isHidden;
@@ -90,16 +90,16 @@ class UITabContainer extends FlxUIGroup {
     }
 
 	override public function draw():Void {
-        if(!isHidden){body.draw();}
+        if (!isHidden) {body.draw(); }
         tab.draw();
 
         #if FLX_DEBUG if (FlxG.debugger.drawDebug) { drawDebug(); } #end
     }
 
 	public function resize(_w:Float, _h:Float):Void {
-        if(tab != null){tab.resize(_w, _h);}
-        if(body != null){body.resize(_w, _h);}
-        if(hideButton != null){hideButton.x = width - hideButton.width - body.list_width - 5;}
+        if (tab != null) {tab.resize(_w, _h); }
+        if (body != null) {body.resize(_w, _h); }
+        if (hideButton != null) {hideButton.x = width - hideButton.width - body.list_width - 5; }
     }
     
 	override public function destroy():Void {
@@ -108,7 +108,7 @@ class UITabContainer extends FlxUIGroup {
         lblTabTitle = FlxDestroyUtil.destroy(lblTabTitle);
         hideButton = FlxDestroyUtil.destroy(hideButton);
     
-        if(focused == this){focused = null;}
+        if (focused == this) {focused = null; }
     
         super.destroy();
     }

@@ -1,93 +1,94 @@
 {
 	"aspect": "WithGf",
+	"icon": "bf",
 	"position": [
 		0,
 		320
 	],
 	"scale": 1,
+	"color": "#409fff",
+	"zoom": 0.8,
+	"image": "BfHoldingGf",
+	"name": "Boyfriend",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"camera": [
+		260,
+		510
+	],
+	"onRight": false,
+	"skin": "Default",
 	"animations": [
 		{
-			"loop": false,
 			"symbol": "BF NOTE DOWN",
-			"key": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
-			"loop": false,
 			"symbol": "MISS BF NOTE DOWN",
-			"key": "singDOWNmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWNmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF NOTE LEFT",
-			"key": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
-			"loop": false,
 			"symbol": "MISS BF NOTE LEFT",
-			"key": "singLEFTmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFTmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF NOTE RIGHT",
-			"key": "singRIGHT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"loop": false,
 			"symbol": "MISS BF NOTE RIGHT",
-			"key": "singRIGHTmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHTmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF NOTE UP",
-			"key": "singUP",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		},
 		{
-			"loop": false,
 			"symbol": "MISS BF NOTE UP",
-			"key": "singUPmiss",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUPmiss"
 		},
 		{
-			"loop": false,
 			"symbol": "BF catches GF",
-			"key": "catch",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "catch"
 		},
 		{
-			"loop": false,
 			"symbol": "BF idle dance",
-			"key": "idle",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		}
-	],
-	"name": "Boyfriend",
-	"image": "BfHoldingGf",
-	"zoom": 0.8,
-	"antialiasing": true,
-	"skin": "Default",
-	"onRight": false,
-	"camera": [
-		0,
-		0
-	],
-	"icon": "bf",
-	"color": "#409fff",
-	"singTime": 1
+	]
 }

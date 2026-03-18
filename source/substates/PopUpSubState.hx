@@ -25,29 +25,33 @@ import objects.ui.UIList;
 import flixel.ui.FlxCustomButton;
 
 class PopUpSubState extends MusicBeatSubstate {
-	public var onYes:Void->Void = function(){};
+	public var onYes:Void->Void = function() {};
     
     public var MENU:FlxUITabMenu;
 
-    public function new(information:String, onYes:Void->Void, onClose:Void->Void){
+    public var d_information:String;
+
+    public function new(_information:String, onYes:Void->Void, onClose:Void->Void) {
+        this.d_information = _information;
 		this.onYes = onYes;
         super(onClose);
-		curCamera.bgColor.alpha = 200;
-
-        MENU = new FlxUITabMenu(null, [], true);
-        MENU.cameras = [curCamera];
-        MENU.resize(400, 100);
-        addMENUTABS(information);
-        add(MENU);
 	}
 
 	override function create() {
 		super.create();
+        
+		curCamera.bgColor.alpha = 200;
+
+        MENU = new FlxUITabMenu(null, [], true);
+        MENU.resize(400, 100);
+        addMENUTABS(d_information);
+        MENU.camera = curCamera;
+        add(MENU);
 		
 		FlxG.mouse.visible = true;
 	}
 
-	public function doClose(){
+	public function doClose() {
 		canControlle = false;
         curCamera.alpha = 0;
         close();
@@ -64,8 +68,8 @@ class PopUpSubState extends MusicBeatSubstate {
         MENU.resize(400, 25 + lblInformation.height + 75);
         MENU.screenCenter();
 
-        var btnYes:FlxButton = new FlxCustomButton(0, 0, 150, null, "Yes", null, FlxColor.GREEN, function(){onYes(); doClose();});
-        var btnNo:FlxButton = new FlxCustomButton(0, 0, 150, null, "No", null, FlxColor.RED, function(){doClose();});
+        var btnYes:FlxButton = new FlxCustomButton(0, 0, 150, null, "Yes", null, FlxColor.GREEN, () -> { onYes(); doClose(); });
+        var btnNo:FlxButton = new FlxCustomButton(0, 0, 150, null, "No", null, FlxColor.RED, () -> { doClose(); });
         btnYes.setPosition(MENU.width - btnYes.width - 25, MENU.height - btnYes.height - 25);
         btnNo.setPosition(25, MENU.height - btnYes.height - 25);
         tabMENU.add(btnYes); tabMENU.add(btnNo);
