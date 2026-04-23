@@ -10,7 +10,6 @@ We prefer that most mods for this Engine are created to be used from the Engine 
 _____________________________________
 
 ## || <New Features!!> ||
-![](https://github.com/Yirius125/FNF-Magic-Master-Engine-MAIN/blob/main/docs/img/MagicChart.PNG)
 * Key Notes Support [1k - 10k] (Now you can create Songs with from 1k to 10k. Each number of Notes can be configured from the Options)
 * Duel Mode (Now you can play with your friends LOCALLY to your favorite songs from this mode) !!!
 * Lang Support [English, Spanish] (You can add more languages from the Archives)
