@@ -1,57 +1,59 @@
 {
 	"aspect": "Default",
+	"icon": "mom",
 	"position": [
 		70,
 		-65
 	],
 	"scale": 1,
+	"color": "#ff2eb9",
+	"name": "Mom",
+	"image": "Mom_assets",
+	"zoom": 0.8,
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"skin": "Default",
+	"onRight": true,
+	"camera": [
+		289,
+		224
+	],
 	"animations": [
 		{
-			"loop": false,
 			"symbol": "MOM DOWN POSE",
-			"key": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
-			"loop": false,
 			"symbol": "Mom Idle",
-			"key": "idle",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
-			"loop": false,
 			"symbol": "Mom Left Pose",
-			"key": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
-			"loop": false,
 			"symbol": "Mom Pose Left",
-			"key": "singRIGHT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"loop": false,
 			"symbol": "Mom Up Pose",
-			"key": "singUP",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		}
-	],
-	"zoom": 0.8,
-	"image": "Mom_assets",
-	"name": "Mom",
-	"antialiasing": true,
-	"singTime": 1,
-	"icon": "mom",
-	"camera": [
-		83,
-		120
-	],
-	"onRight": true,
-	"skin": "Default"
+	]
 }

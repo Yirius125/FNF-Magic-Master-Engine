@@ -54,12 +54,11 @@ import substates.InformationSubState;
 import substates.MusicBeatSubstate;
 import substates.GameOverSubstate;
 import substates.SettingsSubState;
-import substates.ResultSubstate;
+import substates.ResultSubState;
 import substates.PauseSubState;
 import substates.FadeSubState;
 
 import states.editors.CharacterEditorState;
-import states.editors.PackerEditorState;
 import states.editors.StageEditorState;
 import states.editors.ChartEditorState;
 import states.editors.XMLEditorState;
@@ -85,34 +84,30 @@ using StringTools;
 
 class PreLoaderState extends FlxUIState {
 	public var nextState:Array<Dynamic> = ["states.TitleState", []];
-	public var menu_list:Array<Dynamic> = [];
+	public var subStateList:Array<Dynamic> = [];
 
 	override public function create():Void {		
 		FlxG.autoPause = false;
+		Paths.useMods = false;
+		
 		super.create();
+		
+    	FlxG.mouse.visible = false;
 
 		FlxAssets.FONT_DEFAULT = "assets/fonts/funkin.ttf";
 		
 		#if windows Windows.resetBorderColor(); #end
 		Players.init();
 
-		if(!FlxG.save.data.first){menu_list.push(["substates.menus.LangSubMenu", [()->{FlxG.resetState();}]]);}
-		if(!Mods.same()){menu_list.push(["substates.menus.YesNoSubMenu", [
+		if (!FlxG.save.data.first) { subStateList.push(["substates.menus.LangSubMenu", [()->{ FlxG.resetState(); }]]); }
+		if (!Mods.same()) { subStateList.push(["substates.menus.YesNoSubMenu", [
 			Language.get("mod_advert"), 
 			()->{
 				nextState[0] = "states.ModListState";
 				nextState[1] = ["states.MainMenuState"];
 			}, 
-			()->{ 
-				Mods.reload();
-				Magic.reload(); 
-			}
-		]]);}
-
-		if(menu_list.length <= 0){ 
-			Mods.reload();
-			Magic.reload(); 
-		}
+			()->{ }
+		]]); }
 
 		checkSubMenu();
 	}
@@ -120,14 +115,23 @@ class PreLoaderState extends FlxUIState {
 	override function closeSubState():Void {
 		super.closeSubState();
 
-		Timer.delay(()->{checkSubMenu();}, 300);		
+		Timer.delay(()->{ checkSubMenu(); }, 300);		
 	}
 
 	public function checkSubMenu():Void {
-		if(menu_list.length > 0){
-			var cur_menu = menu_list.shift();
+		if (subStateList.length > 0) {
+			var cur_menu = subStateList.shift();
 			loadSubState(cur_menu[0], cur_menu[1]);
+			
 			return;
+		}
+		
+		Paths.useMods = true;		
+		Magic.reload(); 
+
+		if (nextState[0] == "states.TitleState") {
+			var l_modState:String = Mods.getVar("initialState");
+			if (l_modState != null) { nextState[0] = l_modState; }
 		}
 
 		MusicBeatState.switchState(nextState[0], nextState[1]);
@@ -135,7 +139,7 @@ class PreLoaderState extends FlxUIState {
 
 	public function loadSubState(substate:String, args:Array<Any>):Void {
 		var to_create:Class<FlxSubState> = Type.resolveClass(substate) != null ? cast Type.resolveClass(substate) : null;
-		if(to_create == null){ trace("Null SubState"); return;}
+		if (to_create == null) { trace("Null SubState"); return; }
 		var new_substate:FlxSubState = cast Type.createInstance(to_create, args);
 		openSubState(new_substate);
 	}

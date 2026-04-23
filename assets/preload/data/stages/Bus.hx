@@ -1,7 +1,7 @@
+import flixel.FlxSprite;
+import utils.Settings;
 import utils.Files;
 import utils.Paths;
-import utils.Settings;
-import flixel.FlxSprite;
 
 preset("initChar", 4);
 preset("camP_1", [450,360]);
@@ -26,7 +26,7 @@ function create():Void {
 	window = new FlxSprite(-600, -50);
 	window.frames = Files.getAtlas(Paths.image('stages/bus/window'));
 	window.animation.addByPrefix('idle', 'window');
-	if(Settings.get('Animated', 'GraphicSettings')){window.animation.play('idle');}
+	if (Settings.get('Animated', 'GraphicSettings')) { window.animation.play('idle'); }
 	window.scale.set(1.2, 1.2);
 	window.updateHitbox();
 	window.scrollFactor.set(0.8, 0.8);
@@ -53,13 +53,13 @@ function create():Void {
 	radio = new FlxSprite(480, 530);
 	radio.frames = Files.getAtlas(Paths.image('stages/bus/Radio'));
 	radio.animation.addByPrefix('idle', 'RADIO', 24, false);
-	if(Settings.get('Animated', 'GraphicSettings')){radio.animation.play('idle');}
+	if (Settings.get('Animated', 'GraphicSettings')) {radio.animation.play('idle'); }
 	push(radio);
 
-	pushGlobal();
+	setGlobal();
 }
 
 function beatHit(curBeat:Int):Void {
-	if(!Settings.get("Animated", "GraphicSettings")){return;}
+	if (!Settings.get("Animated", "GraphicSettings")) { return; }
 	radio.animation.play('idle', true);
 }

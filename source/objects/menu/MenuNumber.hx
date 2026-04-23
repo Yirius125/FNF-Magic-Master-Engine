@@ -22,7 +22,7 @@ class MenuNumber extends Alphabet {
     private var cooldown:Float = 0.1;
 
     public function new(_x:Float, _y:Float, _value:Float, ?_min:Float, ?_max:Float, ?_step:Float, ?_setting:String):Void {
-        if(_step != null){this.step = _step;}
+        if (_step != null) {this.step = _step; }
         this.setting = _setting;
         this.value = _value;
         this.min = _min;
@@ -35,15 +35,15 @@ class MenuNumber extends Alphabet {
 
     override public function update(elapsed:Float):Void {
         super.update(elapsed);
-        if(!isSelected){return;}
+        if (!isSelected) { return; }
 
-        if(controls.check("MenuLeft", PRESSED)){
-            if(holdTimer == 0 || holdTimer > 1 && holdTimer <= 3 && cooldown >= 0.1 || holdTimer > 3 && cooldown >= 0.01){toggle_sub(); cooldown = 0;}
+        if (controls.check("MenuLeft", PRESSED)) {
+            if (holdTimer == 0 || holdTimer > 1 && holdTimer <= 3 && cooldown >= 0.1 || holdTimer > 3 && cooldown >= 0.01) {toggle_sub(); cooldown = 0; }
             holdTimer += elapsed; cooldown += elapsed;
-        }else if(controls.check("MenuRight", PRESSED)){
-            if(holdTimer == 0 || holdTimer > 1 && holdTimer <= 3 && cooldown >= 0.1 || holdTimer > 3 && cooldown >= 0.01){toggle_add(); cooldown = 0;}
+        } else if (controls.check("MenuRight", PRESSED)) {
+            if (holdTimer == 0 || holdTimer > 1 && holdTimer <= 3 && cooldown >= 0.1 || holdTimer > 3 && cooldown >= 0.01) {toggle_add(); cooldown = 0; }
             holdTimer += elapsed; cooldown += elapsed;
-        }else{
+        } else{
             holdTimer = 0;
             cooldown = 0;
         }
@@ -51,18 +51,18 @@ class MenuNumber extends Alphabet {
     
     public function toggle_add():Void {
         this.value += this.step; FlxMath.roundDecimal(this.value, 1);
-        if(this.max != null && this.value > this.max){this.value = this.max;}
+        if (this.max != null && this.value > this.max) {this.value = this.max; }
 
-        if(setting != null){Settings.get_setting(setting).set(value);}
+        if (setting != null) { Settings.get_setting(setting).set(value); }
 
         setText({font: "small_numbers", text: '${value}'});
 		FlxG.sound.play(Paths.sound("scrollMenu").getSound());
     }
     public function toggle_sub():Void {
         this.value -= this.step; FlxMath.roundDecimal(this.value, 1);
-        if(this.min != null && this.value < this.min){this.value = this.min;}
+        if (this.min != null && this.value < this.min) {this.value = this.min; }
         
-        if(setting != null){Settings.get_setting(setting).set(value);}
+        if (setting != null) { Settings.get_setting(setting).set(value); }
 
         setText({font: "small_numbers", text: '${value}'});
 		FlxG.sound.play(Paths.sound("scrollMenu").getSound());

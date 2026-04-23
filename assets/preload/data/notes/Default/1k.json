@@ -50,7 +50,7 @@
         ],
         "notes":[
             {
-                "sing_animation": "singUP",
+                "sing_animation": "UP",
                 "animations":[
                     {
                         "anim": "static",

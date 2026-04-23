@@ -9,6 +9,9 @@ We prefer that most mods for this Engine are created to be used from the Engine 
 
 _____________________________________
 
+# WARNING
+* The slide notes were removed a long time ago. I’m sorry i didn’t make an announcement when this happened, but I had abandoned this project after its initial release. I decided to revive it briefly for the release of Vs Fliqpy Full Week. You’re free to use this engine, but I’m sorry to say that I won’t be continuing to support this project.
+
 ## || <New Features!!> ||
 * Key Notes Support [1k - 10k] (Now you can create Songs with from 1k to 10k. Each number of Notes can be configured from the Options)
 * Duel Mode (Now you can play with your friends LOCALLY to your favorite songs from this mode) !!!

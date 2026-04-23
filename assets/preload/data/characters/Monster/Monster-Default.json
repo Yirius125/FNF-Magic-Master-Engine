@@ -1,57 +1,59 @@
 {
 	"aspect": "Default",
+	"icon": "monster",
 	"position": [
 		-55,
 		85
 	],
 	"scale": 1,
+	"color": "#d1d126",
+	"name": "Monster",
+	"image": "Monster_Assets",
+	"zoom": 0.8,
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"skin": "Default",
+	"onRight": true,
+	"camera": [
+		113.333333333333,
+		315
+	],
 	"animations": [
 		{
-			"loop": false,
 			"symbol": "Monster Right note",
-			"key": "singRIGHT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"loop": false,
 			"symbol": "Monster left note",
-			"key": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
-			"loop": false,
 			"symbol": "monster down",
-			"key": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
-			"loop": false,
 			"symbol": "monster idle",
-			"key": "idle",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
-			"loop": false,
 			"symbol": "monster up note",
-			"key": "singUP",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		}
-	],
-	"zoom": 0.8,
-	"image": "Monster_Assets",
-	"name": "Monster",
-	"antialiasing": true,
-	"camera": [
-		15,
-		20
-	],
-	"icon": "monster",
-	"onRight": true,
-	"skin": "Default",
-	"singTime": 1
+	]
 }

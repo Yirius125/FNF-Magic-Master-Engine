@@ -1,112 +1,114 @@
 {
 	"aspect": "Car",
+	"icon": "mom",
 	"position": [
 		-95,
 		-55
 	],
 	"scale": 1,
+	"color": "#ff2eb9",
+	"name": "Mom",
+	"image": "momCar",
+	"zoom": 0.8,
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"skin": "Default",
+	"onRight": true,
+	"camera": [
+		193.888888888889,
+		215
+	],
 	"animations": [
 		{
-			"loop": false,
 			"symbol": "MOM DOWN POSE",
-			"key": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
-			"loop": false,
 			"symbol": "Mom Idle",
-			"key": "idle",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
-			"loop": false,
 			"symbol": "Mom Left Pose",
-			"key": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
-			"loop": false,
 			"symbol": "Mom Pose Left",
-			"key": "singRIGHT",
-			"fps": 24,
-			"indices": []
-		},
-		{
 			"loop": false,
-			"symbol": "Mom Up Pose",
-			"key": "singUP",
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
+			"symbol": "Mom Up Pose",
+			"loop": false,
+			"fps": 24,
+			"indices": [],
+			"key": "singUP"
+		},
+		{
+			"loop": true,
+			"symbol": "Mom Idle",
+			"fps": 24,
 			"indices": [
 				8,
 				9,
 				10
 			],
-			"symbol": "Mom Idle",
-			"fps": 24,
-			"key": "idle-loop",
-			"loop": true
+			"key": "idle-loop"
 		},
 		{
-			"indices": [
-				7,
-				8,
-				9
-			],
+			"loop": true,
 			"symbol": "Mom Left Pose",
 			"fps": 24,
-			"key": "singLEFT-loop",
-			"loop": true
-		},
-		{
 			"indices": [
 				7,
 				8,
 				9
 			],
+			"key": "singLEFT-loop"
+		},
+		{
+			"loop": true,
 			"symbol": "Mom Pose Left",
 			"fps": 24,
-			"key": "singRIGHT-loop",
-			"loop": true
+			"indices": [
+				7,
+				8,
+				9
+			],
+			"key": "singRIGHT-loop"
 		},
 		{
-			"indices": [
-				12,
-				13,
-				14
-			],
+			"loop": true,
 			"symbol": "Mom Up Pose",
 			"fps": 24,
-			"key": "singUP-loop",
-			"loop": true
-		},
-		{
 			"indices": [
 				12,
 				13,
 				14
 			],
+			"key": "singUP-loop"
+		},
+		{
+			"loop": true,
 			"symbol": "MOM DOWN POSE",
 			"fps": 24,
-			"key": "singDOWN-loop",
-			"loop": true
+			"indices": [
+				12,
+				13,
+				14
+			],
+			"key": "singDOWN-loop"
 		}
-	],
-	"zoom": 0.8,
-	"image": "momCar",
-	"name": "Mom",
-	"antialiasing": true,
-	"camera": [
-		105,
-		-25
-	],
-	"icon": "mom",
-	"onRight": true,
-	"skin": "Default",
-	"singTime": 1
+	]
 }

@@ -131,7 +131,7 @@
         ],
         "notes":[
             {
-                "sing_animation": "singLEFT",
+                "sing_animation": "LEFT",
                 "animations":[
                     {
                         "anim": "static",
@@ -145,7 +145,7 @@
                 "color": "#c24b98"
             },
             {
-                "sing_animation": "singDOWN",
+                "sing_animation": "DOWN",
                 "animations":[
                     {
                         "anim": "static",
@@ -159,7 +159,7 @@
                 "color": "#00ffff"
             },
             {
-                "sing_animation": "singUP",
+                "sing_animation": "UP",
                 "animations":[
                     {
                         "anim": "static",
@@ -173,7 +173,7 @@
                 "color": "#11fa05"
             },
             {
-                "sing_animation": "singRIGHT",
+                "sing_animation": "RIGHT",
                 "animations":[
                     {
                         "anim": "static",

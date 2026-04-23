@@ -39,7 +39,7 @@ class ModCard extends FlxUITabMenu {
     public var controls:Controls = Players.get(0).controls;
     public var canControlle:Bool = false;
 
-    public function new(x:Float = 0, y:Float = 0, width:Float = 100, height:Float = 100, mod:Mod){
+    public function new(x:Float = 0, y:Float = 0, width:Float = 100, height:Float = 100, mod:Mod) {
         this.mod = mod;
         super(Magic.sliceRect(0, 0, 100, 100, Paths.image("menu_card", null, mod.name)), null, []);
         this.x = x;
@@ -48,7 +48,7 @@ class ModCard extends FlxUITabMenu {
 
         script = new Script();
         script.parent = this;
-        script.force('${mod.path}/card.hx', true);
+        script.force('${mod.path}/scripts/Card.hx', true);
 
         enableUI = new FlxUI(null, this);
         enableUI.name = "enable";
@@ -65,31 +65,31 @@ class ModCard extends FlxUITabMenu {
         script.call("preCreate");
 
         optLeft = new MenuButton(0, 0, "<", 0.3, ()->{
-            if(!canControlle){return;}
+            if (!canControlle) { return; }
             canControlle = false;
 
             var curInsert:Int = Mods.list.indexOf(mod) - 1;
 
             Mods.list.remove(mod);
-            if(curInsert < 0){curInsert = Mods.list.length;}
+            if (curInsert < 0) {curInsert = Mods.list.length; }
             Mods.list.insert(curInsert, mod);
-            if(callbacks.exists("onLeft")){callbacks.get("onLeft")();}
+            if (callbacks.exists("onLeft")) {callbacks.get("onLeft")(); }
 
-            Timer.delay(()->{canControlle = true;}, 100);
+            Timer.delay(()->{canControlle = true; }, 100);
         }, {enableColor: 0xff525252});
         optLeft.callAfterTransition = false;
         optRight = new MenuButton(0, 0, ">", 0.3, ()->{
-            if(!canControlle){return;}
+            if (!canControlle) { return; }
             canControlle = false;
 
             var curInsert:Int = Mods.list.indexOf(mod) + 1;
 
             Mods.list.remove(mod);
-            if(curInsert > Mods.list.length){curInsert = 0;}
+            if (curInsert > Mods.list.length) {curInsert = 0; }
             Mods.list.insert(curInsert, mod);
-            if(callbacks.exists("onRight")){callbacks.get("onRight")();}
+            if (callbacks.exists("onRight")) {callbacks.get("onRight")(); }
 
-            Timer.delay(()->{canControlle = true;}, 100);
+            Timer.delay(()->{canControlle = true; }, 100);
         }, {enableColor: 0xff525252});
         optRight.callAfterTransition = false;
         backMove = Magic.roundRect(0, 0, Std.int(optLeft.width + optRight.width) + 30, Std.int(Math.max(optLeft.height, optRight.height)) + 20, 15, 15, 0x38000000);
@@ -125,13 +125,13 @@ class ModCard extends FlxUITabMenu {
     override public function update(elapsed:Float):Void {
         super.update(elapsed);
 
-        if(canControlle){
-            switch(_selected_tab_id){
+        if (canControlle) {
+            switch (_selected_tab_id) {
                 case "normal":{
-                    if(controls.check("MenuBack")){if(callbacks.exists("disable")){callbacks.get("disable")();}}
-                    else if(controls.check("MenuLeft")){changeOption(-1);}
-                    else if(controls.check("MenuRight")){changeOption(1);}
-                    else if(controls.check("MenuAccept")){chooseOption();}
+                    if (controls.check("MenuBack")) {if (callbacks.exists("disable")) {callbacks.get("disable")(); }}
+                    else if (controls.check("MenuLeft")) {changeOption(-1); }
+                    else if (controls.check("MenuRight")) {changeOption(1); }
+                    else if (controls.check("MenuAccept")) {chooseOption(); }
                 }
             }
         }
@@ -142,25 +142,25 @@ class ModCard extends FlxUITabMenu {
     public function changeOption(_value:Int = 0, _force:Bool = false):Void {
         curOption = _force ? _value : curOption + _value;
 
-        if(curOption < 0){curOption = options.length - 1;}
-        if(curOption >= options.length){curOption = 0;}
+        if (curOption < 0) {curOption = options.length - 1; }
+        if (curOption >= options.length) {curOption = 0; }
 
-        for(opt in options){opt.disable();}
+        for (opt in options) {opt.disable(); }
         options[curOption].enable();
 
-        if(!_force){FlxG.sound.play(Paths.sound("scrollMenu").getSound(), 0.5);}
+        if (!_force) {FlxG.sound.play(Paths.sound("scrollMenu").getSound(), 0.5); }
     }
     public function chooseOption():Void {
         options[curOption].click();
     }
 
     override public function showTabId(name:String):Void {
-        if(name == "hidden"){name = mod.enabled ? "enable" : "disable";}
+        if (name == "hidden") {name = mod.enabled ? "enable" : "disable"; }
         super.showTabId(name);
 
         var i:Int = 0;
-		for(group in _tab_groups){
-            if(group.name == name){
+		for (group in _tab_groups) {
+            if (group.name == name) {
 				_selected_tab_id = name;
 				_selected_tab = i;
                 break;

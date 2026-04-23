@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin': Magic Master Engine" file="Magic Master Engine" packageName="com.yirius.magic" package="com.yirius.magic" main="Main" version="1.0" company="Yirius125" />
+	<app title="Friday Night Funkin': Magic Master Engine" file="Magic-Master-Engine" packageName="com.yirius.magic" package="com.yirius.magic" main="Main" version="1.0" company="Yirius125" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -75,6 +75,10 @@
 		NOT USING A DIRECT THING TO THE ASSET!!!
 	-->
 	<assets path="assets/fonts" embed='true'/>
+
+	<!-- _______________________________ Flags ______________________________ -->
+	<haxeflag name="-w" value="-WAll" />
+	
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />

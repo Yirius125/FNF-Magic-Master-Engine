@@ -10,7 +10,7 @@ class InformationSubState extends MusicBeatSubstate {
 
     public var lblInfo:Alphabet;
 
-	public function new(information:Array<Dynamic>, onClose:Void->Void){
+	public function new(information:Array<Dynamic>, onClose:Void->Void) {
 		super(onClose);
 		curCamera.bgColor.alpha = 200;
 		curCamera.alpha = 0;
@@ -23,28 +23,28 @@ class InformationSubState extends MusicBeatSubstate {
         _cam_follow.screenCenter();
 		curCamera.follow(_cam_follow, LOCKON);
 
-		FlxTween.tween(curCamera, {alpha: 1}, 1, {onComplete: function(twn){canControlle = true;}});
+		FlxTween.tween(curCamera, {alpha: 1}, 1, {onComplete: function(twn) {canControlle = true; }});
 	}
 
-	override function update(elapsed:Float){
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-        if(canControlle){
+        if (canControlle) {
             _cam_follow.y -= FlxG.mouse.wheel * 15;
 			
-			if(controls.check("MenuBack", JUST_PRESSED)){doClose();}
+			if (controls.check("MenuBack", JUST_PRESSED)) {doClose(); }
         }
 
-        if(_cam_follow.y >= lblInfo.y + lblInfo.height - (FlxG.height/2)){_cam_follow.y = lblInfo.y + lblInfo.height - (FlxG.height/2);}
-        if(_cam_follow.y <= (FlxG.height/2)){_cam_follow.y = (FlxG.height/2);}
+        if (_cam_follow.y >= lblInfo.y + lblInfo.height - (FlxG.height/2)) {_cam_follow.y = lblInfo.y + lblInfo.height - (FlxG.height/2); }
+        if (_cam_follow.y <= (FlxG.height/2)) {_cam_follow.y = (FlxG.height/2); }
 	}
 
-	override function destroy(){
+	override function destroy() {
 		super.destroy();
 	}
 
-	public function doClose(){
+	public function doClose() {
 		canControlle = false;
-		FlxTween.tween(curCamera, {alpha: 0}, 1, {onComplete: function(twn){close();}});
+		FlxTween.tween(curCamera, {alpha: 0}, 1, {onComplete: function(twn) {close(); }});
 	}
 }

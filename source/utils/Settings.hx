@@ -25,16 +25,17 @@ class Settings {
     public static var categories(get, never):Array<String>;
     public static function get_categories():Array<String> {
         var toReturn:Array<String> = [];
-        for(cat in current){toReturn.push(cat.name);}
+        for (cat in current) { toReturn.push(cat.name); }
         return toReturn;
     }
 
     public static function init():Void {
 		Settings._save = new FlxSave();
-		Settings._save.bind('settings', 'Yirius125');
+		Settings._save.bind('settings', 'Yirius125/Magic-Master-Engine');
 
         Settings.reset();
     }
+    
     public static function reset():Void {
         Settings.current = [];
 
@@ -56,21 +57,20 @@ class Settings {
         
         // Visual Settings | Category
         Settings.push_setting(new List_Setting("NoteSkin", "Default", Note.getTypes()), "VisualSettings");
-        Settings.push_setting(new List_Setting("SplashSkin", "Magic", ["Magic"]), "VisualSettings");
         Settings.push_setting(new Bool_Setting("SplashNotes", true), "VisualSettings");
         Settings.push_setting(new Bool_Setting("MoveCamera", true), "VisualSettings");
         Settings.push_setting(new Bool_Setting("BumpingCamera", true), "VisualSettings");
+        Settings.push_setting(new Bool_Setting("FlashingLights", true), "VisualSettings");
         
         // Graphic Settings | Category
-        Settings.push_setting(new Bool_Setting("UseGpu", false), "GraphicSettings");
+        Settings.push_setting(new Bool_Setting("VisibleMemory", true), "GraphicSettings");
+        Settings.push_setting(new Bool_Setting("UseGpu", true), "GraphicSettings");
         Settings.push_setting(new Number_Setting("Framerate", 60, 30, 240, 1), "GraphicSettings");
         Settings.push_setting(new Bool_Setting("Antialiasing", true), "GraphicSettings");
         Settings.push_setting(new Bool_Setting("Animated", true), "GraphicSettings");
-        Settings.push_setting(new Bool_Setting("Onlynotes", false), "GraphicSettings");
+        //Settings.push_setting(new Bool_Setting("OnlyNotes", false), "GraphicSettings");
         
         // Other Settings | Category
-        Settings.push_setting(new Bool_Setting("VisibleMemory", true), "OtherSettings");
-        Settings.push_setting(new Bool_Setting("FlashingLights", true), "OtherSettings");
         Settings.push_setting(new Bool_Setting("Violence", true), "OtherSettings");
         Settings.push_setting(new Bool_Setting("Gore", true), "OtherSettings");
         Settings.push_setting(new Bool_Setting("NotSafeForWork", true), "OtherSettings");
@@ -83,17 +83,17 @@ class Settings {
     }
     
     public static function load():Void {
-        if(_save.data.settings == null){trace("No Settings Saved"); return;}
+        if (_save.data.settings == null) { trace("No Settings Saved"); return; }
 
-        for(setting in cast(_save.data.settings, Array<Dynamic>)){
+        for (setting in cast(_save.data.settings, Array<Dynamic>)) {
             var cur_setting = get_setting(setting.name, setting.category);
-            if(cur_setting == null){continue;}
+            if (cur_setting == null) { continue; }
 
-            if((cur_setting is Bool_Setting)){
+            if ((cur_setting is Bool_Setting)) {
                 (cast(cur_setting, Bool_Setting)).toggle(setting.value);
-            }else if((cur_setting is List_Setting)){
+            } else if ((cur_setting is List_Setting)) {
                 (cast(cur_setting, List_Setting)).find(setting.value);
-            }else if((cur_setting is Number_Setting)){
+            } else if ((cur_setting is Number_Setting)) {
                 (cast(cur_setting, Number_Setting)).set(setting.value);
             }
         }
@@ -106,8 +106,8 @@ class Settings {
     public static function save():Void {
         var to_save:Array<{name:String, category:String, value:Dynamic}> = [];
 
-        for(category in current){
-            for(setting in category.settings){
+        for (category in current) {
+            for (setting in category.settings) {
                 to_save.push({
                     name: setting.name,
                     category: category.name,
@@ -116,9 +116,9 @@ class Settings {
             }
         }
 
-        if(_save.data.settings == null){_save.data.settings = [];}
-        for(setting in cast(_save.data.settings, Array<Dynamic>)){
-            if(get_setting(setting.name, setting.category) != null){continue;}
+        if (_save.data.settings == null) {_save.data.settings = []; }
+        for (setting in cast(_save.data.settings, Array<Dynamic>)) {
+            if (get_setting(setting.name, setting.category) != null) { continue; }
             to_save.push(setting);
         }
 
@@ -132,14 +132,14 @@ class Settings {
     }
 
     public static function get(_setting:String, ?_category:String):Dynamic {
-        if(_category != null){
+        if (_category != null) {
             var cur_category:Category = get_category(_category);
-            if(cur_category == null){return null;}
+            if (cur_category == null) { return null; }
             return cur_category.get(_setting);
         }
 
-        for(cur_category in current){
-            if(cur_category.setting(_setting) == null){continue;}
+        for (cur_category in current) {
+            if (cur_category.setting(_setting) == null) { continue; }
             return cur_category.get(_setting);
         }
 
@@ -152,28 +152,28 @@ class Settings {
         current.push(new_category);
     }
     public static function get_category(_name:String):Category {
-        for(_cat in current){
-            if(_cat.name != _name){continue;}
+        for (_cat in current) {
+            if (_cat.name != _name) { continue; }
             return _cat;
         }
         return null;
     }
 
     public static function push_setting(_setting:Setting, _category:String):Void {
-        if(get_category(_category) == null){push_category(_category);}
+        if (get_category(_category) == null) {push_category(_category); }
         var cur_category:Category = get_category(_category);
-        if(cur_category == null){return;}
+        if (cur_category == null) { return; }
         cur_category.push(_setting);
     }
     public static function get_setting(_setting:String, ?_category:String):Dynamic {
-        if(_category != null){
+        if (_category != null) {
             var cur_category:Category = get_category(_category);
-            if(cur_category == null){return null;}
+            if (cur_category == null) { return null; }
             return cur_category.setting(_setting);
         }
 
-        for(cur_category in current){
-            if(cur_category.setting(_setting) == null){continue;}
+        for (cur_category in current) {
+            if (cur_category.setting(_setting) == null) { continue; }
             return cur_category.setting(_setting);
         }
         

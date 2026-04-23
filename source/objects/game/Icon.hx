@@ -25,27 +25,27 @@ class Icon extends FlxSprite {
 		super();
 	}
 
-	public function setIcon(char:String, ?_strum:StrumLine){
+	public function setIcon(char:String, ?_strum:StrumLine) {
 		if (curIcon == char) { return; }
-		if( _strum != null) { parent = _strum; }
+		if ( _strum != null) { parent = _strum; }
 		curIcon = char;
 
-		switch(curIcon){
+		switch (curIcon) {
 			default: {
 				var path = Paths.image('icons/icon-${curIcon}');
-				if(!Paths.exists(path)){path = Paths.image('icons/icon-${curIcon}-pixel');}
-				if(!Paths.exists(path)){path = Paths.image('icons/icon-face');}
+				if (!Paths.exists(path)) {path = Paths.image('icons/icon-${curIcon}-pixel'); }
+				if (!Paths.exists(path)) {path = Paths.image('icons/icon-face'); }
 
 				if (path.getAtlas() != null) {
 					this.frames = path.getAtlas();
 
-					this.animation.addByPrefix('default', 'Default', 24, true);
-					this.animation.addByPrefix('losing', 'Losing', 24, true);
+					this.animation.addByPrefix('default', 'Default', 24, false);
+					this.animation.addByPrefix('losing', 'Losing', 24, false);
 					this.animation.addByPrefix('tolosing', 'toLosing', 24, false);
 					this.animation.addByPrefix('todefault', 'toDefault', 24, false);
 				} else {
 					var _bitMap:FlxGraphic = path.getGraphic();
-					if(_bitMap == null){return;}
+					if (_bitMap == null) { return; }
 
 					this.loadGraphic(_bitMap, true, Math.floor(_bitMap.width / 2), Math.floor(_bitMap.height));
 
@@ -60,14 +60,14 @@ class Icon extends FlxSprite {
 		}
 	}
 
-	override function update(elapsed:Float){
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (animation.finished && animation.curAnim.name != curAnim) { animation.play(curAnim); }
-		if (parent != null) { playAnim(((isPlayer && parent.health > 0.4) || (!isPlayer && parent.health < (parent.max_health - 0.4))) ? 'default' : 'losing'); }
+		if (animation.curAnim != null && animation.finished && animation.curAnim.name != curAnim) { animation.play(curAnim); }
+		if (parent != null) { playAnim(((isPlayer && parent.life > 0.4) || (!isPlayer && parent.life < (parent.max_life - 0.4))) ? 'default' : 'losing'); }
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0){
+	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0) {
 		if (animation.getByName(AnimName) == null || (curAnim == AnimName && !Force)) { return; }
 		animation.play((animation.getByName('to${AnimName}') != null && !Force) ? 'to${AnimName}' : AnimName, Force, Reversed, Frame);
 		curAnim = AnimName;

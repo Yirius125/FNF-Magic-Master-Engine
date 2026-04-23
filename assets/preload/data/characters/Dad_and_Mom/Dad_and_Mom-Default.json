@@ -1,85 +1,87 @@
 {
 	"aspect": "Default",
+	"icon": "parents",
 	"position": [
 		-330,
 		-5
 	],
 	"scale": 1,
+	"color": "#a600ff",
+	"zoom": 0.8,
+	"image": "mom_dad_christmas_assets",
+	"name": "Dad_and_Mom",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"camera": [
+		220,
+		278.333333333333
+	],
+	"onRight": true,
+	"skin": "Default",
 	"animations": [
 		{
+			"loop": false,
 			"symbol": "Parent Christmas Idle",
-			"loop": false,
 			"fps": 24,
-			"key": "idle",
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
+			"loop": false,
 			"symbol": "Parent Down Note Dad",
-			"loop": false,
 			"fps": 24,
-			"key": "singDOWN",
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
+			"loop": false,
 			"symbol": "Parent Down Note Mom",
-			"loop": false,
 			"fps": 24,
-			"key": "singDOWN-alt",
-			"indices": []
+			"indices": [],
+			"key": "singDOWN-alt"
 		},
 		{
+			"loop": false,
 			"symbol": "Parent Left Note Dad",
-			"loop": false,
 			"fps": 24,
-			"key": "singLEFT",
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
+			"loop": false,
 			"symbol": "Parent Left Note Mom",
-			"loop": false,
 			"fps": 24,
-			"key": "singLEFT-alt",
-			"indices": []
+			"indices": [],
+			"key": "singLEFT-alt"
 		},
 		{
+			"loop": false,
 			"symbol": "Parent Right Note Dad",
-			"loop": false,
 			"fps": 24,
-			"key": "singRIGHT",
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
+			"loop": false,
 			"symbol": "Parent Right Note Mom",
-			"loop": false,
 			"fps": 24,
-			"key": "singRIGHT-alt",
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT-alt"
 		},
 		{
+			"loop": false,
 			"symbol": "Parent Up Note Dad",
-			"loop": false,
 			"fps": 24,
-			"key": "singUP",
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		},
 		{
-			"symbol": "Parent Up Note Mom",
 			"loop": false,
+			"symbol": "Parent Up Note Mom",
 			"fps": 24,
-			"key": "singUP-alt",
-			"indices": []
+			"indices": [],
+			"key": "singUP-alt"
 		}
-	],
-	"name": "Dad_and_Mom",
-	"image": "mom_dad_christmas_assets",
-	"zoom": 0.8,
-	"antialiasing": true,
-	"skin": "Default",
-	"onRight": true,
-	"camera": [
-		105,
-		-45
-	],
-	"icon": "parents",
-	"singTime": 1
+	]
 }

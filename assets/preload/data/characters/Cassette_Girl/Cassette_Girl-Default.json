@@ -1,64 +1,66 @@
 {
 	"aspect": "Default",
+	"icon": "cassette",
 	"position": [
 		-6,
 		95
 	],
 	"scale": 1,
+	"color": "#a60092",
+	"zoom": 0.8,
+	"image": "cassettegirl",
+	"name": "Cassette_Girl",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"camera": [
+		244,
+		356
+	],
+	"skin": "Default",
+	"onRight": true,
 	"animations": [
 		{
-			"loop": false,
 			"symbol": "DOWN",
-			"key": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
-			"loop": false,
 			"symbol": "IDLE",
-			"key": "idle",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
-			"loop": false,
 			"symbol": "LEFT",
-			"key": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
-			"loop": false,
 			"symbol": "RIGHT",
-			"key": "singRIGHT",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"loop": false,
 			"symbol": "SMOKIN'",
-			"key": "shokin",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "shokin"
 		},
 		{
-			"loop": false,
 			"symbol": "UP",
-			"key": "singUP",
+			"loop": false,
 			"fps": 24,
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		}
-	],
-	"name": "Cassette_Girl",
-	"image": "cassettegirl",
-	"zoom": 0.8,
-	"antialiasing": true,
-	"singTime": 1,
-	"onRight": true,
-	"skin": "Default",
-	"camera": [
-		-10,
-		-60
-	],
-	"healthicon": "cassette"
+	]
 }

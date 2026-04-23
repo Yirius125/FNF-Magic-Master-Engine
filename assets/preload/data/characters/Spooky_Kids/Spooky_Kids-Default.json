@@ -1,50 +1,64 @@
 {
 	"aspect": "Default",
+	"icon": "spooky",
 	"position": [
-		-25,
+		-24,
 		205
 	],
 	"scale": 1,
+	"color": "#cfcfe6",
+	"zoom": 0.8,
+	"image": "spooky_kids_assets",
+	"name": "Spooky_Kids",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"camera": [
+		123,
+		478
+	],
+	"skin": "Default",
+	"onRight": true,
+	"danceIdle": true,
 	"animations": [
 		{
+			"loop": false,
 			"symbol": "note sing left",
-			"loop": false,
 			"fps": 24,
-			"key": "singLEFT",
-			"indices": []
+			"indices": [],
+			"key": "singLEFT"
 		},
 		{
+			"loop": false,
 			"symbol": "spooky DOWN note",
-			"loop": false,
 			"fps": 24,
-			"key": "singDOWN",
-			"indices": []
+			"indices": [],
+			"key": "singDOWN"
 		},
 		{
+			"loop": false,
 			"symbol": "spooky UP NOTE",
-			"loop": false,
 			"fps": 24,
-			"key": "singUP",
-			"indices": []
+			"indices": [],
+			"key": "singUP"
 		},
 		{
+			"loop": false,
 			"symbol": "spooky dance idle",
-			"loop": false,
 			"fps": 24,
-			"key": "idle",
-			"indices": []
+			"indices": [],
+			"key": "idle"
 		},
 		{
+			"loop": false,
 			"symbol": "spooky sing right",
-			"loop": false,
 			"fps": 24,
-			"key": "singRIGHT",
-			"indices": []
+			"indices": [],
+			"key": "singRIGHT"
 		},
 		{
-			"loop": false,
 			"symbol": "spooky dance idle",
-			"key": "danceLeft",
+			"loop": false,
 			"fps": 24,
 			"indices": [
 				0,
@@ -55,12 +69,12 @@
 				5,
 				6,
 				7
-			]
+			],
+			"key": "danceLeft"
 		},
 		{
-			"loop": false,
 			"symbol": "spooky dance idle",
-			"key": "danceRight",
+			"loop": false,
 			"fps": 24,
 			"indices": [
 				8,
@@ -71,20 +85,8 @@
 				13,
 				14,
 				15
-			]
+			],
+			"key": "danceRight"
 		}
-	],
-	"name": "Spooky_Kids",
-	"image": "spooky_kids_assets",
-	"zoom": 0.8,
-	"antialiasing": true,
-	"onRight": true,
-	"skin": "Default",
-	"icon": "spooky",
-	"camera": [
-		15,
-		0
-	],
-	"singTime": 1,
-	"danceIdle": true
+	]
 }

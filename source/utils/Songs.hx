@@ -7,6 +7,7 @@ import objects.songs.WeekList.WeekItem;
 import objects.songs.Song.Song_File;
 import states.MusicBeatState;
 import objects.songs.Song;
+import states.PlayState;
 
 typedef WeeksFile_Data = {
 	var weekData:Array<WeekItem_Data>;
@@ -30,20 +31,23 @@ class Songs {
 
 	public static var total_score:Int = 0;
 
-	public static function reset(){		
+	public static function reset() {		
 		Songs.weekDisplay = "Custom Week";
 		Songs.weekName = "Custom Week";
 		Songs.isStoryMode = false;
 		Songs.total_score = 0;
+		PlayState.count = 0;
 		Songs.playlist = [];
 		Songs.players = [];
 	}
 
 	public static function loadSong(song:SongItem_Data, category:String = "Normal", difficulty:String = "Normal"):Void {
-		if(!(new SongItem(song).has_difficulty(difficulty, category))){return;}
+		if (!(new SongItem(song).has_difficulty(difficulty, category))) { return; }
 		var song_format:String = Song.format(song.song, category, difficulty);
 
 		trace('Adding ${song_format} to Playlist.');
+		
+		Songs.reset(); 
 
 		weekDisplay = "Freeplay";
 		weekName = "Freeplay";
@@ -52,40 +56,41 @@ class Songs {
 		playlist.push(play);
 	}
 	public static function loadWeek(week:WeekItem_Data, category:String = "Normal", difficulty:String = "Normal"):Void {
-		if(!new WeekItem(week).has_difficulty(difficulty, category)){return;}
-
-		trace('Adding Week ${week.name} to Playlist.');
+		if (!new WeekItem(week).has_difficulty(difficulty, category)) { return; }
+		
+		Songs.reset(); 
 		
 		weekDisplay = week.display;
 		weekName = week.name;
 
-		for(song in week.songs){
+		for (song in week.songs) {
 			var song_format:String = Song.format(song, category, difficulty);
-
-			trace('Adding (${week.name}) : ${song_format} to Playlist.');
 
 			var play:Song_File = Song.load(song_format);
 			playlist.push(play);
 		}
 	}
 
-	public static function addSongs(songList:Array<Song_File>){for(song in songList){playlist.push(song);}}
-	public static function addSong(song:Song_File){playlist.push(song);}
+	public static function addSongs(songList:Array<Song_File>) { for (song in songList) { playlist.push(song); }}
+	public static function addSong(song:Song_File) { playlist.push(song); }
 
 	public static function play(_isStoryMode:Bool = true):Void {
 		Songs.isStoryMode = _isStoryMode;
 
-		MusicBeatState.loadState("states.PlayState", [], [[{type: "SONG", instance: playlist[0]}], false]);
+		MusicBeatState.loadState("states.PlayState", [], [[{ type: "SONG", instance: playlist[0] }], false]);
 	}
 
 	public static function quickPlay(song:Song_File, _isStoryMode:Bool = false):Void {
-		reset(); Songs.isStoryMode = _isStoryMode;
+		Songs.reset(); 
+		
+		Songs.isStoryMode = _isStoryMode;
+		
 		playlist.push(song);
 
-		MusicBeatState.loadState("states.PlayState", [], [[{type: "SONG", instance: song}], false]);
+		MusicBeatState.loadState("states.PlayState", [], [[{ type: "SONG", instance: song }], false]);
 	}
 	
-	public static function next(score:Int){
+	public static function next(score:Int) {
 		total_score += score;
 		playlist.shift();
 		players = [];

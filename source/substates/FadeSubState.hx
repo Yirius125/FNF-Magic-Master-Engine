@@ -21,45 +21,71 @@ using utils.Files;
 class FadeSubState extends FlxSubState {
 	public static var fade:FlxSprite;
 
-    public var targetState:FlxState;
+    public var TARGET:FlxState;
 
-	private var curCamera:FlxCamera;
+	public var curCamera:FlxCamera;
     
-    public function new(?_targetState:FlxState){
-        this.targetState = _targetState;
-		curCamera = new FlxCamera();
-		curCamera.bgColor = FlxColor.BLACK;
-		curCamera.bgColor.alpha = 0;
-		FlxG.cameras.add(curCamera);
+    public function new(?_target:FlxState) {
+        this.TARGET = _target;
+        
         super();
 	}
 
     override function create():Void {
-        fade = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-        fade.alpha = (targetState != null) ? 0 : 1;
-        fade.cameras = [curCamera];
-        
-        var doTransition:Void->Void = function(){
-            add(fade);
-    
-            FlxTween.tween(fade, {alpha: (targetState != null) ? 1 : 0}, 0.5, {onComplete: function(twn:FlxTween) {
-                if(targetState != null){
-                    MusicBeatState.state.persistentDraw = false;
-                    FlxG.switchState(new VoidState(targetState));
-                }else{
-                    MusicBeatState.state.persistentUpdate = true;
-                    close();
-                }
-            }, ease: FlxEase.linear});
-        };
+		curCamera = new FlxCamera();
+		curCamera.bgColor = FlxColor.BLACK;
+		curCamera.bgColor.alpha = 0;
+		FlxG.cameras.add(curCamera);
 
-        var tans_script:Script = null;
-        for(s in Mods.mod_scripts){if(s.getFunc("transition") == null){continue;} tans_script = s; break;}
-        if(tans_script != null){if(tans_script.call("transition", [doTransition])){return;}}
-        doTransition();
+        super.create();
+		
+		this.camera = curCamera;
+
+        fade = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+        add(fade);
+
+        var l_transitionScript:Script = null;
+        for (l_script in Mods.mod_scripts) { 
+            if (l_script.getVar("entryTransition") == null) { continue; }
+            if (l_script.getVar("exitTransition") == null) { continue; }
+            
+            l_transitionScript = l_script;
+            l_transitionScript.setVar("transitionSubState", this);
+
+            break; 
+        }
+        
+        if (TARGET != null) {
+            if (l_transitionScript != null) { l_transitionScript.call("entryTransition"); } 
+            else { startEntryTransition(); }
+        } else { 
+            if (l_transitionScript != null) { l_transitionScript.call("exitTransition"); } 
+            else { startExitTransition(); }
+        }
+    }
+
+    public function startEntryTransition():Void {
+        fade.alpha = 0;
+
+        FlxTween.tween(fade, { alpha: 1 }, 0.5, { onComplete: (_twn:FlxTween) -> { endTransition(); }, ease: FlxEase.linear });
+    }
+    public function startExitTransition():Void {
+        fade.alpha = 1;
+
+        FlxTween.tween(fade, { alpha: 0 }, 0.5, { onComplete: (_twn:FlxTween) -> { endTransition(); }, ease: FlxEase.linear});
     }
     
-	override function close():Void {
+    public function endTransition():Void {
+        if (TARGET != null) {
+            MusicBeatState.state.persistentDraw = false;
+            FlxG.switchState(new VoidState(TARGET));
+        } else {
+            MusicBeatState.state.persistentUpdate = true;
+            this.close();
+        }
+    }
+
+	override public function close():Void {
 		FlxG.cameras.remove(curCamera);
 		curCamera.destroy();
 

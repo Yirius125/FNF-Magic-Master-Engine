@@ -1,39 +1,18 @@
 package states.editors;
 
 import objects.scripts.ScriptBuilder.Script_Object;
-import objects.game.Character.Character_File;
-import objects.game.Character.Animation_Data;
-import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.display.FlxGridOverlay;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.addons.ui.FlxUI9SliceSprite;
-import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIInputText;
-import flixel.addons.ui.FlxUICheckBox;
-import flixel.addons.ui.FlxInputText;
 import objects.scripts.ScriptBuilder;
-import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUIButton;
-import objects.songs.Song.Song_File;
-import objects.ui.UINumericStepper;
-import openfl.events.IOErrorEvent;
-import flixel.addons.ui.FlxUIText;
-import objects.ui.UITabContainer;
-import openfl.net.FileReference;
-import flixel.util.FlxArrayUtil;
 import objects.ui.UIScrollList;
 import objects.utils.SaverFile;
 import objects.game.Character;
-import openfl.utils.ByteArray;
-import flixel.addons.ui.FlxUI;
 import flixel.tweens.FlxTween;
 import objects.ui.UIContainer;
 import objects.ui.UIInputText;
-import flixel.sound.FlxSound;
-import flixel.group.FlxGroup;
 import objects.ui.UICheckBox;
 import flixel.tweens.FlxEase;
-import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import objects.ui.UIButton;
@@ -41,18 +20,13 @@ import flixel.text.FlxText;
 import flixel.util.FlxSort;
 import flixel.math.FlxMath;
 import objects.ui.UISlider;
-import openfl.events.Event;
 import lime.ui.FileDialog;
 import objects.game.Stage;
 import openfl.media.Sound;
-import objects.ui.UIList;
-import objects.game.Icon;
 import objects.game.Icon;
 import flixel.FlxSprite;
 import flixel.FlxObject;
-import haxe.xml.Access;
 import flixel.FlxG;
-import haxe.Timer;
 import haxe.Json;
 
 #if desktop
@@ -149,13 +123,15 @@ class StageEditorState extends MusicBeatState {
         super(onConfirm, onBack);
     }
 
-    override function create(){
+    override function create() {
         FlxG.sound.playMusic(Paths.music('break_song').getSound());
 
         #if desktop
 		Discord.change('Editing Stage', '[Stage Editor]');
 		Magic.setWindowTitle('Editing Stage', 1);
 		#end
+        
+        super.create();
         
         var bgGrid:FlxSprite = FlxGridOverlay.create(10, 10, FlxG.width, FlxG.height, true, 0xff4d4d4d, 0xff333333);
         bgGrid.cameras = [camGame];
@@ -172,7 +148,7 @@ class StageEditorState extends MusicBeatState {
             ["Daddy_Dearest", [100, 100], 1, true, "Default", "NORMAL", 0],
             ["Boyfriend", [770, 100], 1, false, "Default", "NORMAL", 0]
         ]);
-        for(c in stage.characterData){c.alpha = 0.5;}
+        for (c in stage.characterData) {c.alpha = 0.5;}
         stage.loadSource(builder.build());
         stage.cameras = [camFGame];
         stage.reload();
@@ -244,7 +220,6 @@ class StageEditorState extends MusicBeatState {
         cameraSprite.scale.x = cameraSprite.scale.y = 1 / stage_file.zoom;
         cameraSprite.scrollFactor.set(0,0);
         cameraSprite.cameras = [camFGame];
-        cameraSprite.antialiasing = false;
         cameraSprite.alpha = 0.5;
         add(cameraSprite);
 
@@ -252,34 +227,32 @@ class StageEditorState extends MusicBeatState {
         debugText.y = FlxG.height - debugText.height;
         debugText.cameras = [camHUD];
         add(debugText);
-        
-        super.create();
-        
-        FlxG.mouse.visible = true;
 
 		camFollow = new FlxObject(0, 0, 1, 1);
         camFollow.screenCenter();
 		add(camFollow);
-
+        
         camFGame.zoom = stage_file.zoom;
         camFGame.follow(camFollow, LOCKON);
+        
+        FlxG.mouse.visible = true;
     }
 
     public function showTab(_tab:UIContainer):Void {
-        if(curMenu != null){
+        if (curMenu != null) {
             FlxTween.cancelTweensOf(curMenu);
             FlxTween.tween(curMenu, {x: FlxG.width}, 0.2, {ease: FlxEase.quadOut});
         }
 
         curMenu = curMenu == _tab ? null : _tab;
 
-        if(curMenu != null){
+        if (curMenu != null) {
             FlxTween.cancelTweensOf(curMenu);
             FlxTween.tween(curMenu, {x: FlxG.width - curMenu.width}, 0.2, {ease: FlxEase.quadOut});
         }
     }
 
-    override function update(elapsed:Float){
+    override function update(elapsed:Float) {
         camFGame.x = FlxMath.lerp(camFGame.x, curMenu != null ? -(curMenu.width / 2) : 0, elapsed * 20);
         var pMouse = FlxG.mouse.getPositionInCameraView(camFGame);
         var wMouse = FlxG.mouse.getWorldPosition(camFGame);
@@ -287,9 +260,9 @@ class StageEditorState extends MusicBeatState {
         debugText.text = 'X: ${Std.int(wMouse.x)} | Y: ${Std.int(wMouse.y)}';
 
         var arrayControlle = true;
-        for(item in arrayFocus){if(item.hasFocus){arrayControlle = false;}}
+        for (item in arrayFocus) {if (item.hasFocus) {arrayControlle = false;}}
 
-        if(canControlle && arrayControlle){
+        if (canControlle && arrayControlle) {
 
             switch (mouseState) {
                 case 0: {
@@ -308,10 +281,10 @@ class StageEditorState extends MusicBeatState {
             }
 
             initSpot.alpha = finishSpot.alpha = 0.5;
-            if(FlxG.mouse.overlaps(initSpot, camFGame)){initSpot.alpha = 1;}
-            else if(FlxG.mouse.overlaps(finishSpot, camFGame)){finishSpot.alpha = 1;}
+            if (FlxG.mouse.overlaps(initSpot, camFGame)) {initSpot.alpha = 1;}
+            else if (FlxG.mouse.overlaps(finishSpot, camFGame)) {finishSpot.alpha = 1;}
 
-            if((FlxG.mouse.releasedRight && mouseState == 0) || (FlxG.mouse.justReleased && mouseState == 4) || (FlxG.mouse.released && mouseState > 0 && mouseState < 4)){
+            if ((FlxG.mouse.releasedRight && mouseState == 0) || (FlxG.mouse.justReleased && mouseState == 4) || (FlxG.mouse.released && mouseState > 0 && mouseState < 4)) {
                 switch (mouseState) {
                     case 1:{stage_file.initCam = [initSpot.x + 16, initSpot.y + 16];}
                     case 2:{stage_file.finishCam = [finishSpot.x + 35, finishSpot.y + 35];}
@@ -323,7 +296,7 @@ class StageEditorState extends MusicBeatState {
                         builder.members = [];
 
                         ctnLayersMenu.current_height = 0;
-                        for(_objTab in ctnLayersMenu.list.members){
+                        for (_objTab in ctnLayersMenu.list.members) {
                             builder.members.push(cast(_objTab, UIStageObject)._object);
                             FlxTween.tween(_objTab, {y: ctnLayersMenu.list_height + ctnLayersMenu.current_height}, 0.1, {ease: FlxEase.quadInOut});
                             ctnLayersMenu.current_height += _objTab.height + 5;
@@ -333,24 +306,24 @@ class StageEditorState extends MusicBeatState {
                     }
                 }
                 mouseState = -1;
-            }else if(mouseState == -1){
-                if(FlxG.mouse.justPressedRight && (curMenu == null || FlxG.mouse.x < FlxG.width - curMenu.width)){setMousePointer(camFollow, pMouse, true, 0);}
-                else if(FlxG.mouse.justPressed){
-                    if(FlxG.mouse.overlaps(initSpot, camFGame)){setMousePointer(initSpot, wMouse, false, 1);}
-                    else if(FlxG.mouse.overlaps(finishSpot, camFGame)){setMousePointer(finishSpot, wMouse, false, 2);}
-                    else if(curObjStage != null && FlxG.mouse.overlaps(curObjStage, camFGame)){setMousePointer(curObjStage, wMouse, false, 3);}
-                    else if(dragMenu == null){
-                        for(_objTab in ctnLayersMenu.list.members){
-                            if(!FlxG.mouse.overlaps(_objTab)){continue;}
+            } else if (mouseState == -1) {
+                if (FlxG.mouse.justPressedRight && (curMenu == null || FlxG.mouse.x < FlxG.width - curMenu.width)) {setMousePointer(camFollow, pMouse, true, 0);}
+                else if (FlxG.mouse.justPressed) {
+                    if (FlxG.mouse.overlaps(initSpot, camFGame)) {setMousePointer(initSpot, wMouse, false, 1);}
+                    else if (FlxG.mouse.overlaps(finishSpot, camFGame)) {setMousePointer(finishSpot, wMouse, false, 2);}
+                    else if (curObjStage != null && FlxG.mouse.overlaps(curObjStage, camFGame)) {setMousePointer(curObjStage, wMouse, false, 3);}
+                    else if (dragMenu == null) {
+                        for (_objTab in ctnLayersMenu.list.members) {
+                            if (!FlxG.mouse.overlaps(_objTab)) { continue;}
                             dragMenu = cast _objTab;
                             setMousePointer(dragMenu, FlxG.mouse, false, 4);
                         }
                     }
-                }else if(FlxG.mouse.justReleasedRight){
-                    for(_objTab in ctnLayersMenu.list.members){
-                        if(!FlxG.mouse.overlaps(_objTab)){continue;}
+                } else if (FlxG.mouse.justReleasedRight) {
+                    for (_objTab in ctnLayersMenu.list.members) {
+                        if (!FlxG.mouse.overlaps(_objTab)) { continue;}
                         curObjTab = cast _objTab;
-                        if(curObjTab._object != curObjMenu){
+                        if (curObjTab._object != curObjMenu) {
                             curObjStage = curObjTab._stage;
                             curObjMenu = cast curObjTab._object;
                             setPropertiesMenu();
@@ -361,12 +334,12 @@ class StageEditorState extends MusicBeatState {
                 }
             }
 
-            if(FlxG.keys.pressed.SHIFT){
-                if(FlxG.mouse.justPressedMiddle){camFGame.zoom = stage_file.zoom;}
-                if(FlxG.mouse.wheel != 0){camFGame.zoom += (FlxG.mouse.wheel * 0.1);}
-            }else{
-                if(FlxG.mouse.justPressedMiddle){camFollow.screenCenter();}
-                if(FlxG.mouse.wheel != 0){camFGame.zoom += (FlxG.mouse.wheel * 0.01);}
+            if (FlxG.keys.pressed.SHIFT) {
+                if (FlxG.mouse.justPressedMiddle) {camFGame.zoom = stage_file.zoom;}
+                if (FlxG.mouse.wheel != 0) {camFGame.zoom += (FlxG.mouse.wheel * 0.1);}
+            } else {
+                if (FlxG.mouse.justPressedMiddle) {camFollow.screenCenter();}
+                if (FlxG.mouse.wheel != 0) {camFGame.zoom += (FlxG.mouse.wheel * 0.01);}
             }
         }   
         
@@ -386,7 +359,7 @@ class StageEditorState extends MusicBeatState {
         ctnGeneralMenu.addPlus(txtStage, 10);
 
         var btnExport:FlxUIButton = new UIButton(0, 0, Std.int(ctnGeneralMenu.display_width / 2 - 2.5), null, "Export (.hx)", 16, null, null, () -> {
-            if(save_file != null){return;}
+            if (save_file != null) { return;}
             
             builder.set("zoom", stage_file.zoom);
             builder.set("camP_1", stage_file.initCam);
@@ -398,7 +371,7 @@ class StageEditorState extends MusicBeatState {
         }); ctnGeneralMenu.addPlus(btnExport, 0, false);
 
         var btnSave:FlxUIButton = new UIButton(btnExport.width + 5, 0, Std.int(ctnGeneralMenu.display_width / 2 - 2.5), null, "Save (.json)", 16, null, null, () -> {
-            if(save_file != null){return;}
+            if (save_file != null) { return;}
             save_file = new SaverFile([{name: '${txtStage.text}.json', data: Json.stringify(stage_file, "\t")}], {destroyOnComplete: true, onComplete: ()->{save_file = null;}});
 			save_file.saveFile();
         }); ctnGeneralMenu.addPlus(btnSave);
@@ -432,7 +405,7 @@ class StageEditorState extends MusicBeatState {
         ctnLayersMenu.scroller.y += ctnTabMenu.height - ctnLayersMenu.list_height + 2.5;
         ctnLayersMenu.list_height = ctnTabMenu.height + 5;
 
-        for(_obj in stage_file.objects){addObject(_obj);}
+        for (_obj in stage_file.objects) {addObject(_obj);}
     }
 
     private function addToolboxMenuStuff():Void {
@@ -443,8 +416,8 @@ class StageEditorState extends MusicBeatState {
         ctnToolboxMenu.scroller.resize(null, Std.int(ctnToolboxMenu.scroller.height - ctnTabMenu.height));
         ctnToolboxMenu.scroller.y += ctnTabMenu.height - ctnToolboxMenu.list_height + 2.5;
 
-        for(i in Paths.readDirectory('assets/data/stage_objects')){
-            if(i.contains(".")){continue;}
+        for (i in Paths.readDirectory('assets/data/stage_objects')) {
+            if (i.contains(".")) { continue;}
             var object_name:String = i.split("/").pop();
 
             var btnToolboxItem:UIButton = new UIButton(
@@ -463,9 +436,9 @@ class StageEditorState extends MusicBeatState {
     }
 
     public function setPropertiesMenu():Void {
-        for(_objTab in ctnLayersMenu.list.members){cast(_objTab, UIStageObject)._back.alpha = _objTab == curObjTab ? 1 : 0.5;}
+        for (_objTab in ctnLayersMenu.list.members) {cast(_objTab, UIStageObject)._back.alpha = _objTab == curObjTab ? 1 : 0.5;}
 
-        while(ctnPropertiesMenu.list.length > 0){ctnPropertiesMenu.list.remove(ctnPropertiesMenu.list.members[0], true).destroy();}
+        while(ctnPropertiesMenu.list.length > 0) {ctnPropertiesMenu.list.remove(ctnPropertiesMenu.list.members[0], true).destroy();}
         ctnPropertiesMenu.current_height = 0;
 
         var _objFile:File_Object = ScriptBuilder.files[curObjMenu.object];
@@ -478,19 +451,19 @@ class StageEditorState extends MusicBeatState {
         arrayFocus.push(txtName);
         ctnPropertiesMenu.addList(txtName, 20);
 
-        for(_var in _objFile.variables){
-            if(_var.name == "x" || _var.name == "y"){continue;}
-            switch(_var.type){
+        for (_var in _objFile.variables) {
+            if (_var.name == "x" || _var.name == "y") { continue;}
+            switch (_var.type) {
                 case "bool": {
                     var chkVariable = new UICheckBox(0, 0, ctnPropertiesMenu.display_width, _var.name, 18, Reflect.getProperty(curObjMenu.variables, _var.name), (_value) -> {
                         Reflect.setProperty(curObjMenu.variables, _var.name, _value);
-                        if(curObjStage == null){return;}
+                        if (curObjStage == null) { return;}
                         var _dynObj = curObjStage;
                         var _dynPro = _var.name;
 
-                        if(_var.name.split("-").length > 0){
+                        if (_var.name.split("-").length > 0) {
                             var _argList = _var.name.split("-");
-                            for(i in 0..._argList.length - 1){
+                            for (i in 0..._argList.length - 1) {
                                 _dynObj = Reflect.getProperty(_dynObj, _argList[i]);
                                 _dynPro = _argList[i + 1];
                             }
@@ -504,16 +477,16 @@ class StageEditorState extends MusicBeatState {
                     var lblDisplay = new FlxText(0, 0, ctnPropertiesMenu.display_width, _var.name, 12);
                     ctnPropertiesMenu.addList(lblDisplay, 0);
 
-                    if(_var.args != null){
+                    if (_var.args != null) {
                         var sldDisplay = new UISlider(10, 0, 12, ctnPropertiesMenu.display_width - 20, 20, false, curObjMenu.variables, _var.name, _var.args[0], _var.args[1]);
                         sldDisplay.callback = (_value) -> {
-                            if(curObjStage == null){return;}
+                            if (curObjStage == null) { return;}
                             var _dynObj = curObjStage;
                             var _dynPro = _var.name;
 
-                            if(_var.name.split("-").length > 0){
+                            if (_var.name.split("-").length > 0) {
                                 var _argList = _var.name.split("-");
-                                for(i in 0..._argList.length - 1){
+                                for (i in 0..._argList.length - 1) {
                                     _dynObj = Reflect.getProperty(_dynObj, _argList[i]);
                                     _dynPro = _argList[i + 1];
                                 }
@@ -538,7 +511,7 @@ class StageEditorState extends MusicBeatState {
             }
         }
 
-        for(_attObj in curObjMenu.attributes){
+        for (_attObj in curObjMenu.attributes) {
             var ctnObjectAtt:UIContainer = new UIContainer(5, 0, ctnPropertiesMenu.display_width - 10, 100, Paths.image("editor_menu/tiles/light"));
             ctnObjectAtt.list_height = ctnObjectAtt.list_width = 5;
             ctnObjectAtt.visible_front = false;
@@ -555,8 +528,8 @@ class StageEditorState extends MusicBeatState {
 
             var _attFile:File_Object = ScriptBuilder.files[_attObj.object];
 
-            for(_var in _attFile.variables){
-                switch(_var.type){
+            for (_var in _attFile.variables) {
+                switch (_var.type) {
                     case "bool": {
                         var chkVariable = new UICheckBox(0, 0, ctnObjectAtt.display_width, _var.name, 18, Reflect.getProperty(_attObj.variables, _var.name), (_value) -> {
                             Reflect.setProperty(_attObj.variables, _var.name, _value);
@@ -567,7 +540,7 @@ class StageEditorState extends MusicBeatState {
                         var lblDisplay = new FlxText(0, 0, ctnObjectAtt.display_width, _var.name, 12);
                         ctnObjectAtt.addPlus(lblDisplay, 0);
     
-                        if(_var.args != null){
+                        if (_var.args != null) {
                             var sldDisplay = new UISlider(10, 0, 12, ctnObjectAtt.display_width - 20, 20, false, _attObj.variables, _var.name, _var.args[0], _var.args[1]);
                             ctnObjectAtt.addPlus(sldDisplay);
                         }
@@ -590,39 +563,36 @@ class StageEditorState extends MusicBeatState {
             ctnPropertiesMenu.addList(ctnObjectAtt);
         }
         
-        while(ctnAttributesMenu.list.length > 0){ctnAttributesMenu.list.remove(ctnAttributesMenu.list.members[0], true).destroy();}
+        while(ctnAttributesMenu.list.length > 0) {ctnAttributesMenu.list.remove(ctnAttributesMenu.list.members[0], true).destroy();}
         ctnAttributesMenu.current_height = ctnAttributesMenu.y + ctnAttributesMenu.front_group.members[0].height - 10;
 
-        for(_att in Paths.readDirectory('assets/data/stage_objects/${curObjMenu.object}')){
+        for (_att in Paths.readDirectory('assets/data/stage_objects/${curObjMenu.object}')) {
             var _att_name:String = _att.split("/").pop().replace(".json", "");
-            if(_att_name == curObjMenu.object){continue;}
+            if (_att_name == curObjMenu.object) { continue;}
             var btnAttribute:UIButton = new UIButton(0, 5, ctnAttributesMenu.display_width, null, _att_name, 14, null, null, ()->{
-                if (ScriptBuilder.addAttribute(curObjMenu, _att_name) == null){return;}
+                if (ScriptBuilder.addAttribute(curObjMenu, _att_name) == null) { return;}
                 setPropertiesMenu();
             });
-            btnAttribute._.update = (elapsed:Float) -> {
-                btnAttribute.visible = btnAttribute.y >= ctnAttributesMenu.y + ctnAttributesMenu.list_height / 2;
-            };
             ctnAttributesMenu.addList(btnAttribute);
         }
     }
 
     public function addObject(object_name:Dynamic):Void {
-        if((object_name is String)){builder.add(object_name);}
-        else{
+        if ((object_name is String)) {builder.add(object_name);}
+        else {
             builder._add(object_name);
-            for(_att in cast(object_name.attributes, Array<Dynamic>)){ScriptBuilder.load(object_name.object, _att.object);}
+            for (_att in cast(object_name.attributes, Array<Dynamic>)) {ScriptBuilder.load(object_name.object, _att.object);}
         }
 
         var _obj:Script_Object = builder.last();
 
         ctnLayersMenu.addList(new UIStageObject(0, 0, ctnLayersMenu.display_width, _obj.name, _obj.object, ()->{
             builder.members.remove(_obj); 
-            if(builder.members.length <= 0){
+            if (builder.members.length <= 0) {
                 ctnLayersMenu.list.remove(ctnLayersMenu.list.members[0], true).destroy();
-            }else{
-                for(i in 0...builder.members.length){
-                    if(cast(ctnLayersMenu.list.members[i], UIStageObject)._object == builder.members[i]){continue;}
+            } else {
+                for (i in 0...builder.members.length) {
+                    if (cast(ctnLayersMenu.list.members[i], UIStageObject)._object == builder.members[i]) { continue;}
                     ctnLayersMenu.list.remove(ctnLayersMenu.list.members[i], true).destroy(); break;
                 }
             }
@@ -646,25 +616,25 @@ class StageEditorState extends MusicBeatState {
         stage.loadSource(builder.build());
 
         var _stage_offset:Int = 0;
-        for(i in 0...builder.members.length){
+        for (i in 0...builder.members.length) {
             var _cur_obj:Script_Object = builder.members[i];
             var _cur_file:File_Object = ScriptBuilder.files[_cur_obj.object];
             var _cur_layer:UIStageObject = cast ctnLayersMenu.list.members[i];
             var _cur_stage:Dynamic = _cur_file.create_object ? stage.stageData[i - _stage_offset] : null;
-            if(!_cur_file.create_object){_stage_offset++;}
+            if (!_cur_file.create_object) {_stage_offset++;}
             
             _cur_layer._object = _cur_obj;
             _cur_layer._stage = _cur_stage;   
-            if(_cur_obj == curObjMenu){curObjStage = _cur_stage;}
+            if (_cur_obj == curObjMenu) {curObjStage = _cur_stage;}
         }
     }
     
     var onReload:Bool = false;
     private function getFile(_onSelect:String->Void):Void {
-        if(onReload){return;} onReload = true;
+        if (onReload) { return;} onReload = true;
 
         var fDialog = new FileDialog();
-        fDialog.onSelect.add(function(str){onReload = false; _onSelect(str);});
+        fDialog.onSelect.add(function(str) {onReload = false; _onSelect(str);});
         fDialog.browse();
 	}
 

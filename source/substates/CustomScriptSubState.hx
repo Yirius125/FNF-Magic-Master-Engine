@@ -9,6 +9,7 @@ class CustomScriptSubState extends MusicBeatSubstate {
         custom_script = new_script;
         custom_script.parent = this;
         super(onClose);
+        
         scripts.set(custom_script.name, custom_script);
     }
 }

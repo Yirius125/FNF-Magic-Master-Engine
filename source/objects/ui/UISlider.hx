@@ -92,7 +92,7 @@ class UISlider extends FlxSpriteGroup {
 
         handle = new FlxSprite().loadGraphic(Paths.image("editor_menu/slide_button"));
         handle.setGraphicSize(isVertical ? _width : 0, isVertical ? 0 : _height); handle.updateHitbox();
-        if(isVertical){handle.y -= (handle.height / 2);}else{handle.x -= (handle.width / 2);}
+        if (isVertical) {handle.y -= (handle.height / 2); } else {handle.x -= (handle.width / 2); }
 		handle.scrollFactor.set();
 
 		valueLabel = new FlxText(0, 0, 0, "", 12);
@@ -104,8 +104,8 @@ class UISlider extends FlxSpriteGroup {
 	}
 
 	public function resize(?__width:Int, ?__height:Int):Void {
-		if(__height != null){_height = __height;}
-		if(__width != null){_width = __width;}
+		if (__height != null) {_height = __height; }
+		if (__width != null) {_width = __width; }
 		
 		_bounds.set(x, y, _width, _height);
 
@@ -121,11 +121,11 @@ class UISlider extends FlxSpriteGroup {
         );
 		
         handle.setGraphicSize(isVertical ? _width : 0, isVertical ? 0 : _height); handle.updateHitbox();
-        if(isVertical){handle.y = -(handle.height / 2);}else{handle.x = -(handle.width / 2);}
+        if (isVertical) {handle.y = -(handle.height / 2); } else {handle.x = -(handle.width / 2); }
 	}
 
 	override public function update(elapsed:Float):Void {
-		if (FlxMath.mouseInFlxRect(false, _bounds)){
+		if (FlxMath.mouseInFlxRect(false, _bounds)) {
 			#if FLX_SOUND_SYSTEM if (hoverSound != null && !_justHovered) { FlxG.sound.play(hoverSound); } #end
 
             valueLabel.visible = valueVisible;
@@ -133,7 +133,7 @@ class UISlider extends FlxSpriteGroup {
             alpha = hoverAlpha;
 
 			if (FlxG.mouse.pressed) {
-                if(isVertical) { handle.y = FlxG.mouse.screenY - (handle.height / 2); } else { handle.x = FlxG.mouse.screenX - (handle.width / 2); }
+                if (isVertical) { handle.y = FlxG.mouse.screenY - (handle.height / 2); } else { handle.x = FlxG.mouse.screenX - (handle.width / 2); }
 				updateValue();
 
 				#if FLX_SOUND_SYSTEM
@@ -189,11 +189,11 @@ class UISlider extends FlxSpriteGroup {
 
 	function get_expectedPos():Float {
         var pos:Float = 0;
-        if(isVertical){
+        if (isVertical) {
             pos = y + (_height * ((value - minValue) / (maxValue - minValue)));
             if (pos > y + _height) { pos = y + _height; }
             else if (pos < y) { pos = y; }
-        }else{
+        } else {
             pos = x + (_width * ((value - minValue) / (maxValue - minValue)));
             if (pos > x + _width) { pos = x + _width; }
             else if (pos < x) { pos = x; }

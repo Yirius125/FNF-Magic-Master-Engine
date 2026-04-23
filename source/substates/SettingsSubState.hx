@@ -35,8 +35,6 @@ class SettingsSubState extends MusicBeatSubstate {
 
 	var curKeys:Int = 4;
 	var strumline:StrumLine;
-	var strumline_test:StrumLine;
-	var isTestingNotes:Bool = false;
 
 	var _category:Category;
 	var catList:Array<String> = [];
@@ -48,16 +46,19 @@ class SettingsSubState extends MusicBeatSubstate {
 	var grpOptions:FlxTypedGroup<Dynamic>;
 	var grpCheckers:FlxTypedGroup<Dynamic>;
 	
-	public function new(onClose:Void->Void){
+	public function new(onClose:Void->Void) {
 		super(onClose);
-        curCamera.bgColor = 0x5a000000;
-		curCamera.alpha = 0;
-
-		this.camera = curCamera;
-
+	}
+	
+	override function create() {
 		catList = Settings.categories;
 		catList.insert(0, "NoteControls");
 		catList.insert(0, "Controls");
+		
+		super.create();
+		
+        curCamera.bgColor = 0x5a000000;
+		curCamera.alpha = 0;
 
 		backSprite = new FlxSprite().loadGraphic(Paths.image("pinkBack"));
 		backSprite.x = -backSprite.width - 10;
@@ -69,12 +70,6 @@ class SettingsSubState extends MusicBeatSubstate {
         add(ttlSettings);
 
 		strumline = new StrumLine(0, 0, 4, 448);
-		strumline_test = new StrumLine(0, 0, 4, 448);
-		strumline_test.x = FlxG.width - strumline_test.width - 20;
-		strumline_test.y = FlxG.height - strumline_test.height - 20;
-		strumline_test.controls = controls;
-		strumline_test.visible = false;
-		add(strumline_test);
 
 		grpOptions = new FlxTypedGroup<Dynamic>();
         add(grpOptions);
@@ -82,136 +77,125 @@ class SettingsSubState extends MusicBeatSubstate {
         add(grpCheckers);
 
 		grpCategories = new FlxTypedGroup<Alphabet>();
-		for(_cat in catList){
+		for (_cat in catList) {
 			var newCategory:Alphabet = new Alphabet(20, -100, {font: "tardling_font_outline", scale: 1.3, text: Language.getText('cat_${_cat.toLowerCase()}')});
 			grpCategories.add(newCategory);
 		}
         add(grpCategories);
 
-		FlxTween.tween(backSprite, {x: 0}, 0.5, {ease: FlxEase.quadOut});
-		FlxTween.tween(curCamera, {alpha: 1}, 1, {onComplete: function(twn){canControlle = true; changeCategory(0, true);}});
+		FlxTween.tween(backSprite, { x: 0 }, 0.5, { ease: FlxEase.quadOut });
+		FlxTween.tween(curCamera, { alpha: 1 }, 1, { onComplete: function(twn) { canControlle = true; changeCategory(0, true); }});
+		
+		scripts.call('created');
 	}
 
-	override function update(elapsed:Float){
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if(inCategory){
-			Magic.sortMembersByY(cast grpOptions, (FlxG.height / 2) - (grpOptions.members[curOption].height / 2), curOption, 60);
-			for(i in 0...grpOptions.length){
+		if (inCategory) {
+			Magic.sortMembersByY(cast grpOptions, (FlxG.height / 2), curOption, 60);
+
+			for (i in 0...grpOptions.length) {
 				var curObj = grpCheckers.members[i];
 
-				if((curObj is Alphabet)){
+				if ((curObj is Alphabet)) {
 					cast(curObj, Alphabet).y = grpOptions.members[i].y + 5;
-				}else if((curObj is MenuKeyBind)){
+				} else if ((curObj is MenuKeyBind)) {
 					cast(curObj, MenuKeyBind).y = grpOptions.members[i].y - 20;
-				}else{
+				} else {
 					curObj.y = grpOptions.members[i].y;
 				}
 			}
-		}else{
-			Magic.sortMembersByY(cast grpCategories, (FlxG.height / 2) - (grpCategories.members[curCategory].height / 2), curCategory, 40);
-		}
+		} else { Magic.sortMembersByY(cast grpCategories, (FlxG.height / 2), curCategory, 40); }
 		
-		if(canControlle){
-			if(inCategory){
-				if(inNoteControls){
-					if(curOption == 1 && (controls.check("MenuLeft", JUST_PRESSED) || controls.check("MenuRight", JUST_PRESSED))){
+		if (canControlle) {
+			if (inCategory) {
+				if (inNoteControls) {
+					if (curOption == 0 && (controls.check("MenuLeft", JUST_PRESSED) || controls.check("MenuRight", JUST_PRESSED))) {
 						curKeys = grpCheckers.members[curOption].value;
 						loadStrum();
-					}
-					else if(controls.check("MenuUp", JUST_PRESSED) && !isTestingNotes){changeSetting(-1);}
-					else if(controls.check("MenuDown", JUST_PRESSED) && !isTestingNotes){changeSetting(1);}
-					else if(controls.check("MenuAccept", JUST_PRESSED)){
-						switch(curOption){
-							case 0:{
-								Controls.save();
-								Players.init();
-								unSelectCategory();
-							}
-							case 1:{}
-							case 2:{
-								FlxG.sound.play(Paths.sound("scrollMenu").getSound());
-								strumline_test.visible = !strumline_test.visible;
-								isTestingNotes = strumline_test.visible;
-							}
-							default:{
-								canControlle = false;
-							}
+					} else if (controls.check("MenuUp", JUST_PRESSED)) { changeSetting(-1); }
+					else if (controls.check("MenuDown", JUST_PRESSED)) { changeSetting(1); }
+					else if (controls.check("MenuAccept", JUST_PRESSED)) {
+						switch (curOption) {
+							case 0: { }
+							default: { canControlle = false; }
 						}
+					} else if (controls.check("MenuBack", JUST_PRESSED)) { 
+						Controls.save();
+						Players.init();
+						unSelectCategory(); 
 					}
 				}
-				else if(inControls){
-					if(controls.check("MenuUp", JUST_PRESSED)){changeSetting(-1);}
-					else if(controls.check("MenuDown", JUST_PRESSED)){changeSetting(1);}
-					else if(controls.check("MenuAccept", JUST_PRESSED)){
-						if(!(grpCheckers.members[curOption] is MenuKeyBind)){
-							if(curOption == 0){
-								Controls.save();
-								Players.init();
-								unSelectCategory();
-							}
-							else if(curOption == grpCheckers.length - 1){
+				else if (inControls) {
+					if (controls.check("MenuUp", JUST_PRESSED)) { changeSetting(-1); }
+					else if (controls.check("MenuDown", JUST_PRESSED)) { changeSetting(1); }
+					else if (controls.check("MenuAccept", JUST_PRESSED)) {
+						if (!(grpCheckers.members[curOption] is MenuKeyBind)) {
+							if (curOption == grpCheckers.length - 1) {
 								Controls.reset();
 								unSelectCategory();
 								selectCategory();
 							}
-						}else{
-							canControlle = false;
-						}
+						} else { canControlle = false; }
+					} else if (controls.check("MenuBack", JUST_PRESSED)) { 
+						Controls.save();
+						Players.init();
+						unSelectCategory(); 
 					}
-				}else{
-					if(controls.check("MenuUp", JUST_PRESSED)){changeSetting(-1);}
-					else if(controls.check("MenuDown", JUST_PRESSED)){changeSetting(1);}
-					else if(controls.check("MenuBack", JUST_PRESSED)){unSelectCategory();}
+				} else {
+					if (controls.check("MenuUp", JUST_PRESSED)) { changeSetting(-1); }
+					else if (controls.check("MenuDown", JUST_PRESSED)) { changeSetting(1); }
+					else if (controls.check("MenuBack", JUST_PRESSED)) { unSelectCategory(); }
 				}
-			}else{
-				if(controls.check("MenuUp", JUST_PRESSED)){changeCategory(-1);}
-				else if(controls.check("MenuDown", JUST_PRESSED)){changeCategory(1);}
-				else if(controls.check("MenuAccept", JUST_PRESSED)){selectCategory();}
-				else if(controls.check("MenuBack", JUST_PRESSED)){doClose();}
+			} else {
+				if (controls.check("MenuUp", JUST_PRESSED)) { changeCategory(-1); }
+				else if (controls.check("MenuDown", JUST_PRESSED)) { changeCategory(1); }
+				else if (controls.check("MenuAccept", JUST_PRESSED)) {selectCategory(); }
+				else if (controls.check("MenuBack", JUST_PRESSED)) { doClose(); }
 			}
 
-		}else if(((inControls || inNoteControls) && (grpCheckers.members[curOption] is MenuKeyBind) && !grpCheckers.members[curOption].isBinding)){
+		} else if (((inControls || inNoteControls) && (grpCheckers.members[curOption] is MenuKeyBind) && !grpCheckers.members[curOption].isBinding)) {
 			canControlle = true;
 		}
 	}
 
 	function changeCategory(change:Int = 0, force:Bool = false):Void {
-		if(force){curCategory = change;}else{curCategory += change;}
+		if (force) {curCategory = change; } else {curCategory += change; }
 
-		if(curCategory < 0){curCategory = grpCategories.length - 1;}
-		if(curCategory >= grpCategories.length){curCategory = 0;}
+		if (curCategory < 0) {curCategory = grpCategories.length - 1; }
+		if (curCategory >= grpCategories.length) {curCategory = 0; }
 		
-		for(i in 0...grpCategories.members.length){
+		for (i in 0...grpCategories.members.length) {
 			grpCategories.members[i].color = FlxColor.WHITE;
-			if(i == curCategory){grpCategories.members[i].color = 0xfffff082;}
+			if (i == curCategory) {grpCategories.members[i].color = 0xfffff082; }
 		}
 		
-		if(!force){FlxG.sound.play(Paths.sound("scrollMenu").getSound());}
+		if (!force) { FlxG.sound.play(Paths.sound("scrollMenu").getSound()); }
 	}
 	function changeSetting(change:Int = 0, force:Bool = false):Void {
-		if(grpCheckers.members[curOption].isSelected != null){grpCheckers.members[curOption].isSelected = false;}
+		if (grpCheckers.members[curOption].isSelected != null) {grpCheckers.members[curOption].isSelected = false; }
 
-		if(force){curOption = change;}else{curOption += change;}
+		if (force) {curOption = change; } else {curOption += change; }
 
-		if(curOption < 0){curOption = grpOptions.length - 1;}
-		if(curOption >= grpOptions.length){curOption = 0;}
+		if (curOption < 0) {curOption = grpOptions.length - 1; }
+		if (curOption >= grpOptions.length) {curOption = 0; }
 		
-		for(i in 0...grpOptions.members.length){
+		for (i in 0...grpOptions.members.length) {
 			var curOpt = grpOptions.members[i];
 
-			if((curOpt is Alphabet)){
+			if ((curOpt is Alphabet)) {
 				cast(curOpt, Alphabet).color = 0xffffffff;
-				if(i == curOption){cast(curOpt, Alphabet).color = 0xff3dff94;}
-			}else if((curOpt is StrumNote)){
+				if (i == curOption) {cast(curOpt, Alphabet).color = 0xff3dff94; }
+			} else if ((curOpt is StrumNote)) {
 				cast(curOpt, StrumNote).playAnim("static");
-				if(i == curOption){cast(curOpt, StrumNote).playAnim("confirm");}
+				if (i == curOption) {cast(curOpt, StrumNote).playAnim("confirm"); }
 			}
 		}
 		
-		if(grpCheckers.members[curOption].isSelected != null){grpCheckers.members[curOption].isSelected = true;}
+		if (grpCheckers.members[curOption].isSelected != null) {grpCheckers.members[curOption].isSelected = true; }
 		
-		if(!force){FlxG.sound.play(Paths.sound("scrollMenu").getSound());}
+		if (!force) {FlxG.sound.play(Paths.sound("scrollMenu").getSound()); }
 	}
 
 	function selectCategory():Void {
@@ -220,12 +204,9 @@ class SettingsSubState extends MusicBeatSubstate {
 
 		curOption = 0;
 
-		switch(catList[curCategory]){
+		switch (catList[curCategory]) {
 			case "Controls":{
-				var newGoBack:Alphabet = new Alphabet(20, -100, {font: "tardling_font_outline", rel_position: [0, -20], text: Language.getText('ctr_goback')}); grpOptions.add(newGoBack);
-				var voidObject:FlxObject = new FlxObject(0, 0); grpCheckers.add(voidObject);
-
-				for(_control in Controls.keys){
+				for (_control in Controls.keys) {
 					var newSetting:Alphabet = new Alphabet(20, -100, {font: "tardling_font_outline", text: Language.getText('ctr_${_control.toLowerCase()}')});
 					grpOptions.add(newSetting);
 					
@@ -240,15 +221,15 @@ class SettingsSubState extends MusicBeatSubstate {
 				inControls = true;
 			}
 			case "NoteControls":{
-				var keyList:Array<Dynamic> = [["goback", 0], ["currentnotes", 1], ["testnotes", 0]];
+				var keyList:Array<Dynamic> = [["currentnotes", 1]];
 				curKeys = 4;
 				
-				for(_option in keyList){
-					var newSetting:Alphabet = new Alphabet(20, -100, {font: "tardling_font_outline", text: Language.getText('ctr_${_option[0].toLowerCase()}')});
+				for (_option in keyList) {
+					var newSetting:Alphabet = new Alphabet(20, -100, { font: "tardling_font_outline", text: Language.getText('ctr_${_option[0].toLowerCase()}')});
 					grpOptions.add(newSetting);
 					
-					switch(_option[1]){
-						case 0:{
+					switch (_option[1]) {
+						case 0: {
 							var voidObject:FlxObject = new FlxObject(0, 0); 
 							grpCheckers.add(voidObject);
 						}
@@ -267,30 +248,30 @@ class SettingsSubState extends MusicBeatSubstate {
 			}
 			default:{
 				_category = Settings.get_category(catList[curCategory]);
-				for(_setting in _category.settings){
+				for (_setting in _category.settings) {
 					var newSetting:Alphabet = new Alphabet(20, -100, {font: "tardling_font_outline", text: Language.getText('opt_${_setting.name.toLowerCase()}') + ":"});
 					grpOptions.add(newSetting);
 		
-					if((_setting is Bool_Setting)){
+					if ((_setting is Bool_Setting)) {
 						var newCheck:MenuBool = new MenuBool(20, -100, _setting.value, _setting.name);
 						newCheck.x = newSetting.x + newSetting.width + 20;
 						newCheck.setGraphicSize(0, newSetting.height + 10);
 						newCheck.updateHitbox();
 						newCheck.controls = controls;
 						grpCheckers.add(newCheck);
-					}else if((_setting is List_Setting)){
+					} else if ((_setting is List_Setting)) {
 						var _list_setting:List_Setting = cast _setting;
 						var newCheck:MenuList = new MenuList(20, -100, _list_setting.list, _list_setting.index, _list_setting.name);
 						newCheck.x = newSetting.x + newSetting.width + 20;
 						newCheck.controls = controls;
 						grpCheckers.add(newCheck);
-					}else if((_setting is Number_Setting)){
+					} else if ((_setting is Number_Setting)) {
 						var _number_setting:Number_Setting = cast _setting;
 						var newCheck:MenuNumber = new MenuNumber(20, -100, _number_setting.value, _number_setting.min, _number_setting.max, _number_setting.step, _number_setting.name);
 						newCheck.x = newSetting.x + newSetting.width + 20;
 						newCheck.controls = controls;
 						grpCheckers.add(newCheck);
-					}else{
+					} else {
 						var voidObject:FlxObject = new FlxObject(0, 0);
 						grpCheckers.add(voidObject);
 					}
@@ -301,9 +282,9 @@ class SettingsSubState extends MusicBeatSubstate {
 		changeSetting(0, true);
 		inCategory = true;
 		
-		for(i in 0...grpCategories.members.length){
+		for (i in 0...grpCategories.members.length) {
 			FlxTween.cancelTweensOf(grpCategories.members[i]);
-			if(i == curCategory){FlxTween.tween(grpCategories.members[i], {y: ttlSettings.y + ttlSettings.height + 20, x: FlxG.width - grpCategories.members[i].width - 20}, 0.1, {ease: FlxEase.quadOut}); continue;}
+			if (i == curCategory) {FlxTween.tween(grpCategories.members[i], {y: ttlSettings.y + ttlSettings.height + 20, x: FlxG.width - grpCategories.members[i].width - 20}, 0.1, {ease: FlxEase.quadOut}); continue; }
 			FlxTween.tween(grpCategories.members[i], {x: -grpCategories.members[i].width - 10}, i * 0.05 + 0.1, {ease: FlxEase.quadInOut});
 		}
 
@@ -317,7 +298,7 @@ class SettingsSubState extends MusicBeatSubstate {
 		inCategory = false;
 		inControls = false;
 		
-		for(i in 0...grpCategories.members.length){
+		for (i in 0...grpCategories.members.length) {
 			FlxTween.cancelTweensOf(grpCategories.members[i]);
 			FlxTween.tween(grpCategories.members[i], {x: 20}, i * 0.05 + 0.1, {ease: FlxEase.quadInOut});
 		}
@@ -326,15 +307,15 @@ class SettingsSubState extends MusicBeatSubstate {
 	}
 
 	public function loadStrum():Void {
-		while(grpOptions.length > 3){grpOptions.remove(grpOptions.members[grpOptions.length - 1], true);}
-		while(grpCheckers.length > 3){grpCheckers.remove(grpCheckers.members[grpCheckers.length - 1], true);}
+		while (grpOptions.length > 1) { grpOptions.remove(grpOptions.members[grpOptions.length - 1], true); }
+		while (grpCheckers.length > 1) { grpCheckers.remove(grpCheckers.members[grpCheckers.length - 1], true); }
 		
 		strumline.changeKeys(curKeys);
-		strumline_test.changeKeys(curKeys);
 
-		for(i in 0...strumline.staticnotes.statics.length){
+		for (i in 0...strumline.staticnotes.statics.length) {
 			var strum = strumline.staticnotes.statics[i];
 			strum.x = 20;
+
 			grpOptions.add(strum);
 
 			var newCheck:MenuKeyBind = new MenuKeyBind(20, -100, controls, '$curKeys', i);
@@ -343,16 +324,16 @@ class SettingsSubState extends MusicBeatSubstate {
 		}
 	}
 
-	public function doClose(){
+	public function doClose() {
 		Settings.save();
-		Language.load();
+		Language.load(Settings.get("Language"));
 
 		canControlle = false;
 		FlxG.sound.play(Paths.sound("cancelMenu").getSound());
-		FlxTween.tween(curCamera, {alpha: 0}, 1, {onComplete: function(twn){close();}});
+		FlxTween.tween(curCamera, {alpha: 0}, 1, { onComplete: (_twn:FlxTween) -> { close(); }});
 	}
 
-	override function destroy(){
+	override function destroy() {
 		super.destroy();
 	}
 }

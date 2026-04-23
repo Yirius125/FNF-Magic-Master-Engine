@@ -34,7 +34,7 @@ class StrumEvent extends StrumNote {
     public var isExternal:Bool = false;
     public var isBroke:Bool = false;
 
-    public function new(_strumtime:Float, _conductor:Conductor = null, _isExternal:Bool = false, _isBroke:Bool = false){
+    public function new(_strumtime:Float, _conductor:Conductor = null, _isExternal:Bool = false, _isBroke:Bool = false) {
         this.strumTime = _strumtime;
         this.conductor = _conductor;
         this.isExternal = _isExternal;
@@ -43,13 +43,13 @@ class StrumEvent extends StrumNote {
         playAnim("BeEvent");
 	}
 
-    override public function loadNote(?_image:String, ?_style:String, ?_type:String){
-        if(_image != null){image = _image;} if(_style != null){style = _style;} if(_type != null){type = _type;}
+    override public function loadNote(?_image:String, ?_style:String, ?_type:String) {
+        if (_image != null) {image = _image; } if (_style != null) {style = _style; } if (_type != null) {type = _type; }
 
-        note_path = Paths.note(image, style, type);
-        frames = note_path.getAtlas();
-    
-        if(frames == null){return;}
+        notePath = Paths.note(image, style, type);
+
+        frames = notePath.getAtlas();    
+        if (frames == null) { return; }
 
         animation.addByPrefix("BeEvent", "BeEvent", 30, false);
         animation.addByPrefix("AfEvent", "AfEvent", 30, false);
@@ -57,15 +57,15 @@ class StrumEvent extends StrumNote {
     }
 
     var _lastAnim:String = "";
-    override function update(elapsed:Float){
+    override function update(elapsed:Float) {
 		super.update(elapsed);
 
-        if(isExternal && isBroke){
-            if(_lastAnim != "OffEvent"){playAnim("OffEvent"); _lastAnim = "OffEvent";}
-        }else if(conductor != null && strumTime < conductor.position){
-            if(_lastAnim != "AfEvent"){playAnim("AfEvent"); _lastAnim = "AfEvent";}
-        }else{
-            if(_lastAnim != "BeEvent"){playAnim("BeEvent"); _lastAnim = "BeEvent";}
+        if (isExternal && isBroke) {
+            if (_lastAnim != "OffEvent") {playAnim("OffEvent"); _lastAnim = "OffEvent"; }
+        } else if (conductor != null && strumTime < conductor.position) {
+            if (_lastAnim != "AfEvent") {playAnim("AfEvent"); _lastAnim = "AfEvent"; }
+        } else{
+            if (_lastAnim != "BeEvent") {playAnim("BeEvent"); _lastAnim = "BeEvent"; }
         }
 	}
 }

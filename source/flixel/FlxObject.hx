@@ -567,8 +567,6 @@ class FlxObject extends FlxBasic
 		return computeOverlapY(object1, object2, false) != 0;
 	}
 
-	public var _:Dynamic = {};
-
 	/**
 	 * X position of the upper left corner of this object in world space.
 	 */
@@ -878,8 +876,6 @@ class FlxObject extends FlxBasic
 
 		wasTouching = touching;
 		touching = FlxDirectionFlags.NONE;
-		
-		if(_.update != null){_.update(elapsed);}
 	}
 
 	/**

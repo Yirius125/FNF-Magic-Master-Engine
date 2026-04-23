@@ -25,16 +25,16 @@ class MenuBool extends FlxSprite {
 
     override public function update(elapsed:Float):Void {
         super.update(elapsed);
-        if(!isSelected){return;}
+        if (!isSelected) { return; }
 
-        if(controls.check("MenuAccept", JUST_PRESSED)){toggle();}
+        if (controls.check("MenuAccept", JUST_PRESSED)) {toggle(); }
     }
 
     public function toggle(?_value:Bool):Void {
         value = _value != null ? _value : !value;
         animation.play("play", true, !value);
 
-        if(setting != null){Settings.get_setting(setting).toggle(value);}
+        if (setting != null) {Settings.get_setting(setting).toggle(value); }
 
 		FlxG.sound.play(Paths.sound("scrollMenu").getSound());
     }

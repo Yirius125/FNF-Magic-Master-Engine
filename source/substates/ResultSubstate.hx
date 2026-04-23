@@ -46,12 +46,30 @@ class ResultSubstate extends MusicBeatSubstate {
     public var charsGenerated:Bool = false;
     
     public var style:String;
+    public var score:Int;
+    public var notes:Int;
+    public var combo:Int;
+    public var misses:Int;
+    public var highscore:Int;
+    public var status:Map<String, Int>;
+    public var characters:Array<Character>;
     
-	public function new(characters:Array<Character>, _style:String, _score:Int = 0, _notes:Int = 0, _combo:Int = 0, _misses:Int = 0, ?_status:Map<String, Int>, _highscore:Int = 0):Void {
+	public function new(_characters:Array<Character>, _style:String, _score:Int = 0, _notes:Int = 0, _combo:Int = 0, _misses:Int = 0, ?_status:Map<String, Int>, _highscore:Int = 0):Void {
 		style = _style;
+        score = _score;
+        notes = _notes;
+        combo = _combo;
+        misses = _misses;
+        status = _status;
+        highscore = _highscore;
+        characters = _characters;
         super();
+	}
+    
+	override function create() {
+		super.create();
 
-        _score = Std.int(Math.max(_score, 0));
+        score = Std.int(Math.max(score, 0));
 
         otherCamera = new FlxCamera();
 		otherCamera.bgColor.alpha = 0;
@@ -64,12 +82,12 @@ class ResultSubstate extends MusicBeatSubstate {
 		FlxG.cameras.add(otherCamera);
 		FlxG.cameras.add(hudCamera);
 
-        if((MusicBeatState.state is PlayState)){curState = cast MusicBeatState.state;}
+        if ((MusicBeatState.state is PlayState)) {curState = cast MusicBeatState.state; }
         
 		var stickerList:Array<String> = Paths.readDirectory("assets/shared/images/stickers");
 		grpBackShit = new FlxTypedGroup<FlxSprite>();
         grpBackShit.cameras = [otherCamera];
-        for(i in 0...50){
+        for (i in 0...50) {
             var backSticker:FlxSprite = new FlxSprite().loadGraphic(stickerList[FlxG.random.int(0, stickerList.length - 1)]);
             backSticker.scale.x = backSticker.scale.y = FlxG.random.float(0.05, 0.5); backSticker.updateHitbox();
             backSticker.alpha = FlxG.random.float(0.05, 0.2);
@@ -79,8 +97,7 @@ class ResultSubstate extends MusicBeatSubstate {
                 (i * (-FlxG.height) / 50) + FlxG.random.float(-backSticker.height, backSticker.height)
             );
             
-            backSticker._.speed = FlxG.random.float(30, 50);
-            backSticker._.speedAngle = FlxG.random.float(-6, 6);
+            backSticker.velocity.y = FlxG.random.float(30, 50);
 
             grpBackShit.add(backSticker);
 		}
@@ -101,7 +118,7 @@ class ResultSubstate extends MusicBeatSubstate {
 
         grpRankStuff = new FlxUIGroup(0, FlxG.height);
         grpRankStuff.cameras = [hudCamera];
-        addScoreSprites(_notes, _combo, _misses, _status);
+        addScoreSprites(notes, combo, misses, status);
         add(grpRankStuff);
 
         sprRadioFront = new FlxSprite(-20, -5);
@@ -112,8 +129,8 @@ class ResultSubstate extends MusicBeatSubstate {
         sprRadioFront.visible = false;
         add(sprRadioFront);
 
-        alpScore = new Alphabet(120, 620, {font: "score-digital-numbers", text: convertScore(_score)});
-        for(d in alpScore.members){d.visible = false;}
+        alpScore = new Alphabet(120, 620, {font: "score-digital-numbers", text: convertScore(score)});
+        for (d in alpScore.members) {d.visible = false; }
         alpScore.cameras = [hudCamera];
         add(alpScore);
 
@@ -125,7 +142,7 @@ class ResultSubstate extends MusicBeatSubstate {
         sprScore.visible = false;
         add(sprScore);
         
-        if(_score >= _highscore){
+        if (score >= highscore) {
             sprHighscore = new FlxSprite(335, 565);
             sprHighscore.frames = Paths.styleImage("result_menu/highscoreNew", PlayState.song.style).getAtlas();
             sprHighscore.scale.set(sprTopBar.scale.x, sprTopBar.scale.y); sprHighscore.updateHitbox();
@@ -137,7 +154,7 @@ class ResultSubstate extends MusicBeatSubstate {
 
         grpCharacters = new FlxTypedGroup<Character>();
         grpCharacters.cameras = [otherCamera];
-		for(i in 0...characters.length){
+		for (i in 0...characters.length) {
             var new_character = new Character(characters[i].x, characters[i].y, characters[i].curCharacter, characters[i].curAspect, "Result");
             new_character.turnLook(characters[i].onRight);
             new_character.playAnim('Waiting', true);
@@ -160,8 +177,8 @@ class ResultSubstate extends MusicBeatSubstate {
 
         FlxG.sound.playMusic(Paths.styleMusic('results', style).getSound());
         curCamera.fade(0xffffc85d, 1, false, () -> {
-            if(grpCharacters.members.length > 0){for(char in grpCharacters){char.playAnim('Perfect', true);}}
-            if(curState != null){curState.stage.destroy();}
+            if (grpCharacters.members.length > 0) {for (char in grpCharacters) {char.playAnim('Perfect', true); }}
+            if (curState != null) {curState.stage.destroy(); }
             MusicBeatState.state.persistentUpdate = false;
             MusicBeatState.state.persistentDraw = false;
             charsGenerated = false;
@@ -186,8 +203,8 @@ class ResultSubstate extends MusicBeatSubstate {
                 FlxTween.tween(alpResults, {y: 10}, 0.1, { ease:FlxEase.quadOut });
 
                 new FlxTimer().start(0.05, (tmr)->{
-                    if(tmr.elapsedLoops > alpScore.length){
-                        if(_score >= _highscore){
+                    if (tmr.elapsedLoops > alpScore.length) {
+                        if (score >= highscore) {
                             sprHighscore.animation.play("play");
                             sprHighscore.visible = true;
                         }
@@ -201,42 +218,42 @@ class ResultSubstate extends MusicBeatSubstate {
             }, 500);
         }});
 
-		camFollow = new FlxObject(characters[0].c.x + characters[0].c.width - (FlxG.width / 3), characters[0].c.y + characters[0].c.height - (FlxG.height / 2.8), 1, 1);
+		camFollow = new FlxObject(characters[0].characterSprite.x + characters[0].characterSprite.width - (FlxG.width / 3), characters[0].characterSprite.y + characters[0].characterSprite.height - (FlxG.height / 2.8), 1, 1);
         add(camFollow);
 
         otherCamera.follow(camFollow, LOCKON, 0.01);
-		FlxG.camera.follow(camFollow, LOCKON, 0.01);
-	}
+		FlxG.camera.follow(camFollow, LOCKON, 0.01);        
+        
+		scripts.call('created');
+    }
 
-	override function update(elapsed:Float){
+	override function update(elapsed:Float) {
 		super.update(elapsed);
         
-		for(obj in grpBackShit.members){
-			if(obj.y > FlxG.height + 5){
+		for (obj in grpBackShit.members) {
+			if (obj.y > FlxG.height + 5) {
 				obj.x = FlxG.random.float(0, FlxG.width - obj.width);
 				obj.y = -obj.height - 5;
 			}
-			obj.angle += elapsed * obj._.speedAngle;
-			obj.y += elapsed * obj._.speed;
 		}
         
-        switch(scoreState){
+        switch (scoreState) {
             case 0, 2:{
                 cooldownScore -= elapsed;
-                if(cooldownScore <= 0){scoreState++;}
+                if (cooldownScore <= 0) {scoreState++; }
             }
             case 1:{
                 grpRankStuff.y -= elapsed * 30;
-                if(grpRankStuff.y + grpRankStuff.height < 390){scoreState++; cooldownScore = 5;}
+                if (grpRankStuff.y + grpRankStuff.height < 390) {scoreState++; cooldownScore = 5; }
             }
             case 3:{
                 grpRankStuff.y += elapsed * 30;
-                if(grpRankStuff.y > 0){scoreState = 0; cooldownScore = 5;}
+                if (grpRankStuff.y > 0) {scoreState = 0; cooldownScore = 5; }
             }
         }
 
-        if(canControlle){
-            if(controls.check("MenuAccept", JUST_PRESSED)){endResult();}
+        if (canControlle) {
+            if (controls.check("MenuAccept", JUST_PRESSED)) { endResult(); }
         }
 	}
 
@@ -263,7 +280,7 @@ class ResultSubstate extends MusicBeatSubstate {
         grpRankStuff.add(maxComboSprite);
         grpRankStuff.add(maxComboCount);
 
-        for(cur_rank in StrumLine.ranks){
+        for (cur_rank in StrumLine.ranks) {
             var rankSprite:FlxSprite = new FlxSprite(45, curHeight).loadGraphic(Paths.styleImage(cur_rank.popup, PlayState.song.style));
             rankSprite.scale.set(sprTopBar.scale.x * 0.5, sprTopBar.scale.y * 0.5); rankSprite.updateHitbox();
 
@@ -286,20 +303,20 @@ class ResultSubstate extends MusicBeatSubstate {
         grpRankStuff.add(missesCount);
     }
 
-    private function endResult():Void {
+    public function endResult():Void {
         canControlle = false;
 
         FlxG.sound.music.fadeOut(2);
-        hudCamera.fade(FlxColor.BLACK, 2, false, function(){
+        hudCamera.fade(FlxColor.BLACK, 2, false, function() {
             FlxG.sound.music.stop();
-            if(Songs.isStoryMode){states.MusicBeatState.switchState("states.MainMenuState", []);}
-            else{MusicBeatState.switchState("states.FreeplayState", [null, "states.MainMenuState"]);}
+            if (Songs.isStoryMode) { states.MusicBeatState.switchState("states.MainMenuState", []); }
+            else { MusicBeatState.switchState("states.FreeplayState", [null, "states.MainMenuState"]); }
         });
     }
 
-    private function convertScore(_score:Int):String {
+    public function convertScore(_score:Int):String {
         var toReturn:String = '${_score}';
-        while(toReturn.split("").length < 10){toReturn = '#$toReturn';}
+        while(toReturn.split("").length < 10) { toReturn = '#$toReturn'; }
         return toReturn;
     }
 }

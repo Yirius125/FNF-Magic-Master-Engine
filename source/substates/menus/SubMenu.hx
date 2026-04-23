@@ -20,7 +20,7 @@ using utils.Files;
 using StringTools;
 
 class SubMenu extends FlxUISubState {
-	public var onClose:Void->Void = function(){};
+	public var onClose:Void->Void = function() {};
 
     public var menuHeight:Int = 100;
     public var menuWidth:Int = 100;
@@ -35,7 +35,7 @@ class SubMenu extends FlxUISubState {
     public var backSprite:FlxUI9SliceSprite;
 
     public function new(onClose:Void->Void = null, _width:Int = 100, _height:Int = 100):Void {
-		if(onClose != null){this.onClose = onClose;}
+		if (onClose != null) {this.onClose = onClose; }
         this.menuHeight = _height;
         this.menuWidth = _width;
 
@@ -61,7 +61,7 @@ class SubMenu extends FlxUISubState {
         group.cameras = [curCamera];
         add(group);
         
-        FlxTween.tween(curCamera, {zoom: 1}, 0.3, {ease: FlxEase.backOut, onComplete: (twn)->{canControlle = true;}});
+        FlxTween.tween(curCamera, {zoom: 1}, 0.3, {ease: FlxEase.backOut, onComplete: (twn)->{canControlle = true; }});
         FlxG.sound.play(Paths.sound("popUp").getSound(), 0.5);
     }
 
@@ -72,7 +72,7 @@ class SubMenu extends FlxUISubState {
     public function doClose():Void {
         canControlle = false;
         FlxG.sound.play(Paths.sound("popUp").getSound(), 0.5);
-        FlxTween.tween(curCamera, {zoom: 0.000001}, 0.2, {ease: FlxEase.backIn, onComplete: (twn)->{close();}});
+        FlxTween.tween(curCamera, {zoom: 0.000001}, 0.2, {ease: FlxEase.backIn, onComplete: (twn)->{close(); }});
     }
 
 	override function close():Void {
@@ -80,6 +80,6 @@ class SubMenu extends FlxUISubState {
         curCamera.destroy();
         super.close();
 
-        if(onClose != null){onClose();}
+        if (onClose != null) {onClose(); }
 	}
 }

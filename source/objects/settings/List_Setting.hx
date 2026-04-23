@@ -14,10 +14,10 @@ class List_Setting extends Setting {
 
     public function toggle(_value:Int = 0):Void { index += _value; limit(); }
     public function set(id:Int):Void { index = id; limit(); }
-    public function find(_value:String){ index = list.indexOf(_value); limit(); }
+    public function find(_value:String) { index = list.indexOf(_value); limit(); }
 
     public function limit():Void {
-        if(index >= list.length){index = 0;}
-        if(index < 0){index = list.length - 1;}
+        if (index >= list.length) {index = 0; }
+        if (index < 0) {index = list.length - 1; }
     }
 }

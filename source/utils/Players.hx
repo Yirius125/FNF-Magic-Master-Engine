@@ -15,15 +15,16 @@ class Players {
     public static function get_length():Int { return list.length; }
 
     public static function init():Void {
-        while(list.length > 0){list.pop().destroy();}
+        while (list.length > 0) { list.pop().destroy(); }
 
         list.push(new Player(0)); //Adding Principal Player One
         get(0).controls.useKeyboard = true; // Forcing Keyboard to Player 1
         
         //Adding Controller Players
-        for(i in 0...FlxG.gamepads.numActiveGamepads){
-            if(i == 0 && FlxG.gamepads.getByID(0) != null){get(0).controls.addGamepad(0); continue;}
-            if(FlxG.gamepads.getByID(i) != null){
+        for (i in 0...FlxG.gamepads.numActiveGamepads) {
+            if (i == 0 && FlxG.gamepads.getByID(0) != null) { get(0).controls.addGamepad(0); continue; }
+
+            if (FlxG.gamepads.getByID(i) != null) {
                 var new_player:Player = new Player(i);
                 new_player.controls.addGamepad(i);
                 list.push(new_player);

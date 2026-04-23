@@ -185,7 +185,7 @@
         ],
         "notes":[
             {
-                "sing_animation": "singLEFT",
+                "sing_animation": "LEFT",
                 "animations":[
                     {
                         "anim": "static",
@@ -199,7 +199,7 @@
                 "color": "#c24b98"
             },
             {
-                "sing_animation": "singDOWN",
+                "sing_animation": "DOWN",
                 "animations":[
                     {
                         "anim": "static",
@@ -213,7 +213,7 @@
                 "color": "#00ffff"
             },
             {
-                "sing_animation": "singRIGHT",
+                "sing_animation": "RIGHT",
                 "animations":[
                     {
                         "anim": "static",
@@ -227,7 +227,7 @@
                 "color": "#f9393f"
             },
             {
-                "sing_animation": "singLEFT",
+                "sing_animation": "LEFT",
                 "animations":[
                     {
                         "anim": "static",
@@ -241,7 +241,7 @@
                 "color": "#fffc59"
             },
             {
-                "sing_animation": "singUP",
+                "sing_animation": "UP",
                 "animations":[
                     {
                         "anim": "static",
@@ -255,7 +255,7 @@
                 "color": "#73fffd"
             },
             {
-                "sing_animation": "singRIGHT",
+                "sing_animation": "RIGHT",
                 "animations":[
                     {
                         "anim": "static",

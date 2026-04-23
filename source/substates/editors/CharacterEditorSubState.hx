@@ -30,23 +30,31 @@ import flixel.FlxObject;
 import flixel.FlxG;
 
 class CharacterEditorSubState extends MusicBeatSubstate {
-    public var last_cameras:Array<FlxCamera> = [];
-    public var characters_stage:Stage;
     public var song:Song_File;
+    public var stage:Stage;
 
 	public var curCharacter:Int = 0;
 	public var selCharacter:Character;
 
-    var camFollow:FlxObject;
+    public var last_cameras:Array<FlxCamera> = [];
 	var subHUD:FlxCamera;
 
+    var camFollow:FlxObject;
+	
     var arrayFocus:Array<FlxUIInputText> = [];
+	
     var MENU:FlxUITabMenu;
 
-	public function new(song:Song_File, stage:Stage, onClose:Void->Void):Void {
-		this.characters_stage = stage;
+	public function new(song:Song_File, _stage:Stage, onClose:Void->Void):Void {
+		this.stage = _stage;
         this.song = song;
         super(onClose);
+
+	}
+
+	override function create() {
+		super.create();
+
 		curCamera.bgColor.alpha = 200;
 		curCamera.alpha = 0;
 
@@ -54,8 +62,8 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 		subHUD.bgColor.alpha = 0;
 		FlxG.cameras.add(subHUD);
         
-        last_cameras = characters_stage.cameras.copy();
-        characters_stage.cameras = [curCamera];
+        last_cameras = stage.cameras.copy();
+        stage.cameras = [curCamera];
 
         MENU = new FlxUITabMenu(null, [], true);
         MENU.resize(300, 250);
@@ -74,12 +82,7 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 
 		changeCharacter();
 
-		FlxTween.tween(curCamera, {alpha: 1}, 0.5, {onComplete: function(twn){canControlle = true;}});
-
-	}
-
-	override function create() {
-		super.create();
+		FlxTween.tween(curCamera, { alpha: 1 }, 0.5, { onComplete: (twn) -> { canControlle = true; }});
 		
 		FlxG.mouse.visible = true;
 	}
@@ -88,72 +91,72 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-        var arrayControlle = true; for(item in arrayFocus){if(item.hasFocus){arrayControlle = false;}}
-        if(canControlle && arrayControlle){
-            if(FlxG.mouse.justPressedRight){pos = [[camFollow.x, camFollow.y],[FlxG.mouse.x, FlxG.mouse.y]];}
-            if(FlxG.mouse.pressedRight){camFollow.setPosition(pos[0][0] + (pos[1][0] - FlxG.mouse.x), pos[0][1] + (pos[1][1] - FlxG.mouse.y));}
+        var arrayControlle = true; for (item in arrayFocus) {if (item.hasFocus) {arrayControlle = false; }}
+        if (canControlle && arrayControlle) {
+            if (FlxG.mouse.justPressedRight) {pos = [[camFollow.x, camFollow.y],[FlxG.mouse.x, FlxG.mouse.y]]; }
+            if (FlxG.mouse.pressedRight) {camFollow.setPosition(pos[0][0] + (pos[1][0] - FlxG.mouse.x), pos[0][1] + (pos[1][1] - FlxG.mouse.y)); }
 
-            if(FlxG.keys.pressed.SHIFT){
-                if(FlxG.mouse.wheel != 0){curCamera.zoom += (FlxG.mouse.wheel * 0.1);}
+            if (FlxG.keys.pressed.SHIFT) {
+                if (FlxG.mouse.wheel != 0) {curCamera.zoom += (FlxG.mouse.wheel * 0.1); }
 				
-				if(song.characters[curCharacter] != null){
-					if(FlxG.keys.justPressed.W){song.characters[curCharacter][1][1] -= 10; updateStage();}
-					if(FlxG.keys.justPressed.A){song.characters[curCharacter][1][0] -= 10; updateStage();}
-					if(FlxG.keys.justPressed.S){song.characters[curCharacter][1][1] += 10; updateStage();}
-					if(FlxG.keys.justPressed.D){song.characters[curCharacter][1][0] += 10; updateStage();}
+				if (song.characters[curCharacter] != null) {
+					if (FlxG.keys.justPressed.W) {song.characters[curCharacter][1][1] -= 10; updateStage(); }
+					if (FlxG.keys.justPressed.A) {song.characters[curCharacter][1][0] -= 10; updateStage(); }
+					if (FlxG.keys.justPressed.S) {song.characters[curCharacter][1][1] += 10; updateStage(); }
+					if (FlxG.keys.justPressed.D) {song.characters[curCharacter][1][0] += 10; updateStage(); }
 					
-					if(FlxG.keys.justPressed.E){song.characters[curCharacter][6] += 1; updateStage();}
-					if(FlxG.keys.justPressed.Q){song.characters[curCharacter][6] -= 1; updateStage();}
+					if (FlxG.keys.justPressed.E) {song.characters[curCharacter][6] += 1; updateStage(); }
+					if (FlxG.keys.justPressed.Q) {song.characters[curCharacter][6] -= 1; updateStage(); }
 				}
-			}else{
-                if(FlxG.mouse.wheel != 0){curCamera.zoom += (FlxG.mouse.wheel * 0.01);}
+			} else {
+                if (FlxG.mouse.wheel != 0) {curCamera.zoom += (FlxG.mouse.wheel * 0.01); }
 
-				if(song.characters[curCharacter] != null){
-					if(FlxG.keys.justPressed.W){song.characters[curCharacter][1][1] -= 1; updateStage();}
-					if(FlxG.keys.justPressed.A){song.characters[curCharacter][1][0] -= 1; updateStage();}
-					if(FlxG.keys.justPressed.S){song.characters[curCharacter][1][1] += 1; updateStage();}
-					if(FlxG.keys.justPressed.D){song.characters[curCharacter][1][0] += 1; updateStage();}
+				if (song.characters[curCharacter] != null) {
+					if (FlxG.keys.justPressed.W) {song.characters[curCharacter][1][1] -= 1; updateStage(); }
+					if (FlxG.keys.justPressed.A) {song.characters[curCharacter][1][0] -= 1; updateStage(); }
+					if (FlxG.keys.justPressed.S) {song.characters[curCharacter][1][1] += 1; updateStage(); }
+					if (FlxG.keys.justPressed.D) {song.characters[curCharacter][1][0] += 1; updateStage(); }
 					
-					if(FlxG.keys.justPressed.E){song.characters[curCharacter][2] += 0.1; updateStage();}
-					if(FlxG.keys.justPressed.Q){song.characters[curCharacter][2] -= 0.1; updateStage();}
+					if (FlxG.keys.justPressed.E) {song.characters[curCharacter][2] += 0.1; updateStage(); }
+					if (FlxG.keys.justPressed.Q) {song.characters[curCharacter][2] -= 0.1; updateStage(); }
 				}
 			}
 			
-			if(song.characters[curCharacter] != null){
-				if(FlxG.keys.justPressed.F){song.characters[curCharacter][3] = !song.characters[curCharacter][3]; updateStage();}
+			if (song.characters[curCharacter] != null) {
+				if (FlxG.keys.justPressed.F) {song.characters[curCharacter][3] = !song.characters[curCharacter][3]; updateStage(); }
 			}
 
-			if(FlxG.keys.justPressed.Z){changeCharacter(-1);}
-			if(FlxG.keys.justPressed.X){changeCharacter(1);}
+			if (FlxG.keys.justPressed.Z) {changeCharacter(-1); }
+			if (FlxG.keys.justPressed.X) {changeCharacter(1); }
 
-			if(controls.check("MenuBack", JUST_PRESSED)){doClose();}
+			if (controls.check("MenuBack", JUST_PRESSED)) {doClose(); }
         }
 	}
 
 	public function changeCharacter(value:Int = 0, force:Bool = false):Void {
 		curCharacter = force ? value : curCharacter + value;
-		if(curCharacter < 0){curCharacter = song.characters.length - 1;}
-		if(curCharacter >= song.characters.length){curCharacter = 0;}
+		if (curCharacter < 0) {curCharacter = song.characters.length - 1; }
+		if (curCharacter >= song.characters.length) {curCharacter = 0; }
 
-		for(c in characters_stage.characterData){c.alpha = 0.5;}
-		selCharacter = characters_stage.characterData[curCharacter];
-		if(selCharacter != null){selCharacter.alpha = 1;}
+		for (c in stage.characterData) {c.alpha = 0.5; }
+		selCharacter = stage.characterData[curCharacter];
+		if (selCharacter != null) {selCharacter.alpha = 1; }
 
 		updateValues();
 	}
 
 	public function updateStage():Void {
-        characters_stage.setCharacters(song.characters);
+        stage.setCharacters(song.characters);
 		
-		for(c in characters_stage.characterData){c.alpha = 0.5;}
-		selCharacter = characters_stage.characterData[curCharacter];
-		if(selCharacter != null){selCharacter.alpha = 1;}
+		for (c in stage.characterData) {c.alpha = 0.5; }
+		selCharacter = stage.characterData[curCharacter];
+		if (selCharacter != null) {selCharacter.alpha = 1; }
 
 		updateValues();
 	}
 
 	public function updateValues():Void {
-		if(selCharacter == null){return;}
+		if (selCharacter == null) { return; }
 		var char_data:Array<Dynamic> = song.characters[curCharacter];
 
 		txtCharacter.text = char_data[0];
@@ -168,12 +171,12 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 	public function doClose():Void {
 		canControlle = false;
 		subHUD.visible = false;
-		for(c in characters_stage.characterData){c.alpha = 1;}
-		FlxTween.tween(curCamera, {alpha: 0}, 0.5, {onComplete: function(twn){close();}});
+		for (c in stage.characterData) { c.alpha = 1; }
+		FlxTween.tween(curCamera, { alpha: 0 }, 0.5, { onComplete: (twn) -> { close(); } });
 	}
 
 	override function close():Void {
-		characters_stage.cameras = last_cameras.copy();
+		stage.cameras = last_cameras.copy();
 
 		FlxG.cameras.remove(subHUD);
 		subHUD.destroy();
@@ -193,8 +196,8 @@ class CharacterEditorSubState extends MusicBeatSubstate {
         tabMENU.name = "Characters";
         MENU.addGroup(tabMENU);
 
-        var btnAddChar:FlxButton = new FlxCustomButton(25, 25, 100, null, "Create Character", null, null, function(){song.characters.push(["Boyfriend", [100, 100], 1, false, "Default", "NORMAL", 0]); updateStage(); updateValues();}); tabMENU.add(btnAddChar);
-        var btnDelChar:FlxButton = new FlxCustomButton(150, 25, 100, null, "Delete Character", null, null, function(){song.characters.remove(song.characters[curCharacter]); updateStage(); updateValues();}); tabMENU.add(btnDelChar);
+        var btnAddChar:FlxButton = new FlxCustomButton(25, 25, 100, null, "Create Character", null, null, function() {song.characters.push(["Boyfriend", [100, 100], 1, false, "Default", "NORMAL", 0]); updateStage(); updateValues(); }); tabMENU.add(btnAddChar);
+        var btnDelChar:FlxButton = new FlxCustomButton(150, 25, 100, null, "Delete Character", null, null, function() {song.characters.remove(song.characters[curCharacter]); updateStage(); updateValues(); }); tabMENU.add(btnDelChar);
         
         var lblCharacter = new FlxText(25, 75, 0, "Name:", 8); tabMENU.add(lblCharacter);
         txtCharacter = new FlxUIInputText(25 + lblCharacter.width + 5, lblCharacter.y, 200, "", 8); tabMENU.add(txtCharacter);
@@ -210,7 +213,7 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 
         var lblCharX = new FlxText(25, 150, 0, "X:", 8); tabMENU.add(lblCharX);
         stpCharX = new UINumericStepper(25 + lblCharX.width + 5, 150, 90, 1, 0, -99999, 99999, 1); tabMENU.add(stpCharX);
-            @:privateAccess arrayFocus.push(cast stpCharX.text_field);
+//            @:privateAccess arrayFocus.push(cast stpCharX.text_field);
         stpCharX.name = "CHARACTER_X";
 
         var lblCharSize = new FlxText(150, 150, 0, "Size:", 8); tabMENU.add(lblCharSize);
@@ -220,7 +223,7 @@ class CharacterEditorSubState extends MusicBeatSubstate {
 
         var lblCharY = new FlxText(25, 175, 0, "Y:", 8); tabMENU.add(lblCharY);
         stpCharY = new UINumericStepper(25 + lblCharY.width + 5, 175, 100, 1, 0, -99999, 99999, 1); tabMENU.add(stpCharY);
-            @:privateAccess arrayFocus.push(cast stpCharY.text_field);
+//            @:privateAccess arrayFocus.push(cast stpCharY.text_field);
         stpCharY.name = "CHARACTER_Y";
 
         var lblCharLayout = new FlxText(150, 175, 0, "Layout:", 8); tabMENU.add(lblCharLayout);
@@ -228,63 +231,63 @@ class CharacterEditorSubState extends MusicBeatSubstate {
             @:privateAccess arrayFocus.push(cast stpCharLayout.text_field);
         stpCharLayout.name = "CHARACTER_LAYOUT";
 
-        var btnPrevChar:FlxButton = new FlxCustomButton(25, 200, 100, null, "Previous Character", null, null, function(){changeCharacter(-1);}); tabMENU.add(btnPrevChar);
-        var btnNextChar:FlxButton = new FlxCustomButton(150, 200, 100, null, "Next Character", null, null, function(){changeCharacter(1);}); tabMENU.add(btnNextChar);
+        var btnPrevChar:FlxButton = new FlxCustomButton(25, 200, 100, null, "Previous Character", null, null, function() {changeCharacter(-1); }); tabMENU.add(btnPrevChar);
+        var btnNextChar:FlxButton = new FlxCustomButton(150, 200, 100, null, "Next Character", null, null, function() {changeCharacter(1); }); tabMENU.add(btnNextChar);
     
 		
         MENU.showTabId("Characters");
 	}
 
 	
-    override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>){
-        if(id == FlxUICheckBox.CLICK_EVENT){
+    override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
+        if (id == FlxUICheckBox.CLICK_EVENT) {
             var check:FlxUICheckBox = cast sender;
 			var wname = check.getLabel().text;
-			switch(wname){
+			switch (wname) {
                 case "onRight?":{
-                    if(song.characters[curCharacter] == null){return;}
+                    if (song.characters[curCharacter] == null) { return; }
 					song.characters[curCharacter][3] = check.checked;
                     updateStage();
                 }
 			}
-		}else if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)){
+		} else if (id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
             var input:FlxUIInputText = cast sender;
             var wname = input.name;
 
-			switch(wname){
+			switch (wname) {
 				case "CHARACTER_NAME":{
-                    if(song.characters[curCharacter] == null){return;}
+                    if (song.characters[curCharacter] == null) { return; }
 					song.characters[curCharacter][0] = input.text;
 					updateStage();
 				}
                 case "CHARACTER_ASPECT":{
-                    if(song.characters[curCharacter] == null){return;}
+                    if (song.characters[curCharacter] == null) { return; }
 					song.characters[curCharacter][4] = input.text;
 					updateStage();
 				}
 			}
-		}else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)){
+		} else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
             var nums:FlxUINumericStepper = cast sender;
 			var wname = nums.name;
 
-			switch(wname){
+			switch (wname) {
                 case "CHARACTER_X":{
-                    if(song.characters[curCharacter] == null){return;}
+                    if (song.characters[curCharacter] == null) { return; }
                     song.characters[curCharacter][1][0] = nums.value;
                     updateStage();
                 }
                 case "CHARACTER_Y":{
-                    if(song.characters[curCharacter] == null){return;}
+                    if (song.characters[curCharacter] == null) { return; }
                     song.characters[curCharacter][1][1] = nums.value;
                     updateStage();
                 }
                 case "CHARACTER_SIZE":{
-                    if(song.characters[curCharacter] == null){return;}
+                    if (song.characters[curCharacter] == null) { return; }
 					song.characters[curCharacter][2] = nums.value;
                     updateStage();
                 }
                 case "CHARACTER_LAYOUT":{
-                    if(song.characters[curCharacter] == null){return;}
+                    if (song.characters[curCharacter] == null) { return; }
                     song.characters[curCharacter][6] = Std.int(nums.value);
                     updateStage();
                 }
