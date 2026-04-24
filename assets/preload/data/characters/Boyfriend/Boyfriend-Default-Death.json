@@ -1,44 +1,45 @@
 {
 	"aspect": "Default",
+	"icon": "bf",
 	"position": [
 		-30,
 		335
 	],
 	"scale": 1,
+	"color": "#409fff",
+	"zoom": 0.8,
+	"image": "BOYFRIEND_DEATH",
+	"name": "Boyfriend",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"camera": [
+		212.777777777778,
+		563.333333333333
+	],
+	"onRight": false,
+	"skin": "Default",
 	"animations": [
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF Dead Loop",
 			"fps": 24,
-			"key": "deathLoop",
-			"loop": false
+			"indices": [],
+			"key": "deathLoop"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF Dead confirm",
 			"fps": 24,
-			"key": "deathConfirm",
-			"loop": false
+			"indices": [],
+			"key": "deathConfirm"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF dies",
 			"fps": 24,
-			"key": "firstDeath",
-			"loop": false
+			"indices": [],
+			"key": "firstDeath"
 		}
-	],
-	"name": "Boyfriend",
-	"image": "BOYFRIEND_DEATH",
-	"zoom": 0.8,
-	"antialiasing": true,
-	"singTime": 1,
-	"skin": "Default",
-	"onRight": false,
-	"icon": "bf",
-	"color": "#409fff",
-	"camera": [
-		25,
-		20
 	]
 }

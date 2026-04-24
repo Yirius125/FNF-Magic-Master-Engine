@@ -1,45 +1,46 @@
 {
 	"aspect": "Pixel",
+	"icon": "bf-pixel",
 	"position": [
 		0,
 		320
 	],
+	"scale": 6,
+	"nAntialiasing": true,
+	"color": "#409fff",
+	"zoom": 0.8,
+	"image": "bfPixel_Death",
+	"name": "Boyfriend",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": false,
+	"camera": [
+		256,
+		583
+	],
+	"onRight": false,
+	"skin": "Default",
 	"animations": [
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF Dies pixel",
 			"fps": 24,
-			"key": "firstDeath",
-			"loop": false
+			"indices": [],
+			"key": "firstDeath"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "RETRY CONFIRM",
 			"fps": 24,
-			"key": "deathConfirm",
-			"loop": false
+			"indices": [],
+			"key": "deathConfirm"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "Retry Loop",
 			"fps": 24,
-			"key": "deathLoop",
-			"loop": false
+			"indices": [],
+			"key": "deathLoop"
 		}
-	],
-	"nAntialiasing": true,
-	"scale": 6,
-	"name": "Boyfriend",
-	"image": "bfPixel_Death",
-	"zoom": 0.8,
-	"antialiasing": false,
-	"skin": "Default",
-	"onRight": false,
-	"camera": [
-		171,
-		213
-	],
-	"icon": "bf-pixel",
-	"color": "#409fff",
-	"singTime": 1
+	]
 }
