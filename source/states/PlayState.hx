@@ -4,6 +4,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import objects.notes.Note.Event_Data;
 import objects.songs.Song.Song_File;
 import flixel.sound.FlxSoundGroup;
+import substates.ResultSubState;
 import objects.utils.EventList;
 import substates.PauseSubState;
 import objects.notes.StrumLine;

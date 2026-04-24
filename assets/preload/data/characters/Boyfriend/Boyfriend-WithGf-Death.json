@@ -1,44 +1,45 @@
 {
 	"aspect": "WithGf",
+	"icon": "bf",
 	"position": [
 		-25,
 		295
 	],
 	"scale": 1,
+	"color": "#409fff",
+	"zoom": 0.8,
+	"image": "BfHoldingGf_Death",
+	"name": "Boyfriend",
+	"death": "fnf_loss_sfx",
+	"singTime": 1,
+	"antialiasing": true,
+	"camera": [
+		234,
+		582
+	],
+	"onRight": false,
+	"skin": "Default",
 	"animations": [
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF Dead with GF Loop",
 			"fps": 24,
-			"key": "deathLoop",
-			"loop": false
+			"indices": [],
+			"key": "deathLoop"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "BF Dies with GF",
 			"fps": 24,
-			"key": "firstDeath",
-			"loop": false
+			"indices": [],
+			"key": "firstDeath"
 		},
 		{
-			"indices": [],
+			"loop": false,
 			"symbol": "RETRY confirm holding gf",
 			"fps": 24,
-			"key": "deathConfirm",
-			"loop": false
+			"indices": [],
+			"key": "deathConfirm"
 		}
-	],
-	"name": "Boyfriend",
-	"image": "BfHoldingGf_Death",
-	"zoom": 0.8,
-	"antialiasing": true,
-	"skin": "Default",
-	"onRight": false,
-	"camera": [
-		0,
-		0
-	],
-	"icon": "bf",
-	"color": "#409fff",
-	"singTime": 1
+	]
 }

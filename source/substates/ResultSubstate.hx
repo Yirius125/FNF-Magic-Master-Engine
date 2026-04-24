@@ -22,7 +22,7 @@ import haxe.Timer;
 
 using utils.Files;
 
-class ResultSubstate extends MusicBeatSubstate {
+class ResultSubState extends MusicBeatSubstate {
     public var grpCharacters:FlxTypedGroup<Character>;
 	public var grpBackShit:FlxTypedGroup<FlxSprite>;
     public var grpRankStuff:FlxUIGroup;
@@ -66,7 +66,7 @@ class ResultSubstate extends MusicBeatSubstate {
         super();
 	}
     
-	override function create() {
+	override function create():Void {
 		super.create();
 
         score = Std.int(Math.max(score, 0));
@@ -82,7 +82,7 @@ class ResultSubstate extends MusicBeatSubstate {
 		FlxG.cameras.add(otherCamera);
 		FlxG.cameras.add(hudCamera);
 
-        if ((MusicBeatState.state is PlayState)) {curState = cast MusicBeatState.state; }
+        if ((MusicBeatState.state is PlayState)) { curState = cast MusicBeatState.state; }
         
 		var stickerList:Array<String> = Paths.readDirectory("assets/shared/images/stickers");
 		grpBackShit = new FlxTypedGroup<FlxSprite>();
